@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bosses>
+	<boss>
+		<id>boss1</id>
+		<nameEnglish>Giant Imp</nameEnglish>
+		<nameIndonesia>Setan Raksasa</nameIndonesia>
+		<name>CharEnemyImp1</name><!-- Name in Flash -->
+		<pivot>0,310</pivot>
+		<scale>2</scale>
+		<pngUrl>assets/chars/CharImp.png</pngUrl>
+		<size>31.5</size>
+		<numOfAttack>5</numOfAttack>
+		<numOfHit>2</numOfHit>
+		<numOfDie>2</numOfDie>
+		<baseHealth>300</baseHealth>
+		<healthBonus>10</healthBonus>
+		<baseDamage>25</baseDamage>
+		<damageBonus>8</damageBonus>
+		<baseDamageRange>15</baseDamageRange>
+		<exp>100</exp>
+		<expFormula>level,5</expFormula>
+		<expGainPercentage>10</expGainPercentage>
+		<isBoss>1</isBoss>
+		<level>10</level>
+		<revive>2</revive>
+		<jkpLevel>5</jkpLevel>
+		<points>100</points>
+		<pointsBonus>1</pointsBonus>
+		<pointsMax></pointsMax>
+		
+		<poisonChance>30</poisonChance>
+		<poisonChanceBonus>5</poisonChanceBonus>
+		<poisonChanceMax>70</poisonChanceMax>
+		<poisonValue>10</poisonValue>
+		<poisonValueBonus>1</poisonValueBonus>
+		<poisonValueMax>70</poisonValueMax>
+		
+		<weakenChance>70</weakenChance>
+		<weakenChanceBonus>5</weakenChanceBonus>
+		<weakenChanceMax>80</weakenChanceMax>
+		<weakenValue>0.5</weakenValue>
+		<weakenValueBonus>0.1</weakenValueBonus>
+		<weakenValueMax>0.5</weakenValueMax>
+	</boss>
+	
+	<boss>
+		<id>boss2</id>
+		<nameEnglish>Park Ranger</nameEnglish>
+		<nameIndonesia>Penjaga Hutan</nameIndonesia>
+		<name>CharEnemyParkRanger</name><!-- Name in Flash -->
+		<pivot>0,310</pivot>
+		<scale>1</scale>
+		<pngUrl>assets/chars/CharParkRanger.png</pngUrl>
+		<size>61.1</size>
+		<numOfAttack>5</numOfAttack>
+		<numOfHit>2</numOfHit>
+		<numOfDie>2</numOfDie>
+		<baseHealth>300</baseHealth>
+		<healthBonus>30</healthBonus>
+		<baseDamage>50</baseDamage>
+		<damageBonus>5</damageBonus>
+		<baseDamageRange>15</baseDamageRange>
+		<exp>100</exp>
+		<expFormula>level,5</expFormula>
+		<expGainPercentage>10</expGainPercentage>
+		<points>100</points>
+		<pointsBonus>1</pointsBonus>
+		<pointsMax></pointsMax>
+		
+		<isBoss>1</isBoss>
+		<level>50</level>
+		<revive>2</revive>
+		<jkpLevel>10</jkpLevel>
+		<magicChance>45</magicChance>
+		<magicChanceBonus>5</magicChanceBonus>
+		<magicChanceMax>70</magicChanceMax>
+		<magicValue>50</magicValue>
+		<magicValueBonus>50</magicValueBonus>
+		<magicValueMax>100</magicValueMax>
+		
+	</boss>
+	
+</bosses>

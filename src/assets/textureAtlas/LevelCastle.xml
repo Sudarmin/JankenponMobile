@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with TexturePacker http://www.codeandweb.com/texturepacker-->
+<!-- $TexturePacker:SmartUpdate:867b961ae7b6ddc65dcaa0eaaa87925e:1/1$ -->
+<TextureAtlas imagePath="LevelCastle.png">
+    <SubTexture name="BG" x="2" y="2" width="1237" height="613"/>
+    <SubTexture name="FG" x="1241" y="2" width="783" height="575"/>
+    <SubTexture name="Ground0" x="602" y="617" width="598" height="350"/>
+    <SubTexture name="Ground1" x="2" y="958" width="598" height="453"/>
+    <SubTexture name="Ground2" x="1241" y="579" width="609" height="377"/>
+    <SubTexture name="Sky" x="1852" y="579" width="100" height="100"/>
+</TextureAtlas>

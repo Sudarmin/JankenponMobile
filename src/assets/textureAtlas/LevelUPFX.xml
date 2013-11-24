@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with TexturePacker http://www.codeandweb.com/texturepacker-->
+<!-- $TexturePacker:SmartUpdate:c144ef8754ed2f3a070a85920ecf96c8:1/1$ -->
+<TextureAtlas imagePath="LevelUPFX.png">
+    <SubTexture name="FxLevelUp0001" x="432" y="645" width="60" height="21" frameX="-150" frameY="-274" frameWidth="366" frameHeight="327"/>
+    <SubTexture name="FxLevelUp0002" x="296" y="684" width="84" height="29" frameX="-138" frameY="-270" frameWidth="366" frameHeight="327"/>
+    <SubTexture name="FxLevelUp0003" x="296" y="645" width="134" height="37" frameX="-117" frameY="-266" frameWidth="366" frameHeight="327"/>
+    <SubTexture name="FxLevelUp0004" x="314" y="2" width="192" height="119" frameX="-88" frameY="-189" frameWidth="366" frameHeight="327"/>
+    <SubTexture name="FxLevelUp0005" x="2" y="1732" width="252" height="153" frameX="-58" frameY="-162" frameWidth="366" frameHeight="327"/>
+    <SubTexture name="FxLevelUp0006" x="2" y="175" width="310" height="167" frameX="-29" frameY="-155" frameWidth="366" frameHeight="327"/>
+    <SubTexture name="FxLevelUp0007" x="2" y="2" width="310" height="171" frameX="-29" frameY="-151" frameWidth="366" frameHeight="327"/>
+    <SubTexture name="FxLevelUp0008" x="2" y="344" width="302" height="175" frameX="-32" frameY="-146" frameWidth="366" frameHeight="327"/>
+    <SubTexture name="FxLevelUp0009" x="2" y="521" width="292" height="223" frameX="-37" frameY="-97" frameWidth="366" frameHeight="327"/>
+    <SubTexture name="FxLevelUp0010" x="2" y="746" width="284" height="233" frameX="-40" frameY="-87" frameWidth="366" frameHeight="327"/>
+    <SubTexture name="FxLevelUp0011" x="2" y="981" width="274" height="241" frameX="-44" frameY="-79" frameWidth="366" frameHeight="327"/>
+    <SubTexture name="FxLevelUp0012" x="2" y="1224" width="266" height="249" frameX="-48" frameY="-71" frameWidth="366" frameHeight="327"/>
+    <SubTexture name="FxLevelUp0013" x="2" y="1475" width="258" height="255" frameX="-52" frameY="-65" frameWidth="366" frameHeight="327"/>
+    <SubTexture name="FxLevelUp0014" x="256" y="1764" width="250" height="255" frameX="-55" frameY="-65" frameWidth="366" frameHeight="327"/>
+    <SubTexture name="FxLevelUp0015" x="262" y="1503" width="242" height="259" frameX="-58" frameY="-61" frameWidth="366" frameHeight="327"/>
+    <SubTexture name="FxLevelUp0016" x="278" y="981" width="232" height="259" frameX="-63" frameY="-61" frameWidth="366" frameHeight="327"/>
+    <SubTexture name="FxLevelUp0017" x="270" y="1242" width="224" height="259" frameX="-66" frameY="-60" frameWidth="366" frameHeight="327"/>
+    <SubTexture name="FxLevelUp0018" x="306" y="384" width="204" height="259" frameX="-77" frameY="-60" frameWidth="366" frameHeight="327"/>
+    <SubTexture name="FxLevelUp0019" x="314" y="123" width="184" height="259" frameX="-87" frameY="-60" frameWidth="366" frameHeight="327"/>
+    <SubTexture name="FxLevelUp0020" x="508" y="2" width="1" height="1" frameX="0" frameY="0" frameWidth="366" frameHeight="327"/>
+</TextureAtlas>

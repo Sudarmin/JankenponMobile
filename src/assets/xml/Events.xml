@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<events>
+	<event>
+		<name>boss</name>
+		<afterBattles>3</afterBattles>
+		<charID>boss1</charID>
+	</event>
+	<event>
+		<name>boss</name>
+		<afterBattles>6</afterBattles>
+		<charID>boss2</charID>
+	</event>
+</events>

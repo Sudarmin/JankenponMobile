@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with TexturePacker http://www.codeandweb.com/texturepacker-->
+<!-- $TexturePacker:SmartUpdate:9dbc2e812a931af7305d594b3e84ed43:1/1$ -->
+<TextureAtlas imagePath="levelMeadow.png">
+    <SubTexture name="BG" x="2" y="2" width="1237" height="472"/>
+    <SubTexture name="FG" x="2" y="476" width="837" height="647"/>
+    <SubTexture name="Ground0" x="2" y="1125" width="549" height="291"/>
+    <SubTexture name="Ground1" x="1241" y="2" width="549" height="299"/>
+    <SubTexture name="Ground2" x="1241" y="303" width="549" height="295"/>
+    <SubTexture name="Sky" x="1792" y="2" width="100" height="100"/>
+</TextureAtlas>

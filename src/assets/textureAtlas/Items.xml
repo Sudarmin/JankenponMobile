@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with TexturePacker http://www.codeandweb.com/texturepacker-->
+<!-- $TexturePacker:SmartUpdate:e96c176d5825caa4515fd1bebe164b04:1/1$ -->
+<TextureAtlas imagePath="Items.png">
+    <SubTexture name="ItemAnimalEye" x="133" y="206" width="43" height="43"/>
+    <SubTexture name="ItemBone" x="197" y="158" width="50" height="50"/>
+    <SubTexture name="ItemClaw" x="145" y="107" width="50" height="50"/>
+    <SubTexture name="ItemEmerald" x="197" y="106" width="50" height="50"/>
+    <SubTexture name="ItemFeather" x="133" y="251" width="21" height="49"/>
+    <SubTexture name="ItemGreenHerb" x="178" y="210" width="28" height="46"/>
+    <SubTexture name="ItemLeather" x="145" y="55" width="50" height="50"/>
+    <SubTexture name="ItemMushroom" x="145" y="159" width="49" height="45"/>
+    <SubTexture name="ItemSpiderEgg" x="197" y="54" width="50" height="50"/>
+    <SubTexture name="ItemSpiderWeb" x="145" y="2" width="50" height="51"/>
+    <SubTexture name="ItemWood" x="197" y="2" width="50" height="50"/>
+    <SubTexture name="TreasureClip0001" x="2" y="164" width="129" height="120" frameX="-2" frameY="-39" frameWidth="141" frameHeight="162"/>
+    <SubTexture name="TreasureClip0002" x="2" y="2" width="141" height="160" frameX="0" frameY="0" frameWidth="141" frameHeight="162"/>
+</TextureAtlas>

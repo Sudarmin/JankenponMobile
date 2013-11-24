@@ -1,0 +1,420 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<characters>
+	<character>
+		<id>0</id>
+		<nameEnglish>Idiotic Human</nameEnglish>
+		<nameIndonesia>Manusia Idiot</nameIndonesia>
+		<name>CharHuman</name><!-- Name in Flash -->
+		<pivot>0,310</pivot>
+		<scale>1</scale>
+		<pngUrl>assets/chars/CharHuman.png</pngUrl>
+		<size>31.5</size>
+		<!-- ANIMATION -->
+		<numOfAttack>5</numOfAttack>
+		<numOfHit>2</numOfHit>
+		<numOfDie>2</numOfDie>
+		<baseHealth>520</baseHealth>
+		<healthBonus>10</healthBonus>
+		<baseDamage>20</baseDamage>
+		<damageBonus>5</damageBonus>
+		<baseDamageRange>5</baseDamageRange>
+		<exp>100</exp>
+		<expFormula>level,2</expFormula>
+		<expGainPercentage>10</expGainPercentage>
+		<points>100</points>
+		<pointsBonus>1</pointsBonus>
+		<pointsMax></pointsMax>
+		
+		<luck>50</luck>
+		<luckBonus>0.1</luckBonus>
+		<luckMax>50</luckMax>
+		<criticalChance>50</criticalChance>
+		<criticalChanceBonus>1</criticalChanceBonus>
+		<criticalChanceMax>80</criticalChanceMax>
+		<criticalValue>3</criticalValue>
+		<criticalValueBonus>0.1</criticalValueBonus>
+		<criticalValueMax>4</criticalValueMax>
+		
+	</character>
+	<character>
+		<id>1</id>
+		<nameEnglish>Weak Imp</nameEnglish>
+		<nameIndonesia>Setan Lemah</nameIndonesia>
+		<name>CharEnemyImp1</name><!-- Name in Flash -->
+		<pivot>0,310</pivot>
+		<scale>1</scale>
+		<pngUrl>assets/chars/CharImp.png</pngUrl>
+		<size>31.5</size>
+		<numOfAttack>5</numOfAttack>
+		<numOfHit>2</numOfHit>
+		<numOfDie>2</numOfDie>
+		<baseHealth>90</baseHealth>
+		<healthBonus>10</healthBonus>
+		<baseDamage>25</baseDamage>
+		<damageBonus>8</damageBonus>
+		<baseDamageRange>15</baseDamageRange>
+		<exp>100</exp>
+		<expFormula>level,5</expFormula>
+		<expGainPercentage>10</expGainPercentage>
+		<points>100</points>
+		<pointsBonus>1</pointsBonus>
+		<pointsMax></pointsMax>
+		
+		<poisonChance>15</poisonChance>
+		<poisonChanceBonus>5</poisonChanceBonus>
+		<poisonChanceMax>30</poisonChanceMax>
+		<poisonValue>10</poisonValue>
+		<poisonValueBonus>1</poisonValueBonus>
+		<poisonValueMax>30</poisonValueMax>
+		
+	</character>
+	<character>
+		<id>2</id>
+		<nameEnglish>Blue Wolf</nameEnglish>
+		<nameIndonesia>Serigala Biru</nameIndonesia>
+		<name>CharEnemyWolf1</name><!-- Name in Flash -->
+		<pivot>0,310</pivot>
+		<scale>1</scale>
+		<pngUrl>assets/chars/CharWolf.png</pngUrl>
+		<size>56.7</size>
+		<numOfAttack>5</numOfAttack>
+		<numOfHit>2</numOfHit>
+		<numOfDie>2</numOfDie>
+		<baseHealth>300</baseHealth>
+		<healthBonus>50</healthBonus>
+		<baseDamage>15</baseDamage>
+		<damageBonus>5</damageBonus>
+		<baseDamageRange>10</baseDamageRange>
+		<exp>100</exp>
+		<expFormula>level,5</expFormula>
+		<expGainPercentage>10</expGainPercentage>
+		<points>100</points>
+		<pointsBonus>1</pointsBonus>
+		<pointsMax></pointsMax>
+		
+		<healChance>25</healChance>
+		<healChanceBonus>1</healChanceBonus>
+		<healChanceMax>60</healChanceMax>
+		<healValue>100</healValue>
+		<healValueBonus>50</healValueBonus>
+		<healValueMax>500</healValueMax>
+		
+	</character>
+	<character>
+		<id>3</id>
+		<nameEnglish>Ridiculous Boar</nameEnglish>
+		<nameIndonesia>Babi Hutan Konyol</nameIndonesia>
+		<name>CharEnemyBoar1</name><!-- Name in Flash -->
+		<pivot>0,310</pivot>
+		<scale>1</scale>
+		<pngUrl>assets/chars/CharBoar.png</pngUrl>
+		<size>44.3</size>
+		<numOfAttack>5</numOfAttack>
+		<numOfHit>2</numOfHit>
+		<numOfDie>2</numOfDie>
+		<baseHealth>500</baseHealth>
+		<healthBonus>5</healthBonus>
+		<baseDamage>10</baseDamage>
+		<damageBonus>5</damageBonus>
+		<baseDamageRange>50</baseDamageRange>
+		<exp>100</exp>
+		<expFormula>level,5</expFormula>
+		<expGainPercentage>10</expGainPercentage>
+		<points>100</points>
+		<pointsBonus>1</pointsBonus>
+		<pointsMax></pointsMax>
+		
+		<evadeChance>50</evadeChance>
+		<evadeChanceBonus>5</evadeChanceBonus>
+		<evadeChanceMax>60</evadeChanceMax>
+		
+	</character>
+	<character>
+		<id>4</id>
+		<nameEnglish>Gigantic Golem</nameEnglish>
+		<nameIndonesia>Golem Raksasa</nameIndonesia>
+		<name>CharEnemyGolem</name><!-- Name in Flash -->
+		<pivot>0,310</pivot>
+		<scale>1</scale>
+		<pngUrl>assets/chars/CharGolem.png</pngUrl>
+		<size>61.1</size>
+		<numOfAttack>5</numOfAttack>
+		<numOfHit>2</numOfHit>
+		<numOfDie>2</numOfDie>
+		<baseHealth>700</baseHealth>
+		<healthBonus>50</healthBonus>
+		<baseDamage>50</baseDamage>
+		<damageBonus>5</damageBonus>
+		<baseDamageRange>1</baseDamageRange>
+		<exp>100</exp>
+		<expFormula>level,5</expFormula>
+		<expGainPercentage>10</expGainPercentage>
+		<points>100</points>
+		<pointsBonus>1</pointsBonus>
+		<pointsMax></pointsMax>
+		
+		<dmgReturnChance>30</dmgReturnChance>
+		<dmgReturnChanceBonus>5</dmgReturnChanceBonus>
+		<dmgReturnChanceMax>100</dmgReturnChanceMax>
+		<dmgReturnValue>50</dmgReturnValue>
+		<dmgReturnValueBonus>5</dmgReturnValueBonus>
+		<dmgReturnValueMax>100</dmgReturnValueMax>
+		
+	</character>
+	<character>
+		<id>5</id>
+		<nameEnglish>Dark King</nameEnglish>
+		<nameIndonesia>Raja Kegelapan</nameIndonesia>
+		<name>CharEnemyKing</name><!-- Name in Flash -->
+		<pivot>0,310</pivot>
+		<scale>1</scale>
+		<pngUrl>assets/chars/CharKing.png</pngUrl>
+		<size>61.1</size>
+		<numOfAttack>5</numOfAttack>
+		<numOfHit>2</numOfHit>
+		<numOfDie>2</numOfDie>
+		<baseHealth>200</baseHealth>
+		<healthBonus>20</healthBonus>
+		<baseDamage>40</baseDamage>
+		<damageBonus>5</damageBonus>
+		<baseDamageRange>5</baseDamageRange>
+		<exp>100</exp>
+		<expFormula>level,5</expFormula>
+		<expGainPercentage>10</expGainPercentage>
+		<points>100</points>
+		<pointsBonus>1</pointsBonus>
+		<pointsMax></pointsMax>
+		
+		<lifeStealValue>5</lifeStealValue>
+		<lifeStealValueBonus>0.5</lifeStealValueBonus>
+		<lifeStealValueMax>25</lifeStealValueMax>
+		
+	</character>
+	<character>
+		<id>6</id>
+		<nameEnglish>Royal Knight</nameEnglish>
+		<nameIndonesia>Ksatria Kerajaan</nameIndonesia>
+		<name>CharEnemyKnight</name><!-- Name in Flash -->
+		<pivot>0,310</pivot>
+		<scale>1</scale>
+		<pngUrl>assets/chars/CharKnight.png</pngUrl>
+		<size>61.1</size>
+		<numOfAttack>5</numOfAttack>
+		<numOfHit>2</numOfHit>
+		<numOfDie>2</numOfDie>
+		<baseHealth>250</baseHealth>
+		<healthBonus>30</healthBonus>
+		<baseDamage>40</baseDamage>
+		<damageBonus>8</damageBonus>
+		<baseDamageRange>10</baseDamageRange>
+		<exp>100</exp>
+		<expFormula>level,5</expFormula>
+		<expGainPercentage>10</expGainPercentage>
+		<points>100</points>
+		<pointsBonus>1</pointsBonus>
+		<pointsMax></pointsMax>
+		
+		<magicChance>45</magicChance>
+		<magicChanceBonus>5</magicChanceBonus>
+		<magicChanceMax>70</magicChanceMax>
+		<magicValue>50</magicValue>
+		<magicValueBonus>50</magicValueBonus>
+		<magicValueMax>100</magicValueMax>
+		
+	</character>
+	<character>
+		<id>7</id>
+		<nameEnglish>Park Ranger</nameEnglish>
+		<nameIndonesia>Penjaga Hutan</nameIndonesia>
+		<name>CharEnemyParkRanger</name><!-- Name in Flash -->
+		<pivot>0,310</pivot>
+		<scale>1</scale>
+		<pngUrl>assets/chars/CharParkRanger.png</pngUrl>
+		<size>61.1</size>
+		<numOfAttack>5</numOfAttack>
+		<numOfHit>2</numOfHit>
+		<numOfDie>2</numOfDie>
+		<baseHealth>300</baseHealth>
+		<healthBonus>30</healthBonus>
+		<baseDamage>50</baseDamage>
+		<damageBonus>5</damageBonus>
+		<baseDamageRange>15</baseDamageRange>
+		<exp>100</exp>
+		<expFormula>level,5</expFormula>
+		<expGainPercentage>10</expGainPercentage>
+		<points>100</points>
+		<pointsBonus>1</pointsBonus>
+		<pointsMax></pointsMax>
+		
+		<magicChance>80</magicChance>
+		<magicChanceBonus>5</magicChanceBonus>
+		<magicChanceMax>80</magicChanceMax>
+		<magicValue>50</magicValue>
+		<magicValueBonus>50</magicValueBonus>
+		<magicValueMax>150</magicValueMax>
+		
+	</character>
+	<character>
+		<id>8</id>
+		<nameEnglish>Soul Catcher</nameEnglish>
+		<nameIndonesia>Penangkap Jiwa</nameIndonesia>
+		<name>CharEnemySoulCatcher</name><!-- Name in Flash -->
+		<pivot>0,310</pivot>
+		<scale>1</scale>
+		<pngUrl>assets/chars/CharSoulCatcher.png</pngUrl>
+		<size>61.1</size>
+		<numOfAttack>5</numOfAttack>
+		<numOfHit>2</numOfHit>
+		<numOfDie>2</numOfDie>
+		<baseHealth>600</baseHealth>
+		<healthBonus>50</healthBonus>
+		<baseDamage>20</baseDamage>
+		<damageBonus>5</damageBonus>
+		<baseDamageRange>50</baseDamageRange>
+		<exp>100</exp>
+		<expFormula>level,5</expFormula>
+		<expGainPercentage>10</expGainPercentage>
+		<points>100</points>
+		<pointsBonus>1</pointsBonus>
+		<pointsMax></pointsMax>
+		
+		<reverseChance>10</reverseChance>
+		<reverseChanceBonus>5</reverseChanceBonus>
+		<reverseChanceMax>50</reverseChanceMax>
+		
+	</character>
+	<character>
+		<id>9</id>
+		<nameEnglish>Rainbow Spider</nameEnglish>
+		<nameIndonesia>Laba-Laba Pelangi</nameIndonesia>
+		<name>CharEnemySpider1</name><!-- Name in Flash -->
+		<pivot>0,310</pivot>
+		<scale>1</scale>
+		<pngUrl>assets/chars/CharSpider.png</pngUrl>
+		<size>61.1</size>
+		<numOfAttack>5</numOfAttack>
+		<numOfHit>2</numOfHit>
+		<numOfDie>2</numOfDie>
+		<baseHealth>550</baseHealth>
+		<healthBonus>10</healthBonus>
+		<baseDamage>20</baseDamage>
+		<damageBonus>5</damageBonus>
+		<baseDamageRange>5</baseDamageRange>
+		<exp>100</exp>
+		<expFormula>level,5</expFormula>
+		<expGainPercentage>10</expGainPercentage>
+		<points>100</points>
+		<pointsBonus>1</pointsBonus>
+		<pointsMax></pointsMax>
+		
+		<strengthenChance>30</strengthenChance>
+		<strengthenChanceBonus>5</strengthenChanceBonus>
+		<strengthenChanceMax>60</strengthenChanceMax>
+		<strengthenValue>1.5</strengthenValue>
+		<strengthenValueBonus>0.5</strengthenValueBonus>
+		<strengthenValueMax>2</strengthenValueMax>
+		
+	</character>
+	<character>
+		<id>10</id>
+		<nameEnglish>Werewolf</nameEnglish>
+		<nameIndonesia>Siluman Serigala</nameIndonesia>
+		<name>CharEnemyWerewolf</name><!-- Name in Flash -->
+		<pivot>0,310</pivot>
+		<scale>1</scale>
+		<pngUrl>assets/chars/CharWereWolf.png</pngUrl>
+		<size>61.1</size>
+		<numOfAttack>5</numOfAttack>
+		<numOfHit>2</numOfHit>
+		<numOfDie>2</numOfDie>
+		<baseHealth>400</baseHealth>
+		<healthBonus>10</healthBonus>
+		<baseDamage>40</baseDamage>
+		<damageBonus>5</damageBonus>
+		<baseDamageRange>5</baseDamageRange>
+		<exp>100</exp>
+		<expFormula>level,5</expFormula>
+		<expGainPercentage>10</expGainPercentage>
+		<points>100</points>
+		<pointsBonus>1</pointsBonus>
+		<pointsMax></pointsMax>
+		
+		<weakenChance>70</weakenChance>
+		<weakenChanceBonus>5</weakenChanceBonus>
+		<weakenChanceMax>80</weakenChanceMax>
+		<weakenValue>0.5</weakenValue>
+		<weakenValueBonus>0.1</weakenValueBonus>
+		<weakenValueMax>0.2</weakenValueMax>
+		
+	</character>
+</characters>
+
+<!-- 
+		<criticalChanceBonus>1</criticalChanceBonus>
+		<criticalChanceMax>70</criticalChanceMax>
+		<criticalValue>3</criticalValue>
+		<criticalValueBonus>0.1</criticalValueBonus>
+		<criticalValueMax>4</criticalValueMax>
+		
+		<healChance>25</healChance>
+		<healChanceBonus>1</healChanceBonus>
+		<healChanceMax>60</healChanceMax>
+		<healValue>100</healValue>
+		<healValueBonus>50</healValueBonus>
+		<healValueMax>500</healValueMax>
+		
+		<evadeChance>50</evadeChance>
+		<evadeChanceBonus>5</evadeChanceBonus>
+		<evadeChanceMax>60</evadeChanceMax>
+		
+		<dmgReturnChance>30</dmgReturnChance>
+		<dmgReturnChanceBonus>5</dmgReturnChanceBonus>
+		<dmgReturnChanceMax>100</dmgReturnChanceMax>
+		<dmgReturnValue>50</dmgReturnValue>
+		<dmgReturnValueBonus>5</dmgReturnValueBonus>
+		<dmgReturnValueMax>100</dmgReturnValueMax>
+		
+		<poisonChance>15</poisonChance>
+		<poisonChanceBonus>5</poisonChanceBonus>
+		<poisonChanceMax>30</poisonChanceMax>
+		<poisonValue>10</poisonValue>
+		<poisonValueBonus>1</poisonValueBonus>
+		<poisonValueMax>30</poisonValueMax>
+		
+		<lifeStealValue>5</lifeStealValue>
+		<lifeStealValueBonus>0.5</lifeStealValueBonus>
+		<lifeStealValueMax>25</lifeStealValueMax>
+		
+		<magicChance>45</magicChance>
+		<magicChanceBonus>5</magicChanceBonus>
+		<magicChanceMax>70</magicChanceMax>
+		<magicValue>50</magicValue>
+		<magicValueBonus>50</magicValueBonus>
+		<magicValueMax>100</magicValueMax>
+		
+		<strengthenChance>30</strengthenChance>
+		<strengthenChanceBonus>5</strengthenChanceBonus>
+		<strengthenChanceMax>60</strengthenChanceMax>
+		<strengthenValue>1.5</strengthenValue>
+		<strengthenValueBonus>0.5</strengthenValueBonus>
+		<strengthenValueMax>2</strengthenValueMax>
+		
+		<weakenChance>70</weakenChance>
+		<weakenChanceBonus>5</weakenChanceBonus>
+		<weakenChanceMax>80</weakenChanceMax>
+		<weakenValue>0.5</weakenValue>
+		<weakenValueBonus>0.1</weakenValueBonus>
+		<weakenValueMax>0.2</weakenValueMax>
+		
+		<reverseChance>10</reverseChance>
+		<reverseChanceBonus>5</reverseChanceBonus>
+		<reverseChanceMax>50</reverseChanceMax>
+		
+		<luck>10</luck>
+		<luckBonus>0.1</luckBonus>
+		<luckMax>50</luckMax>
+		
+		<points>100</points>
+		<pointsBonus>1</pointsBonus>
+		<pointsMax></pointsMax>
+ -->

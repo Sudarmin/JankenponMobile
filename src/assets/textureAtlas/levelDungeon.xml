@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with TexturePacker http://www.codeandweb.com/texturepacker-->
+<!-- $TexturePacker:SmartUpdate:83a1363a6e26662dad7bbbcd658a837f:1/1$ -->
+<TextureAtlas imagePath="levelDungeon.png">
+    <SubTexture name="BG" x="2" y="2" width="1573" height="648" frameX="-4" frameY="-16" frameWidth="1577" frameHeight="664"/>
+    <SubTexture name="FG" x="2" y="652" width="805" height="677"/>
+    <SubTexture name="Ground0" x="790" y="1331" width="786" height="597" frameX="0" frameY="0" frameWidth="786" frameHeight="619"/>
+    <SubTexture name="Ground1" x="809" y="652" width="786" height="586" frameX="0" frameY="0" frameWidth="786" frameHeight="608"/>
+    <SubTexture name="Ground2" x="2" y="1331" width="786" height="597" frameX="0" frameY="0" frameWidth="786" frameHeight="619"/>
+    <SubTexture name="Sky" x="1577" y="2" width="100" height="100"/>
+</TextureAtlas>

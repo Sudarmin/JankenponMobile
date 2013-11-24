@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with TexturePacker http://www.codeandweb.com/texturepacker-->
+<!-- $TexturePacker:SmartUpdate:ffabee49ee3d77e680ababeec0626373:1/1$ -->
+<TextureAtlas imagePath="mainMenu.png">
+    <SubTexture name="ButtonCredits0001" x="366" y="970" width="112" height="114" frameX="-8" frameY="-8" frameWidth="128" frameHeight="130"/>
+    <SubTexture name="ButtonCredits0002" x="366" y="722" width="128" height="130"/>
+    <SubTexture name="ButtonCredits0003" x="860" y="826" width="112" height="114" frameX="-8" frameY="-8" frameWidth="128" frameHeight="130"/>
+    <SubTexture name="ButtonCredits0004" x="860" y="826" width="112" height="114" frameX="-8" frameY="-8" frameWidth="128" frameHeight="130"/>
+    <SubTexture name="ButtonOptions0001" x="366" y="854" width="112" height="114" frameX="-8" frameY="-8" frameWidth="128" frameHeight="130"/>
+    <SubTexture name="ButtonOptions0002" x="366" y="590" width="128" height="130"/>
+    <SubTexture name="ButtonOptions0003" x="366" y="854" width="112" height="114" frameX="-8" frameY="-8" frameWidth="128" frameHeight="130"/>
+    <SubTexture name="ButtonOptions0004" x="366" y="854" width="112" height="114" frameX="-8" frameY="-8" frameWidth="128" frameHeight="130"/>
+    <SubTexture name="ButtonStart0001" x="496" y="826" width="362" height="76" frameX="0" frameY="-14" frameWidth="362" frameHeight="104"/>
+    <SubTexture name="ButtonStart0002" x="2" y="1002" width="352" height="86" frameX="-5" frameY="-8" frameWidth="362" frameHeight="104"/>
+    <SubTexture name="ButtonStart0003" x="480" y="904" width="352" height="86" frameX="-5" frameY="-8" frameWidth="362" frameHeight="104"/>
+    <SubTexture name="LogoShield" x="480" y="992" width="346" height="214"/>
+    <SubTexture name="UI-BackgroundBlue" x="511" y="504" width="480" height="320"/>
+    <SubTexture name="UI-CharBoar" x="2" y="254" width="507" height="334" frameX="-8" frameY="0" frameWidth="523" frameHeight="356"/>
+    <SubTexture name="UI-CharHero" x="2" y="590" width="362" height="410" frameX="0" frameY="0" frameWidth="424" frameHeight="410"/>
+    <SubTexture name="UI-Title" x="2" y="70" width="549" height="182"/>
+    <SubTexture name="UI-TopLine" x="2" y="2" width="960" height="66"/>
+    <SubTexture name="img-sunburst" x="553" y="70" width="434" height="432" frameX="-23" frameY="-24" frameWidth="480" frameHeight="480"/>
+</TextureAtlas>
