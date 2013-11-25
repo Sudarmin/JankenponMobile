@@ -422,9 +422,9 @@ package p_entity
 			return m_isMoving;
 		}
 		
-		public function get no():String
+		public function get id():String
 		{
-			return m_charXML.no;
+			return m_charXML.id;
 		}
 		public function get desc():String
 		{

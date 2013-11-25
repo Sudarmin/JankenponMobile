@@ -11,6 +11,7 @@ package p_gameState.p_inGameState
 	import p_engine.p_singleton.TG_World;
 	
 	import p_entity.TG_Character;
+	import p_entity.TG_NPC;
 	import p_entity.TG_TreasureChest;
 	
 	import p_gameState.TG_InGameState;
@@ -53,6 +54,7 @@ package p_gameState.p_inGameState
 		private var m_char:TG_Character;
 		private var m_owedRotation:Number = 0;
 		private var m_enemy:TG_Character;
+		private var m_npc:TG_NPC;
 		
 		private var m_callBackFunc:Function;
 		private var m_callBackParams:Array;
@@ -60,7 +62,8 @@ package p_gameState.p_inGameState
 		
 		private var m_surprisedStrings:Array;
 		private var m_distanceDifference:Number = 1;
-		private var m_treasureDistanceDifference:Number = 0.1;
+		private var m_NPCdistanceDifference:Number = 0.5;
+		private var m_treasureDistanceDifference:Number = 0.3;
 		private var m_attackDistance:Number = 0.4;
 		private var m_charRotationCounter:Number = 0;
 		private var m_enemyRotationCounter:Number = 0;
@@ -222,23 +225,28 @@ package p_gameState.p_inGameState
 			{
 				m_treasureChest2.destroy();
 			}
+			if(m_npc)
+			{
+				m_npc.destroy();
+			}
 		}
 		
 		private function onCharLoaded(e:Event):void
 		{
+			m_char.removeEventListener(TG_Character.LOADED,onCharLoaded);
 			m_char.playAnimation("idle",0);
 			m_char.moving = false;
 			m_statusBar1.setChar(m_char);
-			if(TG_Status.getInstance().characterExps[m_char.no] == null)
+			if(TG_Status.getInstance().characterExps[m_char.id] == null)
 			{
-				TG_Status.getInstance().characterExps[m_char.no] = 0;
+				TG_Status.getInstance().characterExps[m_char.id] = 0;
 			}
-			var currentExp:int = TG_Status.getInstance().characterExps[m_char.no];
-			if(TG_Status.getInstance().characterLevels[m_char.no] == null)
+			var currentExp:int = TG_Status.getInstance().characterExps[m_char.id];
+			if(TG_Status.getInstance().characterLevels[m_char.id] == null)
 			{
-				TG_Status.getInstance().characterLevels[m_char.no] = 1;
+				TG_Status.getInstance().characterLevels[m_char.id] = 1;
 			}
-			var currentLevel:int = TG_Status.getInstance().characterLevels[m_char.no];
+			var currentLevel:int = TG_Status.getInstance().characterLevels[m_char.id];
 			m_char.level = currentLevel;
 			m_statusBar1.setExp(currentExp,m_char.nextExp);
 			m_statusBar1.setLevel(m_char.level);
@@ -407,6 +415,8 @@ package p_gameState.p_inGameState
 						{
 							m_distancePause = true;
 							m_distanceCounter = 0;
+							
+						/*	
 							var rand:Number = (Math.random() * 10000) % 200;
 							if(rand < m_char.getLuck())
 							{
@@ -415,8 +425,8 @@ package p_gameState.p_inGameState
 							else
 							{
 								createSomething("enemy");
-							}
-							
+							}*/
+							createSomething("npc");
 						}
 					}
 				}
@@ -489,8 +499,6 @@ package p_gameState.p_inGameState
 		
 		private function createSomething(command:String):void
 		{
-			trace("event counter = "+m_eventCounter);
-			trace("enemy counter = "+m_enemyCounter);
 			if(m_eventsXML.event[m_eventCounter])
 			{
 				trace("after battle = "+int(m_eventsXML.event[m_eventCounter].afterBattles));
@@ -533,9 +541,91 @@ package p_gameState.p_inGameState
 				m_currTreasureChest.rotation = m_char.rotation + 1.4;
 				m_callBackFunc = checkTreasureDistance;
 			}
+			else if(command == "npc")
+			{
+				createNPC();
+			}
 		}
 		
+		private function createNPC():void
+		{
+			if(m_npc == null)
+			{
+				m_npc = new TG_NPC(layerCharacter,"left");
+				m_npc.addEventListener(TG_Character.LOADED,onNPCLoaded);
+			}
+			else
+			{
+				onNPCLoaded();
+			}
+		}
 		
+		private function onNPCLoaded(e:Event = null):void
+		{
+			m_npc.removeEventListener(TG_Character.LOADED,onNPCLoaded);
+			
+			m_npc.playAnimation("idle",0);
+			m_npc.rotation = m_char.rotation + 1.4;
+			
+			m_npc.sprite.alpha = 0;
+			TweenMax.fromTo(m_npc.sprite,1,{alpha:0.1},{alpha:1,ease:Circ.easeIn});
+			layerCharacter.swapChildren(m_npc.sprite,m_char.sprite);
+			
+			m_callBackFunc = checkCharNPCDistance;
+		}
+		
+		private function checkCharNPCDistance(elapsedTime:int):void
+		{
+			if(m_npc && m_char)
+			{
+				var difference:Number = 0;
+				if(m_npc.rotation > m_char.rotation)
+				{
+					difference = m_npc.rotation - m_char.rotation;
+				}
+				else
+				{
+					difference = m_char.rotation - m_npc.rotation;
+				}
+				
+				if(difference <= m_NPCdistanceDifference)
+				{
+					m_char.moving = false;
+					m_char.playAnimation("idle");
+					m_callBackFunc = updateDynamicLayerRotationNPC;
+					
+					m_charRotationCounter = 0;
+					m_currentCharRotationCounter = 0;
+					m_currentDynamicLayerRotationCounter = 0;
+				}
+			}
+			
+		}
+		
+		private function updateDynamicLayerRotationNPC(elapsedTime:int):void
+		{
+			var difference:Number = 0;
+			difference = m_npc.rotation - m_char.rotation;
+			if(difference < m_NPCdistanceDifference)
+			{
+				difference = m_NPCdistanceDifference - difference;
+				m_char.rotation -= difference;
+				layerNormalground.rotation += difference;
+				layerCharacter.rotation += difference;
+				layerForeground.rotation += difference;
+				layerBackground.rotation += difference;
+			}
+			difference = m_NPCdistanceDifference;
+			m_currentDynamicLayerRotationCounter = difference * 0.5;
+			m_callBackFunc = null;
+			TweenMax.fromTo(layerDynamic,0.4,{rotation:layerDynamic.rotation},{rotation:layerDynamic.rotation - (difference * 0.5),onComplete:onDynamicLayerRotatedNPC});
+			
+		}
+		
+		private function onDynamicLayerRotatedNPC():void
+		{
+			//moveUntilPlayerAtTheMiddle
+		}
 		
 		private function createEnemy(charID:String = ""):void
 		{
@@ -545,6 +635,8 @@ package p_gameState.p_inGameState
 		
 		private function onEnemyLoaded(e:Event):void
 		{
+			m_enemy.removeEventListener(TG_Character.LOADED,onEnemyLoaded);
+			
 			m_enemy.playAnimation("idle",0);
 			m_enemy.rotation = m_char.rotation + 1.4;
 			m_enemy.sprite.alpha = 0;
@@ -619,13 +711,36 @@ package p_gameState.p_inGameState
 				{
 					m_char.moving = false;
 					m_char.playAnimation("idle");
-					m_callBackFunc = null;
-					
-					m_warning.showCommand("Do you want to open the treasure chest?",true);
-					m_warning.okButton.addEventListener(Event.TRIGGERED,onTreasureChestOkButton);
-					m_warning.cancelButton.addEventListener(Event.TRIGGERED,onTreasureChestCancelButton);
+					m_callBackFunc = updateDynamicLayerRotationTreasureChest;
 				}
 			}
+		}
+		
+		private function updateDynamicLayerRotationTreasureChest(elapsedTime:int):void
+		{
+			var difference:Number = 0;
+			difference = m_currTreasureChest.rotation - m_char.rotation;
+			if(difference < m_treasureDistanceDifference)
+			{
+				difference = m_treasureDistanceDifference - difference;
+				m_char.rotation -= difference;
+				layerNormalground.rotation += difference;
+				layerCharacter.rotation += difference;
+				layerForeground.rotation += difference;
+				layerBackground.rotation += difference;
+			}
+			difference = m_treasureDistanceDifference;
+			m_currentDynamicLayerRotationCounter = difference * 0.5;
+			TweenMax.fromTo(layerDynamic,0.4,{rotation:layerDynamic.rotation},{rotation:layerDynamic.rotation - (difference * 0.5),onComplete:onDynamicLayerRotatedTreasureChest});
+			m_callBackFunc = null;
+			
+		}
+		
+		private function onDynamicLayerRotatedTreasureChest():void
+		{
+			m_warning.showCommand("Do you want to open the treasure chest?",true);
+			m_warning.okButton.addEventListener(Event.TRIGGERED,onTreasureChestOkButton);
+			m_warning.cancelButton.addEventListener(Event.TRIGGERED,onTreasureChestCancelButton);
 		}
 		
 		private function onTreasureChestOkButton(e:Event):void
@@ -644,8 +759,7 @@ package p_gameState.p_inGameState
 			m_currTreasureChest.hide();
 			m_warning.hide();
 			m_char.playAnimation("walk");
-			m_distancePause = false;
-			m_char.moving = true;
+			m_callBackFunc = moveUntilPlayerAtTheMiddle;
 			m_warning.okButton.removeEventListener(Event.TRIGGERED,onTreasureChestOkButton);
 			m_warning.cancelButton.removeEventListener(Event.TRIGGERED,onTreasureChestCancelButton);
 		}
@@ -1520,8 +1634,8 @@ package p_gameState.p_inGameState
 			m_statusInfo.nextButton.removeEventListener(Event.TRIGGERED,onPlayerStatsBonusClicked);
 			TweenMax.to(m_statusInfo.sprite,0.5,{y:TG_World.GAME_HEIGHT,visible:false});
 			
-			hideTreasureChest();
 			m_callBackFunc = null;
+			hideTreasureChest();
 		}
 		private function idleTreasureChest(elapsedTime:int):void
 		{
@@ -1530,12 +1644,12 @@ package p_gameState.p_inGameState
 			if(m_animationCounter >= 1000)
 			{
 				m_animationCounter = 0;
-				
+				m_callBackFunc = null;
 				if(!isAnyoneDies())
 				{
 					hideTreasureChest();
 				}
-				m_callBackFunc = null;
+				
 			}
 		}
 		
@@ -1551,10 +1665,9 @@ package p_gameState.p_inGameState
 			{
 				m_clipAreaFX2.visible = false;
 			}
-			
 			m_char.playAnimation("walk");
-			m_distancePause = false;
-			m_char.moving = true;
+			m_callBackFunc = moveUntilPlayerAtTheMiddle;
+			
 		}
 		
 		
@@ -1572,7 +1685,7 @@ package p_gameState.p_inGameState
 			}
 			else
 			{
-				m_callBackFunc = updateDynamicLayerRotation;
+				m_callBackFunc = updateDynamicLayerRotationEnemy;
 				prepareToFight();
 			}
 			
@@ -1607,6 +1720,44 @@ package p_gameState.p_inGameState
 		{
 			var difference:Number = 0;
 			difference = m_enemy.rotation - m_char.rotation;
+			if(difference < m_distanceDifference)
+			{
+				difference = m_distanceDifference - difference;
+				m_char.rotation -= difference;
+				layerNormalground.rotation += difference;
+				layerCharacter.rotation += difference;
+				layerForeground.rotation += difference;
+				layerBackground.rotation += difference;
+			}
+			difference = m_distanceDifference;
+			m_currentDynamicLayerRotationCounter = difference * 1;
+			TweenMax.fromTo(layerDynamic,0.8,{rotation:layerDynamic.rotation},{rotation:layerDynamic.rotation - (difference * 1),onComplete:onRotatedToEnemy});
+			m_callBackFunc = null;
+		}
+		
+		private function rotateToNPC(elapsedTime:int):void
+		{
+			var difference:Number = 0;
+			difference = m_npc.rotation - m_char.rotation;
+			if(difference < m_distanceDifference)
+			{
+				difference = m_distanceDifference - difference;
+				m_char.rotation -= difference;
+				layerNormalground.rotation += difference;
+				layerCharacter.rotation += difference;
+				layerForeground.rotation += difference;
+				layerBackground.rotation += difference;
+			}
+			difference = m_distanceDifference;
+			m_currentDynamicLayerRotationCounter = difference * 1;
+			TweenMax.fromTo(layerDynamic,0.8,{rotation:layerDynamic.rotation},{rotation:layerDynamic.rotation - (difference * 1),onComplete:onRotatedToEnemy});
+			m_callBackFunc = null;
+		}
+		
+		private function rotateToTreasureChest(elapsedTime:int):void
+		{
+			var difference:Number = 0;
+			difference = m_currTreasureChest.rotation - m_char.rotation;
 			if(difference < m_distanceDifference)
 			{
 				difference = m_distanceDifference - difference;
@@ -1680,7 +1831,7 @@ package p_gameState.p_inGameState
 		private function onRotatedToPlayer():void
 		{
 			prepareToFight();
-			onDynamicLayerRotated();
+			onDynamicLayerRotatedEnemy();
 		}
 		private function waitBossIdle(elapsedTime:int):void
 		{
@@ -1694,7 +1845,7 @@ package p_gameState.p_inGameState
 			}
 		}
 		
-		private function updateDynamicLayerRotation(elapsedTime:int):void
+		private function updateDynamicLayerRotationEnemy(elapsedTime:int):void
 		{
 			var difference:Number = 0;
 			difference = m_enemy.rotation - m_char.rotation;
@@ -1709,10 +1860,12 @@ package p_gameState.p_inGameState
 			}
 			difference = m_distanceDifference;
 			m_currentDynamicLayerRotationCounter = difference * 0.5;
-			TweenMax.fromTo(layerDynamic,0.4,{rotation:layerDynamic.rotation},{rotation:layerDynamic.rotation - (difference * 0.5),onComplete:onDynamicLayerRotated});
+			TweenMax.fromTo(layerDynamic,0.4,{rotation:layerDynamic.rotation},{rotation:layerDynamic.rotation - (difference * 0.5),onComplete:onDynamicLayerRotatedEnemy});
 			m_callBackFunc = null;
 		}
-		private function onDynamicLayerRotated():void
+		
+		
+		private function onDynamicLayerRotatedEnemy():void
 		{
 			var str:String;
 			if(TG_Static.language == TG_Static.ENGLISH)
@@ -1728,6 +1881,7 @@ package p_gameState.p_inGameState
 			TweenMax.fromTo(multiFunctionText,0.2,{scaleX:TG_World.SCALE_ROUNDED * 5,scaleY:TG_World.SCALE_ROUNDED * 5,visible:true},{delay:0.3,scaleX:TG_World.SCALE_ROUNDED * 0.5,scaleY:TG_World.SCALE_ROUNDED * 0.5,onComplete:onFightTextCreated,ease:Circ.easeOut});
 			m_callBackFunc = null;
 		}
+		
 		
 		private function onFightTextCreated():void
 		{

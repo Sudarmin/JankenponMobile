@@ -1,0 +1,12 @@
+<NPCS>
+	<NPC>
+		<id>npc0</id>
+		<nameEnglish>Bald Market</nameEnglish>
+		<nameIndonesia>Pasar Botak</nameIndonesia>
+		<name>CharacterBlacksmith</name><!-- Name in Flash -->
+		<pivot>0,310</pivot>
+		<scale>1</scale>
+		<pngUrl>assets/chars/CharBlackSmith.png</pngUrl>
+		<size>30</size>
+	</NPC>
+</NPCS>

@@ -90,14 +90,14 @@ package p_gameState
 				obj.url = "assets/textureAtlas/mainMenu.png";
 				obj.itemName = "UIMainMenuPNG";
 				obj.type = TG_AssetsLoader.IMAGE;
-				obj.kbTotal = 516;
+				obj.kbTotal = 517;
 				m_assetsToLoad.push(obj);
 				
 				obj = new Object();
 				obj.url = "assets/textureAtlas/mainMenu.xml";
 				obj.itemName = "UIMainMenuXML";
 				obj.type = TG_AssetsLoader.XML;
-				obj.kbTotal = 2.34;
+				obj.kbTotal = 3;
 				m_assetsToLoad.push(obj);
 			}
 		}
@@ -105,6 +105,7 @@ package p_gameState
 		//STEP 3 INIT TEXTURE ATLASES
 		protected override function initTextureAtlas():void
 		{
+			trace("init texture atlas");
 			super.initTextureAtlas();
 			var xml:XML;
 			CONFIG::WEB
@@ -145,7 +146,6 @@ package p_gameState
 						textureMainMenu.root.uploadBitmap(bitmap);
 					}
 				}
-				
 			}
 		}
 		
