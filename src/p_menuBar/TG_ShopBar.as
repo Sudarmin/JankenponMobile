@@ -8,6 +8,7 @@ package p_menuBar
 	
 	import starling.display.ButtonExtended;
 	import starling.display.DisplayObjectContainer;
+	import starling.display.Image;
 	import starling.display.Quad;
 	import starling.display.Sprite;
 	import starling.extensions.Scale9Image;
@@ -27,6 +28,9 @@ package p_menuBar
 		private var m_descSprite:Sprite;
 		private var m_nextSprite:Sprite;
 		private var m_nextButton:ButtonExtended;
+		
+		private var m_picBoxes:Vector.<Sprite>;
+		private var m_buySprite:Sprite;
 		
 		public function TG_ShopBar(parent:DisplayObjectContainer, gameState:TG_GameState)
 		{
@@ -67,6 +71,101 @@ package p_menuBar
 			m_sprite.addChild(ribbonSprite);
 			m_ribbon = ribbon;
 			m_ribbonSprite = ribbonSprite;
+			
+			//CREATE PIC BOX
+			m_picBoxes = new Vector.<Sprite>();
+			var picBox:Sprite;
+			
+			
+			var picImage:Image;
+			
+			picImage = new Image(TG_World.assetManager.getTexture("UI-BoxBag"));
+			picImage.scaleX = picImage.scaleY = 0.75;
+			picBox = new Sprite();
+			picBox.addChild(picImage);
+			m_sprite.addChild(picBox);
+			m_picBoxes.push(picBox);
+			
+			picImage = new Image(TG_World.assetManager.getTexture("UI-BoxBag"));
+			picImage.scaleX = picImage.scaleY = 0.75;
+			picBox = new Sprite();
+			picBox.addChild(picImage);
+			m_sprite.addChild(picBox);
+			m_picBoxes.push(picBox);
+			
+			picImage = new Image(TG_World.assetManager.getTexture("UI-BoxBag"));
+			picImage.scaleX = picImage.scaleY = 0.75;
+			picBox = new Sprite();
+			picBox.addChild(picImage);
+			m_sprite.addChild(picBox);
+			m_picBoxes.push(picBox);
+			
+			picImage = new Image(TG_World.assetManager.getTexture("UI-BoxBag"));
+			picImage.scaleX = picImage.scaleY = 0.75;
+			picBox = new Sprite();
+			picBox.addChild(picImage);
+			m_sprite.addChild(picBox);
+			m_picBoxes.push(picBox);
+			
+			var i:int = 0;
+			var size:int = m_picBoxes.length;
+			for(i;i<size;i++)
+			{
+				if(i>0)
+				{
+					m_picBoxes[i].x = m_picBoxes[i-1].x + m_picBoxes[i-1].width + 10;
+				}
+			}
+			
+			//CREATE DESC BG
+			var descSprite:Sprite = new Sprite();
+			
+			var bgQuad:Quad = new Quad(bg.width - 100,100,0xBE8F41);
+			bgQuad.alpha = 0.7;
+			descSprite.addChild(bgQuad);
+			var desc:TextField = new TextField(bgQuad.width - 10,100,"attack\nhealth\nsada\nasdad\nasdfad\nsafas\nasrda\nsadfa","Londrina",20,0xFFFFFF);
+			desc.touchable = false;
+			desc.kerning = false;
+			desc.autoSize = TextFieldAutoSize.VERTICAL;
+			desc.hAlign = HAlign.LEFT;
+			m_desc = desc;
+			
+			bgQuad.height = desc.height + 10;
+			desc.x = (bgQuad.width - desc.width) * 0.5;
+			desc.y = (bgQuad.height - desc.height) * 0.5;
+			descSprite.addChild(desc);
+			
+			bg.height = bgQuad.height + 100;
+			
+			descSprite.x = (bg.width - descSprite.width) * 0.5;
+			descSprite.y = (bg.height - descSprite.height) * 0.5;
+			descSprite.y -= 10;
+			
+			m_sprite.addChild(descSprite);
+			m_descSprite = descSprite;
+			m_bgQuad = bgQuad;
+			
+			//CREATE BUY BUTTON
+			m_buySprite = new Sprite();
+			rect = new Rectangle(17.5,13,3,3);
+			var buyImage:Scale9Image = new Scale9Image(TG_World.assetManager.getTexture("UI-BGButtonWood2"),rect);
+			var buyText:TextField = new TextField(100,100,"BUY","Londrina",30,0xFFFF00);
+			buyText.autoSize = TextFieldAutoSize.BOTH_DIRECTIONS;
+			buyText.hAlign = HAlign.CENTER;
+			buyImage.width = buyText.width + 20;
+			buyImage.height = buyText.height + 10;
+			buyText.x = (buyImage.width - buyText.width) * 0.5;
+			buyText.y = (buyImage.height - buyText.height) * 0.5;
+			m_buySprite.addChild(buyImage);
+			m_buySprite.addChild(buyText);
+			
+			m_sprite.addChild(m_buySprite);
+		}
+		
+		public override function resize():void
+		{
+			super.resize();
+			m_sprite.scaleX = m_sprite.scaleY = TG_World.SCALE_ROUNDED * 0.5;
 		}
 	}
 }

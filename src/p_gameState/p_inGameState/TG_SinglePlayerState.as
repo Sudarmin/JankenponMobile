@@ -19,6 +19,7 @@ package p_gameState.p_inGameState
 	
 	import p_menuBar.TG_QuestionTypeA;
 	import p_menuBar.TG_RPSBar;
+	import p_menuBar.TG_ShopBar;
 	import p_menuBar.TG_StatusBar;
 	import p_menuBar.TG_StatusInfoBar;
 	import p_menuBar.TG_Warning;
@@ -95,6 +96,8 @@ package p_gameState.p_inGameState
 		private var m_treasureChest2:TG_TreasureChest;
 		private var m_currTreasureChest:TG_TreasureChest;
 		private var m_warning:TG_Warning;
+		
+		private var m_shopBar:TG_ShopBar;
 		public function TG_SinglePlayerState(parent:DisplayObjectContainer)
 		{
 			super(parent);
@@ -133,6 +136,7 @@ package p_gameState.p_inGameState
 			m_eventsXML = TG_World.assetManager.getXml("Events");
 			
 			
+			m_shopBar = new TG_ShopBar(TG_Static.layerMenuBar,this);
 			
 			m_statusInfo = new TG_StatusInfoBar(TG_Static.layerMenuBar,this);
 			m_statusInfo.sprite.visible = false;
@@ -228,6 +232,10 @@ package p_gameState.p_inGameState
 			if(m_npc)
 			{
 				m_npc.destroy();
+			}
+			if(m_shopBar)
+			{
+				m_shopBar.destroy();
 			}
 		}
 		
