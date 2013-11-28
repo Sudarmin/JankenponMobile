@@ -6,6 +6,8 @@ package p_menuBar
 	import p_engine.p_menuBar.TG_MenuBar;
 	import p_engine.p_singleton.TG_World;
 	
+	import p_static.TG_Static;
+	
 	import starling.display.ButtonExtended;
 	import starling.display.DisplayObjectContainer;
 	import starling.display.Image;
@@ -26,14 +28,62 @@ package p_menuBar
 		
 		private var m_bgQuad:Quad;
 		private var m_descSprite:Sprite;
-		private var m_nextSprite:Sprite;
-		private var m_nextButton:ButtonExtended;
 		
 		private var m_picBoxes:Vector.<Sprite>;
+		private var m_allPicBoxes:Sprite;
 		private var m_buySprite:Sprite;
+		private var m_nextSprite:Sprite;
+		
+		public static var shopItems:Array;
+		public static var boughtItems:Array;
 		
 		public function TG_ShopBar(parent:DisplayObjectContainer, gameState:TG_GameState)
 		{
+			if(shopItems == null)
+			{
+				shopItems = [];
+				boughtItems = [];
+				var xml:XML = TG_World.assetManager.getXml("ShopItems");
+				var i:int = 0;
+				var size:int = xml.shopItem.length();
+				var currXML:XML;
+				for(i;i<size;i++)
+				{
+					currXML = xml.shopItem[i];
+					var obj:Object = new Object();
+					obj.id = currXML.id;
+					var chosenString:String = "";
+					if(TG_Static.language == TG_Static.ENGLISH)
+					{
+						chosenString = currXML.nameEnglish;
+					}
+					else if(TG_Static.language == TG_Static.INDONESIA)
+					{
+						chosenString = currXML.nameIndonesia;
+					}
+					obj.name = chosenString;
+					
+					if(TG_Static.language == TG_Static.ENGLISH)
+					{
+						chosenString = currXML.descEnglish;
+					}
+					else if(TG_Static.language == TG_Static.INDONESIA)
+					{
+						chosenString = currXML.descIndonesia;
+					}
+					obj.desc = chosenString;
+					obj.imageName = currXML.imageName;
+					obj.price = currXML.price;
+					obj.priceMult = currXML.priceMult;
+					obj.alwaysShow = currXML.alwaysShow;
+					obj.value = currXML.value;
+					obj.valueMult = currXML.valueMult;
+					obj.maxValue = currXML.maxValue;
+					shopItems.push(obj);
+					shopItems[obj.id] = obj;
+				}
+			}
+			
 			super(parent, gameState);
 		}
 		
@@ -54,7 +104,7 @@ package p_menuBar
 			var ribbonSprite:Sprite = new Sprite();
 			rect = new Rectangle(126.5,16,5,5);
 			var ribbon:Scale9Image = new Scale9Image(TG_World.assetManager.getTexture("UI-BGRibbon"),rect);
-			var title:TextField = new TextField(100,100,"COBACOBACOBA","Londrina",30,0xFFFF00);
+			var title:TextField = new TextField(100,100,"BALD MARKET","Londrina",30,0xFFFF00);
 			title.touchable = false;
 			title.kerning = false;
 			title.autoSize = TextFieldAutoSize.HORIZONTAL;
@@ -74,6 +124,7 @@ package p_menuBar
 			
 			//CREATE PIC BOX
 			m_picBoxes = new Vector.<Sprite>();
+			m_allPicBoxes = new Sprite();
 			var picBox:Sprite;
 			
 			
@@ -83,29 +134,31 @@ package p_menuBar
 			picImage.scaleX = picImage.scaleY = 0.75;
 			picBox = new Sprite();
 			picBox.addChild(picImage);
-			m_sprite.addChild(picBox);
+			m_allPicBoxes.addChild(picBox);
 			m_picBoxes.push(picBox);
 			
 			picImage = new Image(TG_World.assetManager.getTexture("UI-BoxBag"));
 			picImage.scaleX = picImage.scaleY = 0.75;
 			picBox = new Sprite();
 			picBox.addChild(picImage);
-			m_sprite.addChild(picBox);
+			m_allPicBoxes.addChild(picBox);
 			m_picBoxes.push(picBox);
 			
 			picImage = new Image(TG_World.assetManager.getTexture("UI-BoxBag"));
 			picImage.scaleX = picImage.scaleY = 0.75;
 			picBox = new Sprite();
 			picBox.addChild(picImage);
-			m_sprite.addChild(picBox);
+			m_allPicBoxes.addChild(picBox);
 			m_picBoxes.push(picBox);
 			
 			picImage = new Image(TG_World.assetManager.getTexture("UI-BoxBag"));
 			picImage.scaleX = picImage.scaleY = 0.75;
 			picBox = new Sprite();
 			picBox.addChild(picImage);
-			m_sprite.addChild(picBox);
+			m_allPicBoxes.addChild(picBox);
 			m_picBoxes.push(picBox);
+			
+			m_sprite.addChild(m_allPicBoxes);
 			
 			var i:int = 0;
 			var size:int = m_picBoxes.length;
@@ -115,7 +168,11 @@ package p_menuBar
 				{
 					m_picBoxes[i].x = m_picBoxes[i-1].x + m_picBoxes[i-1].width + 10;
 				}
+				
 			}
+			
+			m_allPicBoxes.x = (m_bg.width - m_allPicBoxes.width) * 0.5;
+			m_allPicBoxes.y = 50;
 			
 			//CREATE DESC BG
 			var descSprite:Sprite = new Sprite();
@@ -123,11 +180,11 @@ package p_menuBar
 			var bgQuad:Quad = new Quad(bg.width - 100,100,0xBE8F41);
 			bgQuad.alpha = 0.7;
 			descSprite.addChild(bgQuad);
-			var desc:TextField = new TextField(bgQuad.width - 10,100,"attack\nhealth\nsada\nasdad\nasdfad\nsafas\nasrda\nsadfa","Londrina",20,0xFFFFFF);
+			var desc:TextField = new TextField(bgQuad.width - 10,100,"attack + 4","Londrina",20,0xFFFFFF);
 			desc.touchable = false;
 			desc.kerning = false;
 			desc.autoSize = TextFieldAutoSize.VERTICAL;
-			desc.hAlign = HAlign.LEFT;
+			desc.hAlign = HAlign.CENTER;
 			m_desc = desc;
 			
 			bgQuad.height = desc.height + 10;
@@ -138,8 +195,7 @@ package p_menuBar
 			bg.height = bgQuad.height + 100;
 			
 			descSprite.x = (bg.width - descSprite.width) * 0.5;
-			descSprite.y = (bg.height - descSprite.height) * 0.5;
-			descSprite.y -= 10;
+			descSprite.y = m_allPicBoxes.y + m_allPicBoxes.height + 20;
 			
 			m_sprite.addChild(descSprite);
 			m_descSprite = descSprite;
@@ -159,7 +215,38 @@ package p_menuBar
 			m_buySprite.addChild(buyImage);
 			m_buySprite.addChild(buyText);
 			
+			m_buySprite.x = descSprite.x;
+			m_buySprite.y = descSprite.y + descSprite.height + 10;
+			
 			m_sprite.addChild(m_buySprite);
+			
+			
+			//CREATE NEXT BUTTON
+			m_nextSprite = new Sprite();
+			rect = new Rectangle(17.5,13,3,3);
+			var nextImage:Scale9Image = new Scale9Image(TG_World.assetManager.getTexture("UI-BGButtonWood2"),rect);
+			var nextText:TextField = new TextField(100,100,"NEXT","Londrina",30,0xFFFF00);
+			nextText.autoSize = TextFieldAutoSize.BOTH_DIRECTIONS;
+			nextText.hAlign = HAlign.CENTER;
+			nextImage.width = nextText.width + 20;
+			nextImage.height = nextText.height + 10;
+			nextText.x = (nextImage.width - nextText.width) * 0.5;
+			nextText.y = (nextImage.height - nextText.height) * 0.5;
+			m_nextSprite.addChild(nextImage);
+			m_nextSprite.addChild(nextText);
+			
+			m_nextSprite.x = descSprite.x + (descSprite.width - m_nextSprite.width);
+			m_nextSprite.y = descSprite.y + descSprite.height + 10;
+			
+			m_sprite.addChild(m_nextSprite);
+			
+			
+			m_bg.height = m_buySprite.y + m_buySprite.height + 30;
+		}
+		
+		public function getShopItems():void
+		{
+			
 		}
 		
 		public override function resize():void

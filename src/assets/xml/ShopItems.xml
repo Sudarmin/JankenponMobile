@@ -1,0 +1,62 @@
+<shopItems>
+	<shopItem> 
+		<id>heal</id>
+		<nameEnglish>Heal Potion</nameEnglish>
+		<nameIndonesia>Ramuan Sembuh</nameIndonesia>
+		<descEnglish>Fully recovers your health</descEnglish>
+		<descIndonesia>Menyembuhkan semua darah kamu</descIndonesia>
+		<imageName>ItemGreenHerb</imageName>
+		<price>1</price>
+		<priceMult>2</priceMult>
+		<alwaysShow>1</alwaysShow>
+	</shopItem>
+	<shopItem>
+		<id>health</id>
+		<nameEnglish>Max Health+</nameEnglish>
+		<nameIndonesia>Max Darah+</nameIndonesia>
+		<descEnglish>Increase your maximum health</descEnglish>
+		<descIndonesia>Menambah maximum darah kamu</descIndonesia>
+		<imageName>ItemWood</imageName>
+		<value>1</value>
+		<valueMult>2</valueMult>
+		<price>2</price>
+		<priceMult>2</priceMult>
+	</shopItem>
+	<shopItem>
+		<id>damage</id>
+		<nameEnglish>Damage+</nameEnglish>
+		<nameIndonesia>Pukulan+</nameIndonesia>
+		<descEnglish>Increase your damage</descEnglish>
+		<descIndonesia>Menambah kerusakan pukulan kamu</descIndonesia>
+		<imageName>ItemClaw</imageName>
+		<value>1</value>
+		<valueMult>2</valueMult>
+		<price>2</price>
+		<priceMult>2</priceMult>
+	</shopItem>
+	<shopItem>
+		<id>criticalChance</id>
+		<nameEnglish>Critical Chance+</nameEnglish>
+		<nameIndonesia>Kans Kritikal+</nameIndonesia>
+		<descEnglish>Increase your critical chance</descEnglish>
+		<descIndonesia>Menambah kemungkinan kritikal</descIndonesia>
+		<imageName>ItemClaw</imageName>
+		<value>1</value>
+		<maxValue>70</maxValue>
+		<valueMult>2</valueMult>
+		<price>2</price>
+		<priceMult>2</priceMult>
+	</shopItem>
+	<shopItem>
+		<id>criticalDamage</id>
+		<nameEnglish>Critical Damage+</nameEnglish>
+		<nameIndonesia>Nilai Kritikal+</nameIndonesia>
+		<descEnglish>Increase your critical damage</descEnglish>
+		<descIndonesia>Menambah kerusakan kritikal</descIndonesia>
+		<imageName>ItemClaw</imageName>
+		<value>0.1</value>
+		<valueMult>2</valueMult>
+		<price>2</price>
+		<priceMult>2</priceMult>
+	</shopItem>
+</shopItems>

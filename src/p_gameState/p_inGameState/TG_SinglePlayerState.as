@@ -137,6 +137,7 @@ package p_gameState.p_inGameState
 			
 			
 			m_shopBar = new TG_ShopBar(TG_Static.layerMenuBar,this);
+			m_shopBar.sprite.visible = false;
 			
 			m_statusInfo = new TG_StatusInfoBar(TG_Static.layerMenuBar,this);
 			m_statusInfo.sprite.visible = false;
@@ -632,6 +633,11 @@ package p_gameState.p_inGameState
 		
 		private function onDynamicLayerRotatedNPC():void
 		{
+			var middleX:Number = (TG_World.GAME_WIDTH - m_shopBar.sprite.width) * 0.5;
+			var middleY:Number = 50 * TG_World.SCALE;
+			
+		
+			TweenMax.fromTo(m_shopBar.sprite,0.5,{visible:true,x:middleX,y:-m_shopBar.sprite.height},{x:middleX,y:middleY});
 			//moveUntilPlayerAtTheMiddle
 		}
 		
@@ -3316,6 +3322,13 @@ package p_gameState.p_inGameState
 				posY = m_quadTop.height;
 				multiFunctionText.x = posX;
 				multiFunctionText.y = posY;
+			}
+			if(m_shopBar && m_shopBar.sprite.visible)
+			{
+				var middleX:Number = (TG_World.GAME_WIDTH - m_shopBar.sprite.width) * 0.5;
+				var middleY:Number = 50 * TG_World.SCALE;
+				m_shopBar.sprite.x = middleX;
+				m_shopBar.sprite.y = middleY;
 			}
 		}
 		/******************ALTERNATIVES********************************/

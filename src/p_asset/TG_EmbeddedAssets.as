@@ -57,6 +57,9 @@ package p_asset
 		[Embed(source="/assets/xml/NPC.xml",mimeType="application/octet-stream")]
 		public static const NPC:Class;
 		
+		[Embed(source="/assets/xml/ShopItems.xml",mimeType="application/octet-stream")]
+		public static const ShopItems:Class;
+		
 		public function TG_EmbeddedAssets()
 		{
 			
