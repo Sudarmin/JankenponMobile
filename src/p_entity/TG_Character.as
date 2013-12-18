@@ -399,7 +399,7 @@ package p_entity
 		}
 		public function playAnimation(label:String,loop:int = 0,duration:Number = -1):void
 		{
-			if(m_armature)
+			if(m_armature && m_armature.animation)
 			{
 				if(m_armature.animation.gotoAndPlay(label,0,duration,loop) == null)
 				{
