@@ -37,6 +37,9 @@ package p_gameState.p_inGameState
 	import starling.display.Quad;
 	import starling.display.Sprite;
 	import starling.events.Event;
+	import starling.events.Touch;
+	import starling.events.TouchEvent;
+	import starling.events.TouchPhase;
 	import starling.text.TextField;
 	import starling.utils.deg2rad;
 	import starling.utils.rad2deg;
@@ -316,18 +319,20 @@ package p_gameState.p_inGameState
 			m_char.playAnimation("celebrate");
 			var posX:Number = 0;
 			var posY:Number = 0;
-			m_statusInfo.changeText("STATUS",m_char.desc);
+			m_statusInfo.changeTexts("STATUS",m_char.descs);
 			posX = (TG_World.GAME_WIDTH - m_statusInfo.sprite.width);
 			posY = (TG_World.GAME_HEIGHT - m_statusInfo.sprite.height);
 			if(!m_statusInfo.sprite.visible)
 			{
 				TweenMax.fromTo(m_statusInfo.sprite,0.5,{x:posX,y:-m_statusInfo.sprite.height,visible:true},{x:posX,y:posY});
+				m_statusInfo.nextButton.visible = true;
+				m_statusInfo.nextLabel.visible = true;
 				m_statusInfo.nextButton.addEventListener(Event.TRIGGERED,onPlayerStatsClicked);
 			}
 			
 			
 		}
-		protected function onPlayerStatsClicked(e:Event):void
+		protected function onPlayerStatsClicked(e:Event = null):void
 		{
 			m_statusInfo.nextButton.removeEventListener(Event.TRIGGERED,onPlayerStatsClicked);
 			TweenMax.to(m_statusInfo.sprite,0.5,{y:TG_World.GAME_HEIGHT,visible:false});
@@ -436,6 +441,7 @@ package p_gameState.p_inGameState
 								createSomething("enemy");
 							}*/
 							createSomething("npc");
+							//createSomething("enemy");
 						}
 					}
 				}
@@ -633,12 +639,90 @@ package p_gameState.p_inGameState
 		
 		private function onDynamicLayerRotatedNPC():void
 		{
-			var middleX:Number = (TG_World.GAME_WIDTH - m_shopBar.sprite.width) * 0.5;
-			var middleY:Number = 50 * TG_World.SCALE;
 			
+			m_shopBar.initShopItems();
+			var nextSprite:Sprite = m_shopBar.getNextButton();
+			var buySprite:Sprite = m_shopBar.getBuyButton();
+			
+			nextSprite.addEventListener(TouchEvent.TOUCH,onBMNextClicked);
+			buySprite.addEventListener(TouchEvent.TOUCH,onBMBuyClicked);
+			
+			var middleX:Number = (TG_World.GAME_WIDTH - m_shopBar.sprite.width) * 0.5;
+			var middleY:Number = 20 * TG_World.SCALE;
 		
 			TweenMax.fromTo(m_shopBar.sprite,0.5,{visible:true,x:middleX,y:-m_shopBar.sprite.height},{x:middleX,y:middleY});
-			//moveUntilPlayerAtTheMiddle
+		
+			var posX:Number = 0;
+			var posY:Number = 0;
+			//m_statusInfo.changeText("STATUS",m_char.desc);
+			m_statusInfo.changeTexts("STATUS",m_char.descs);
+			posX = (TG_World.GAME_WIDTH - m_statusInfo.sprite.width);
+			posY = (TG_World.GAME_HEIGHT - m_statusInfo.sprite.height);
+			if(!m_statusInfo.sprite.visible)
+			{
+				TweenMax.fromTo(m_statusInfo.sprite,0.5,{x:posX,y:-m_statusInfo.sprite.height,visible:true},{x:posX,y:posY});
+				m_statusInfo.nextButton.visible = false;
+				m_statusInfo.nextLabel.visible = false;
+			}
+		}
+		
+		private function onBMNextClicked(e:TouchEvent):void
+		{
+			var nextSprite:Sprite = m_shopBar.getNextButton();
+			var buySprite:Sprite = m_shopBar.getBuyButton();
+			
+			var touch:Touch = e.getTouch(e.currentTarget as DisplayObject);
+			var num:int = int(Sprite(e.currentTarget).name);
+			
+			if(touch)
+			{
+				var touchPhase:String = touch.phase;
+				if(touchPhase == TouchPhase.ENDED)
+				{
+					nextSprite.removeEventListener(TouchEvent.TOUCH,onBMNextClicked);
+					buySprite.removeEventListener(TouchEvent.TOUCH,onBMBuyClicked);
+					m_char.playAnimation("walk");
+					m_callBackFunc = moveUntilPlayerAtTheMiddle;
+					
+					var middleX:Number = (TG_World.GAME_WIDTH - m_shopBar.sprite.width) * 0.5;
+					var middleY:Number = 20 * TG_World.SCALE;
+					
+					TweenMax.to(m_shopBar.sprite,0.5,{x:middleX,y:-m_shopBar.sprite.height,visible:true});
+					
+					if(m_statusInfo.sprite.visible)
+					{
+						TweenMax.to(m_statusInfo.sprite,0.5,{y:TG_World.GAME_HEIGHT,visible:false});
+					}
+				}
+				
+			}
+			
+		}
+		
+		private function onBMBuyClicked(e:TouchEvent):void
+		{
+			var nextSprite:Sprite = m_shopBar.getNextButton();
+			var buySprite:Sprite = m_shopBar.getBuyButton();
+			
+			var touch:Touch = e.getTouch(e.currentTarget as DisplayObject);
+			var num:int = int(Sprite(e.currentTarget).name);
+			
+			if(touch)
+			{
+				var touchPhase:String = touch.phase;
+				if(touchPhase == TouchPhase.ENDED)
+				{
+					var obj:Object = m_shopBar.buyCurrentItem();
+					m_shopBar.addBonusToUser(m_char,obj);
+					levelUpFX(m_char);
+					var textField:TextField = createText(obj.name,60,0xFF0000);
+					layerCharacter.addChild(textField);
+					textField.rotation = m_char.rotation + m_charRotOffset * -10;
+					textField.pivotY += ((m_char.sprite.pivotY*m_char.sprite.scaleY) + (60*textField.scaleY)) / textField.scaleY;
+					TweenMax.to(textField,2,{pivotY:getTFPivotYGoal(textField),alpha:0.1,onComplete:textFieldComplete,onCompleteParams:[textField]});
+				}
+				
+			}
 		}
 		
 		private function createEnemy(charID:String = ""):void
@@ -944,6 +1028,8 @@ package p_gameState.p_inGameState
 						textField.rotation = m_char.rotation;
 						textField.pivotY += ((m_char.sprite.pivotY*m_char.sprite.scaleY) + (60*textField.scaleY)) / textField.scaleY;
 						TweenMax.to(textField,duration,{delay:delayTime,pivotY:getTFPivotYGoal(textField,offsetY),alpha:0.1,onComplete:textFieldComplete,onCompleteParams:[textField]});
+						
+						trace("add crit chance");
 					}
 					
 					if(showValue2)
@@ -1624,9 +1710,10 @@ package p_gameState.p_inGameState
 		
 			if(showStat)
 			{
+				trace("show stats");
 				var posX:Number = 0;
 				var posY:Number = 0;
-				m_statusInfo.changeText("STATUS",m_char.desc);
+				m_statusInfo.changeTexts("STATUS",m_char.descs);
 				posX = (TG_World.GAME_WIDTH - m_statusInfo.sprite.width);
 				posY = (TG_World.GAME_HEIGHT - m_statusInfo.sprite.height);
 				
@@ -1826,7 +1913,7 @@ package p_gameState.p_inGameState
 			posY = m_quadTop.height;
 			TweenMax.fromTo(multiFunctionText,0.5,{x:centerX,y:-multiFunctionText.height,visible:true},{x:centerX,y:posY,ease:Circ.easeOut});
 			m_enemy.playAnimation("celebrate");
-			m_statusInfo.changeText("STATUS",m_enemy.desc);
+			m_statusInfo.changeTexts("STATUS",m_enemy.descs);
 			posX = (TG_World.GAME_WIDTH - m_statusInfo.sprite.width) * 0.5;
 			posY = (TG_World.GAME_HEIGHT - m_statusInfo.sprite.height);
 		

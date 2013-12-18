@@ -14,8 +14,8 @@
 		<id>health</id>
 		<nameEnglish>Max Health+</nameEnglish>
 		<nameIndonesia>Max Darah+</nameIndonesia>
-		<descEnglish>Increase your maximum health</descEnglish>
-		<descIndonesia>Menambah maximum darah kamu</descIndonesia>
+		<descEnglish>Increase your maximum health by</descEnglish>
+		<descIndonesia>Menambah maximum darah kamu sebanyak</descIndonesia>
 		<imageName>ItemWood</imageName>
 		<value>1</value>
 		<valueMult>2</valueMult>
@@ -26,8 +26,8 @@
 		<id>damage</id>
 		<nameEnglish>Damage+</nameEnglish>
 		<nameIndonesia>Pukulan+</nameIndonesia>
-		<descEnglish>Increase your damage</descEnglish>
-		<descIndonesia>Menambah kerusakan pukulan kamu</descIndonesia>
+		<descEnglish>Increase your damage by</descEnglish>
+		<descIndonesia>Menambah kerusakan pukulan kamu sebanyak</descIndonesia>
 		<imageName>ItemClaw</imageName>
 		<value>1</value>
 		<valueMult>2</valueMult>
@@ -38,9 +38,9 @@
 		<id>criticalChance</id>
 		<nameEnglish>Critical Chance+</nameEnglish>
 		<nameIndonesia>Kans Kritikal+</nameIndonesia>
-		<descEnglish>Increase your critical chance</descEnglish>
-		<descIndonesia>Menambah kemungkinan kritikal</descIndonesia>
-		<imageName>ItemClaw</imageName>
+		<descEnglish>Increase your critical chance by</descEnglish>
+		<descIndonesia>Menambah kemungkinan kritikal sebanyak</descIndonesia>
+		<imageName>ItemSpiderEgg</imageName>
 		<value>1</value>
 		<maxValue>70</maxValue>
 		<valueMult>2</valueMult>
@@ -51,9 +51,213 @@
 		<id>criticalDamage</id>
 		<nameEnglish>Critical Damage+</nameEnglish>
 		<nameIndonesia>Nilai Kritikal+</nameIndonesia>
-		<descEnglish>Increase your critical damage</descEnglish>
-		<descIndonesia>Menambah kerusakan kritikal</descIndonesia>
-		<imageName>ItemClaw</imageName>
+		<descEnglish>Increase your critical damage by</descEnglish>
+		<descIndonesia>Menambah kerusakan kritikal sebanyak</descIndonesia>
+		<imageName>ItemFeather</imageName>
+		<value>0.1</value>
+		<valueMult>2</valueMult>
+		<price>2</price>
+		<priceMult>2</priceMult>
+	</shopItem>
+	<shopItem>
+		<id>poisonChance</id>
+		<nameEnglish>Poison Chance+</nameEnglish>
+		<nameIndonesia>Kans Racun+</nameIndonesia>
+		<descEnglish>Increase your poison chance by</descEnglish>
+		<descIndonesia>Menambah kemungkinan racun sebanyak</descIndonesia>
+		<imageName>ItemFeather</imageName>
+		<value>0.1</value>
+		<valueMult>2</valueMult>
+		<price>2</price>
+		<priceMult>2</priceMult>
+	</shopItem>
+	<shopItem>
+		<id>poisonDamage</id>
+		<nameEnglish>Poison Damage+</nameEnglish>
+		<nameIndonesia>Nilai Kritikal+</nameIndonesia>
+		<descEnglish>Increase your critical damage by</descEnglish>
+		<descIndonesia>Menambah kerusakan kritikal sebanyak</descIndonesia>
+		<imageName>ItemFeather</imageName>
+		<value>0.1</value>
+		<valueMult>2</valueMult>
+		<price>2</price>
+		<priceMult>2</priceMult>
+	</shopItem>
+	<shopItem>
+		<id>healChance</id>
+		<nameEnglish>Heal Chance+</nameEnglish>
+		<nameIndonesia>Nilai Kritikal+</nameIndonesia>
+		<descEnglish>Increase your critical damage by</descEnglish>
+		<descIndonesia>Menambah kerusakan kritikal sebanyak</descIndonesia>
+		<imageName>ItemFeather</imageName>
+		<value>0.1</value>
+		<valueMult>2</valueMult>
+		<price>2</price>
+		<priceMult>2</priceMult>
+	</shopItem>
+	<shopItem>
+		<id>healValue</id>
+		<nameEnglish>Heal Value+</nameEnglish>
+		<nameIndonesia>Nilai Kritikal+</nameIndonesia>
+		<descEnglish>Increase your critical damage by</descEnglish>
+		<descIndonesia>Menambah kerusakan kritikal sebanyak</descIndonesia>
+		<imageName>ItemFeather</imageName>
+		<value>0.1</value>
+		<valueMult>2</valueMult>
+		<price>2</price>
+		<priceMult>2</priceMult>
+	</shopItem>
+	<shopItem>
+		<id>evadeChance</id>
+		<nameEnglish>Evade Chance+</nameEnglish>
+		<nameIndonesia>Nilai Kritikal+</nameIndonesia>
+		<descEnglish>Increase your critical damage by</descEnglish>
+		<descIndonesia>Menambah kerusakan kritikal sebanyak</descIndonesia>
+		<imageName>ItemFeather</imageName>
+		<value>0.1</value>
+		<valueMult>2</valueMult>
+		<price>2</price>
+		<priceMult>2</priceMult>
+	</shopItem>
+	<shopItem>
+		<id>dmgReturnChance</id>
+		<nameEnglish>Heal Chance+</nameEnglish>
+		<nameIndonesia>Nilai Kritikal+</nameIndonesia>
+		<descEnglish>Increase your critical damage by</descEnglish>
+		<descIndonesia>Menambah kerusakan kritikal sebanyak</descIndonesia>
+		<imageName>ItemFeather</imageName>
+		<value>0.1</value>
+		<valueMult>2</valueMult>
+		<price>2</price>
+		<priceMult>2</priceMult>
+	</shopItem>
+	<shopItem>
+		<id>dmgReturnValue</id>
+		<nameEnglish>Heal Value+</nameEnglish>
+		<nameIndonesia>Nilai Kritikal+</nameIndonesia>
+		<descEnglish>Increase your critical damage by</descEnglish>
+		<descIndonesia>Menambah kerusakan kritikal sebanyak</descIndonesia>
+		<imageName>ItemFeather</imageName>
+		<value>0.1</value>
+		<valueMult>2</valueMult>
+		<price>2</price>
+		<priceMult>2</priceMult>
+	</shopItem>
+	<shopItem>
+		<id>healChance</id>
+		<nameEnglish>Heal Chance+</nameEnglish>
+		<nameIndonesia>Nilai Kritikal+</nameIndonesia>
+		<descEnglish>Increase your critical damage by</descEnglish>
+		<descIndonesia>Menambah kerusakan kritikal sebanyak</descIndonesia>
+		<imageName>ItemFeather</imageName>
+		<value>0.1</value>
+		<valueMult>2</valueMult>
+		<price>2</price>
+		<priceMult>2</priceMult>
+	</shopItem>
+	<shopItem>
+		<id>healValue</id>
+		<nameEnglish>Heal Value+</nameEnglish>
+		<nameIndonesia>Nilai Kritikal+</nameIndonesia>
+		<descEnglish>Increase your critical damage by</descEnglish>
+		<descIndonesia>Menambah kerusakan kritikal sebanyak</descIndonesia>
+		<imageName>ItemFeather</imageName>
+		<value>0.1</value>
+		<valueMult>2</valueMult>
+		<price>2</price>
+		<priceMult>2</priceMult>
+	</shopItem>
+	<shopItem>
+		<id>lifeStealValue</id>
+		<nameEnglish>Heal Value+</nameEnglish>
+		<nameIndonesia>Nilai Kritikal+</nameIndonesia>
+		<descEnglish>Increase your critical damage by</descEnglish>
+		<descIndonesia>Menambah kerusakan kritikal sebanyak</descIndonesia>
+		<imageName>ItemFeather</imageName>
+		<value>0.1</value>
+		<valueMult>2</valueMult>
+		<price>2</price>
+		<priceMult>2</priceMult>
+	</shopItem>
+	<shopItem>
+		<id>magicChance</id>
+		<nameEnglish>Heal Value+</nameEnglish>
+		<nameIndonesia>Nilai Kritikal+</nameIndonesia>
+		<descEnglish>Increase your critical damage by</descEnglish>
+		<descIndonesia>Menambah kerusakan kritikal sebanyak</descIndonesia>
+		<imageName>ItemFeather</imageName>
+		<value>0.1</value>
+		<valueMult>2</valueMult>
+		<price>2</price>
+		<priceMult>2</priceMult>
+	</shopItem>
+	<shopItem>
+		<id>magicDamage</id>
+		<nameEnglish>Heal Value+</nameEnglish>
+		<nameIndonesia>Nilai Kritikal+</nameIndonesia>
+		<descEnglish>Increase your critical damage by</descEnglish>
+		<descIndonesia>Menambah kerusakan kritikal sebanyak</descIndonesia>
+		<imageName>ItemFeather</imageName>
+		<value>0.1</value>
+		<valueMult>2</valueMult>
+		<price>2</price>
+		<priceMult>2</priceMult>
+	</shopItem>
+	<shopItem>
+		<id>reverseChance</id>
+		<nameEnglish>Heal Chance+</nameEnglish>
+		<nameIndonesia>Nilai Kritikal+</nameIndonesia>
+		<descEnglish>Increase your critical damage by</descEnglish>
+		<descIndonesia>Menambah kerusakan kritikal sebanyak</descIndonesia>
+		<imageName>ItemFeather</imageName>
+		<value>0.1</value>
+		<valueMult>2</valueMult>
+		<price>2</price>
+		<priceMult>2</priceMult>
+	</shopItem>
+	<shopItem>
+		<id>strengthenChance</id>
+		<nameEnglish>Heal Chance+</nameEnglish>
+		<nameIndonesia>Nilai Kritikal+</nameIndonesia>
+		<descEnglish>Increase your critical damage by</descEnglish>
+		<descIndonesia>Menambah kerusakan kritikal sebanyak</descIndonesia>
+		<imageName>ItemFeather</imageName>
+		<value>0.1</value>
+		<valueMult>2</valueMult>
+		<price>2</price>
+		<priceMult>2</priceMult>
+	</shopItem>
+	<shopItem>
+		<id>strengthenValue</id>
+		<nameEnglish>Heal Chance+</nameEnglish>
+		<nameIndonesia>Nilai Kritikal+</nameIndonesia>
+		<descEnglish>Increase your critical damage by</descEnglish>
+		<descIndonesia>Menambah kerusakan kritikal sebanyak</descIndonesia>
+		<imageName>ItemFeather</imageName>
+		<value>0.1</value>
+		<valueMult>2</valueMult>
+		<price>2</price>
+		<priceMult>2</priceMult>
+	</shopItem>
+	<shopItem>
+		<id>weakenChance</id>
+		<nameEnglish>Heal Chance+</nameEnglish>
+		<nameIndonesia>Nilai Kritikal+</nameIndonesia>
+		<descEnglish>Increase your critical damage by</descEnglish>
+		<descIndonesia>Menambah kerusakan kritikal sebanyak</descIndonesia>
+		<imageName>ItemFeather</imageName>
+		<value>0.1</value>
+		<valueMult>2</valueMult>
+		<price>2</price>
+		<priceMult>2</priceMult>
+	</shopItem>
+	<shopItem>
+		<id>weakenValue</id>
+		<nameEnglish>Heal Chance+</nameEnglish>
+		<nameIndonesia>Nilai Kritikal+</nameIndonesia>
+		<descEnglish>Increase your critical damage by</descEnglish>
+		<descIndonesia>Menambah kerusakan kritikal sebanyak</descIndonesia>
+		<imageName>ItemFeather</imageName>
 		<value>0.1</value>
 		<valueMult>2</valueMult>
 		<price>2</price>

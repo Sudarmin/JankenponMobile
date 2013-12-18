@@ -42,7 +42,7 @@ package p_menuBar
 			//CREATE BACKGROUND
 			rect = new Rectangle(97.25,90,20,20);
 			var bg:Scale9Image = new Scale9Image(TG_World.assetManager.getTexture("UI-BGFrame"),rect);
-			bg.width = 400;
+			bg.width = 300;
 			bg.height = 200;
 			m_sprite.addChild(bg);
 			m_bg = bg;
@@ -124,6 +124,99 @@ package p_menuBar
 			m_sprite.scaleX = m_sprite.scaleY = TG_World.SCALE_ROUNDED * 0.5;
 		}
 		
+		public function changeTexts(title:String,descs:Array):void
+		{
+			m_title.text = title;
+			m_desc.text = "";
+			
+			var i:int = 0;
+			var size:int = 0;
+			
+			m_descSprite.removeChildren(0,-1,true);
+			
+			i = 0;
+			size = descs["desc"].length;
+			var textFields:Array = [];
+			for(i;i<size;i++)
+			{
+				var textField:TextField = new TextField(50,50,descs["desc"][i],"Londrina",20,0xFFFFFF);
+				//textField.border = true;
+				textField.touchable = false;
+				textField.kerning = false;
+				textField.autoSize = TextFieldAutoSize.BOTH_DIRECTIONS;
+				textField.hAlign = HAlign.LEFT;
+				textFields.push(textField);
+				
+				if(i>0)
+				{
+					textField.y = textFields[i-1].y + textFields[i-1].height + 2;
+				}
+				var textField2:TextField;
+				var image:Image;
+				if(descs["diff"][i] != 0)
+				{
+					
+					textField2 = new TextField(50,50,descs["diff"][i],"Londrina",20,0x00CCCC);
+					
+					//textField2.border = true;
+					textField2.touchable = false;
+					textField2.kerning = false;
+					textField2.autoSize = TextFieldAutoSize.BOTH_DIRECTIONS;
+					textField2.hAlign = HAlign.LEFT;
+				
+					image = new Image(TG_World.assetManager.getTexture("ArrowIncrease"));
+					image.x = textField.x + textField.width + 5;
+					image.y = textField.y + 5;
+					image.color = 0x0000AA;
+					
+					textField2.y = textField.y;
+					textField2.x = image.x + image.width + 5;
+				}
+				
+				m_descSprite.addChild(textField);
+				if(textField2)
+				{
+					m_descSprite.addChild(textField2);
+				}
+				if(image)
+				{
+					m_descSprite.addChild(image);
+				}
+				
+			}
+			
+			m_ribbon.width = m_title.width + 50;
+			m_title.x = (m_ribbon.width - m_title.width) * 0.5;
+			m_title.y = (m_ribbon.height - m_title.height) * 0.5;
+			m_title.y -= 5;
+			
+			
+			
+			
+			i = 0;
+			size = textFields.length;
+			for(i;i<size;i++)
+			{
+				//textFields[i].x = (m_bgQuad.width - textFields[i].width) * 0.5;
+				//textFields[i].y = (m_bgQuad.height - textFields[i].height) * 0.5;
+			}
+			
+			m_bgQuad.height = m_descSprite.height + 10;
+			
+			m_bg.height = m_bgQuad.height + 120;
+			
+			m_descSprite.x = (m_bg.width - m_descSprite.width) * 0.5;
+			m_descSprite.y = (m_bg.height - m_descSprite.height) * 0.5;
+			m_descSprite.y -= 15;
+			
+			m_nextSprite.y = m_bg.height - m_nextSprite.height;
+			m_nextSprite.y -= 15;
+			m_nextSprite.x = (m_bg.width - m_nextSprite.width) * 0.5;
+			
+			m_ribbonSprite.y = -10;
+			m_ribbonSprite.x = (m_bg.width - m_ribbonSprite.width) * 0.5;
+			
+		}
 		public function changeText(title:String,desc:String):void
 		{
 			m_title.text = title;
@@ -157,6 +250,10 @@ package p_menuBar
 		public function get nextButton():ButtonExtended
 		{
 			return m_nextButton;
+		}
+		public function get nextLabel():Sprite
+		{
+			return m_nextSprite;
 		}
 	}
 }

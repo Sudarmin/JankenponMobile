@@ -1,19 +1,29 @@
 package p_menuBar
 {
+	import com.greensock.TimelineMax;
+	import com.greensock.TweenMax;
+	
 	import flash.geom.Rectangle;
 	
 	import p_engine.p_gameState.TG_GameState;
 	import p_engine.p_menuBar.TG_MenuBar;
 	import p_engine.p_singleton.TG_World;
 	
+	import p_entity.TG_Character;
+	
 	import p_static.TG_Static;
 	
 	import starling.display.ButtonExtended;
+	import starling.display.DisplayObject;
 	import starling.display.DisplayObjectContainer;
 	import starling.display.Image;
 	import starling.display.Quad;
 	import starling.display.Sprite;
+	import starling.events.Touch;
+	import starling.events.TouchEvent;
+	import starling.events.TouchPhase;
 	import starling.extensions.Scale9Image;
+	import starling.filters.ColorMatrixFilter;
 	import starling.text.TextField;
 	import starling.text.TextFieldAutoSize;
 	import starling.utils.HAlign;
@@ -33,9 +43,18 @@ package p_menuBar
 		private var m_allPicBoxes:Sprite;
 		private var m_buySprite:Sprite;
 		private var m_nextSprite:Sprite;
+		private var m_currShopItems:Array;
+		private var m_maxItems:int = 4;
+		
+		private var m_currentChosen:int = 0;
+		private var m_previousBox:Sprite;
+		private var m_animation:TweenMax;
+		
+		private var m_filter:ColorMatrixFilter;
 		
 		public static var shopItems:Array;
 		public static var boughtItems:Array;
+		public static var alreadyAtShopBar:Array;
 		
 		public function TG_ShopBar(parent:DisplayObjectContainer, gameState:TG_GameState)
 		{
@@ -43,6 +62,7 @@ package p_menuBar
 			{
 				shopItems = [];
 				boughtItems = [];
+				alreadyAtShopBar = [];
 				var xml:XML = TG_World.assetManager.getXml("ShopItems");
 				var i:int = 0;
 				var size:int = xml.shopItem.length();
@@ -73,18 +93,21 @@ package p_menuBar
 					}
 					obj.desc = chosenString;
 					obj.imageName = currXML.imageName;
-					obj.price = currXML.price;
-					obj.priceMult = currXML.priceMult;
-					obj.alwaysShow = currXML.alwaysShow;
-					obj.value = currXML.value;
-					obj.valueMult = currXML.valueMult;
-					obj.maxValue = currXML.maxValue;
+					obj.price = Number(currXML.price);
+					obj.priceMult = Number(currXML.priceMult);
+					obj.alwaysShow = int(currXML.alwaysShow);
+					obj.value = Number(currXML.value);
+					obj.valueMult = Number(currXML.valueMult);
+					obj.maxValue = Number(currXML.maxValue);
+					obj.boughtCounter = 0;
+					obj.bought = false;
 					shopItems.push(obj);
 					shopItems[obj.id] = obj;
 				}
 			}
 			
 			super(parent, gameState);
+			initFilter();
 		}
 		
 		protected override function initSprite():void
@@ -136,6 +159,8 @@ package p_menuBar
 			picBox.addChild(picImage);
 			m_allPicBoxes.addChild(picBox);
 			m_picBoxes.push(picBox);
+			picBox.pivotX = picBox.width * 0.5;
+			picBox.pivotY = picBox.height * 0.5;
 			
 			picImage = new Image(TG_World.assetManager.getTexture("UI-BoxBag"));
 			picImage.scaleX = picImage.scaleY = 0.75;
@@ -143,6 +168,8 @@ package p_menuBar
 			picBox.addChild(picImage);
 			m_allPicBoxes.addChild(picBox);
 			m_picBoxes.push(picBox);
+			picBox.pivotX = picBox.width * 0.5;
+			picBox.pivotY = picBox.height * 0.5;
 			
 			picImage = new Image(TG_World.assetManager.getTexture("UI-BoxBag"));
 			picImage.scaleX = picImage.scaleY = 0.75;
@@ -150,6 +177,8 @@ package p_menuBar
 			picBox.addChild(picImage);
 			m_allPicBoxes.addChild(picBox);
 			m_picBoxes.push(picBox);
+			picBox.pivotX = picBox.width * 0.5;
+			picBox.pivotY = picBox.height * 0.5;
 			
 			picImage = new Image(TG_World.assetManager.getTexture("UI-BoxBag"));
 			picImage.scaleX = picImage.scaleY = 0.75;
@@ -157,6 +186,8 @@ package p_menuBar
 			picBox.addChild(picImage);
 			m_allPicBoxes.addChild(picBox);
 			m_picBoxes.push(picBox);
+			picBox.pivotX = picBox.width * 0.5;
+			picBox.pivotY = picBox.height * 0.5;
 			
 			m_sprite.addChild(m_allPicBoxes);
 			
@@ -166,13 +197,16 @@ package p_menuBar
 			{
 				if(i>0)
 				{
-					m_picBoxes[i].x = m_picBoxes[i-1].x + m_picBoxes[i-1].width + 10;
+					m_picBoxes[i].x = m_picBoxes[i-1].x + (m_picBoxes[i-1].width * 0.5) + 10;
 				}
-				
+				m_picBoxes[i].x += m_picBoxes[i].pivotX;
+				m_picBoxes[i].y += m_picBoxes[i].pivotY;
 			}
 			
 			m_allPicBoxes.x = (m_bg.width - m_allPicBoxes.width) * 0.5;
 			m_allPicBoxes.y = 50;
+			
+			m_allPicBoxes.useHandCursor = true;
 			
 			//CREATE DESC BG
 			var descSprite:Sprite = new Sprite();
@@ -214,6 +248,8 @@ package p_menuBar
 			buyText.y = (buyImage.height - buyText.height) * 0.5;
 			m_buySprite.addChild(buyImage);
 			m_buySprite.addChild(buyText);
+			m_buySprite.pivotX = m_buySprite.width * 0.5;
+			m_buySprite.pivotY = m_buySprite.height * 0.5;
 			
 			m_buySprite.x = descSprite.x;
 			m_buySprite.y = descSprite.y + descSprite.height + 10;
@@ -235,24 +271,431 @@ package p_menuBar
 			m_nextSprite.addChild(nextImage);
 			m_nextSprite.addChild(nextText);
 			
+			m_nextSprite.pivotX = m_nextSprite.width * 0.5;
+			m_nextSprite.pivotY = m_nextSprite.height * 0.5;
+			
 			m_nextSprite.x = descSprite.x + (descSprite.width - m_nextSprite.width);
 			m_nextSprite.y = descSprite.y + descSprite.height + 10;
 			
 			m_sprite.addChild(m_nextSprite);
 			
+			m_nextSprite.useHandCursor = true;
+			m_buySprite.useHandCursor = true;
+			
 			
 			m_bg.height = m_buySprite.y + m_buySprite.height + 30;
+			
 		}
 		
-		public function getShopItems():void
+		private final function initFilter():void
 		{
+			m_filter = new ColorMatrixFilter();
+			m_filter.adjustSaturation(-1);
+		}
+		private final function destroyFilter():void
+		{
+			if(m_filter)
+			{
+				m_filter.dispose();
+			}
+		}
+		private final function reverseAnimation():void
+		{
+			m_animation.reverse(true);
+		}
+		private final function resumeAnimation():void
+		{
+			m_animation.play();
+		}
+		
+		protected override function initListeners():void
+		{
+			super.initListeners();
 			
+			var i:int = 0;
+			var size:int = m_picBoxes.length;
+			var sprite:Sprite;
+			for(i;i<size;i++)
+			{
+				sprite = m_picBoxes[i];
+				sprite.addEventListener(TouchEvent.TOUCH,onPicTouched);
+			}
+			
+			m_nextSprite.addEventListener(TouchEvent.TOUCH,onNextTouched);
+			m_buySprite.addEventListener(TouchEvent.TOUCH,onBuyTouched);
+		}
+		
+		protected override function destroyListeners():void
+		{
+			super.destroyListeners();
+			
+			var i:int = 0;
+			var size:int = m_picBoxes.length;
+			var sprite:Sprite;
+			for(i;i<size;i++)
+			{
+				sprite = m_picBoxes[i];
+				sprite.removeEventListener(TouchEvent.TOUCH,onPicTouched);
+			}
+			m_nextSprite.removeEventListener(TouchEvent.TOUCH,onNextTouched);
+			m_buySprite.removeEventListener(TouchEvent.TOUCH,onBuyTouched);
+		}
+		
+		private final function onNextTouched(e:TouchEvent):void
+		{
+			var touch:Touch = e.getTouch(e.currentTarget as DisplayObject);
+			var num:int = int(Sprite(e.currentTarget).name);
+			
+			if(touch)
+			{
+				var touchPhase:String = touch.phase;
+				if(touchPhase == TouchPhase.HOVER)
+				{
+					m_nextSprite.scaleX = m_nextSprite.scaleY = 1.25;
+				}
+				else if(touchPhase == TouchPhase.BEGAN)
+				{
+					m_nextSprite.scaleX = m_nextSprite.scaleY = 1.1;
+				}
+				else
+				{
+					m_nextSprite.scaleX = m_nextSprite.scaleY = 1;
+				}
+			}
+			if(!e.interactsWith(m_nextSprite))
+			{
+				m_nextSprite.scaleX = m_nextSprite.scaleY = 1;
+			}
+		}
+		private final function onBuyTouched(e:TouchEvent):void
+		{
+			var touch:Touch = e.getTouch(e.currentTarget as DisplayObject);
+			var num:int = int(Sprite(e.currentTarget).name);
+			if(touch)
+			{
+				var touchPhase:String = touch.phase;
+				if(touchPhase == TouchPhase.HOVER)
+				{
+					m_buySprite.scaleX = m_buySprite.scaleY = 1.25;
+				}
+				else if(touchPhase == TouchPhase.BEGAN)
+				{
+					m_buySprite.scaleX = m_buySprite.scaleY = 1.1;
+				}
+				else
+				{
+					m_buySprite.scaleX = m_buySprite.scaleY = 1;
+				}
+			}
+			
+			if(!e.interactsWith(m_buySprite))
+			{
+				m_buySprite.scaleX = m_buySprite.scaleY = 1;
+			}
+		}
+		private final function onPicTouched(e:TouchEvent):void
+		{
+			var touch:Touch = e.getTouch(e.currentTarget as DisplayObject);
+			var num:int = int(Sprite(e.currentTarget).name);
+			if(touch)
+			{
+				var touchPhase:String = touch.phase;
+				if(touchPhase == TouchPhase.BEGAN)
+				{
+					chooseOne(num);
+				}
+			}
+			
+		}
+		
+		public function initShopItems():void
+		{
+			m_currShopItems = [];
+			var rand:int = 0;
+			var obj:Object;
+			while(shopItems.length < m_maxItems)
+			{
+				rand = (Math.random() * 10000) % boughtItems.length;
+				obj = boughtItems[rand];
+				shopItems.push(obj);
+				shopItems[obj.id] = obj;
+				
+				boughtItems.splice(rand,1);
+			}
+			
+			
+			while(m_currShopItems.length < m_maxItems)
+			{
+				rand = (Math.random() * 10000) % shopItems.length;
+				obj = shopItems[rand];
+				alreadyAtShopBar.push(obj);
+				shopItems.splice(rand,1);
+				
+				m_currShopItems.push(obj);
+				
+				obj.bought = false;
+			}
+			
+			var counter:int = 0;
+			var sprite:Sprite;
+			while(counter < m_maxItems)
+			{
+				sprite = m_picBoxes[counter];
+				sprite.filter = null;
+				
+				var image:Image = sprite.getChildByName("image") as Image;
+				if(image)image.parent.removeChild(image);
+				
+				obj = m_currShopItems[counter];
+				image = new Image(TG_World.assetManager.getTexture(obj.imageName));
+				image.x = (sprite.width - image.width) * 0.5;
+				image.y = (sprite.height - image.height) * 0.5;
+				
+				sprite.addChild(image);
+				sprite.name = ""+counter;
+				image.name = "image";
+				counter++;
+			}
+			
+			chooseOne(0);
+		}
+		
+		public function chooseOne(num:int):void
+		{
+			if(m_animation)
+			{
+				m_animation.kill();
+			}
+			if(m_previousBox)
+			{
+				m_previousBox.scaleX = m_previousBox.scaleY = 1;
+			}
+			m_currentChosen = num;
+			m_previousBox = m_picBoxes[num];
+			
+			if(!m_currShopItems[m_currentChosen].bought)
+			{
+				m_animation = new TweenMax(m_picBoxes[num],0.3,{scaleX:1.25,scaleY:1.25,onComplete:reverseAnimation,onReverseComplete:resumeAnimation});
+				m_buySprite.visible = true;
+			}
+			else
+			{
+				m_buySprite.visible = false;
+			}
+			
+			
+			var str:String = showDesc(m_currShopItems[m_currentChosen]);
+			m_desc.text = str;
+		
+			resize();
+		}
+		
+		
+		
+		private function showDesc(obj:Object):String
+		{
+			var str:String = "";
+			str = obj.name+"\n";
+			if(obj.id == "heal")
+			{
+				str += obj.desc+"\n";
+			}
+			else
+			{
+				var value:Number = obj.value + (obj.value * obj.valueMult * obj.boughtCounter);
+				str += obj.desc +" "+value+"\n";
+			}
+			
+			var price:Number = obj.price + (obj.price * obj.priceMult * obj.boughtCounter);
+			str += "Price : "+price;
+			
+			return str;
+		}
+		
+		public override function destroy():void
+		{
+			super.destroy();
+			destroyFilter();
+			if(m_animation)
+			{
+				m_animation.kill();
+			}
+		}
+		
+		public function getShopItems():Array
+		{
+			return m_currShopItems;
 		}
 		
 		public override function resize():void
 		{
+			m_bgQuad.height = m_desc.height + 10;
+			m_desc.x = (m_bgQuad.width - m_desc.width) * 0.5;
+			m_desc.y = (m_bgQuad.height - m_desc.height) * 0.5;
+			
+			m_descSprite.x = (m_bg.width - m_descSprite.width) * 0.5;
+			m_descSprite.y = m_allPicBoxes.y + m_allPicBoxes.height + 20;
+			
+			m_buySprite.x = m_descSprite.x;
+			m_buySprite.y = m_descSprite.y +m_descSprite.height + 10;
+			m_buySprite.x += m_buySprite.pivotX;
+			m_buySprite.y += m_buySprite.pivotY;
+			
+			m_nextSprite.x = m_descSprite.x + (m_descSprite.width - m_nextSprite.width);
+			m_nextSprite.y = m_descSprite.y + m_descSprite.height + 10;
+			m_nextSprite.x += m_nextSprite.pivotX;
+			m_nextSprite.y += m_nextSprite.pivotY;
+			
+			m_bg.height = m_buySprite.y + m_buySprite.height + 20;
+			
 			super.resize();
 			m_sprite.scaleX = m_sprite.scaleY = TG_World.SCALE_ROUNDED * 0.5;
+		}
+		
+		public function getNextButton():Sprite
+		{
+			return m_nextSprite;
+		}
+		
+		public function getBuyButton():Sprite
+		{
+			return m_buySprite;
+		}
+		
+		public function buyCurrentItem():Object
+		{
+			var obj:Object;
+			var usedObj:Object;
+			usedObj = m_currShopItems[m_currentChosen];
+			obj = usedObj;
+			if(!obj.bought)
+			{
+				m_picBoxes[m_currentChosen].filter = m_filter;
+				obj.bought = true;
+				obj.boughtCounter++;
+				m_buySprite.visible = false;
+				if(m_animation)
+				{
+					m_animation.kill();
+				}
+				if(m_picBoxes[m_currentChosen])
+				{
+					m_picBoxes[m_currentChosen].scaleX = m_picBoxes[m_currentChosen].scaleY = 1;
+				}
+				
+				var counter:int = 0;
+				var currChosen:int = m_currentChosen;
+				while(counter < m_maxItems && obj.bought)
+				{
+					currChosen++;
+					if(currChosen >= m_currShopItems.length)
+					{
+						currChosen = 0;
+					}
+					obj = m_currShopItems[currChosen];
+					counter++;
+				}
+				
+				chooseOne(currChosen);
+			}
+			return usedObj;
+		}
+		
+		public function addBonusToUser(char:TG_Character,obj:Object):void
+		{
+			switch(""+obj.id)
+			{
+				
+				case "heal":
+					char.health = char.initialHealth;
+					break;
+				case "health":
+					char.healthBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
+					char.recalculateStats();
+					break;
+				case "damage":
+					char.damageBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
+					char.recalculateStats();
+					break;
+				case "criticalChance":
+					char.criticalChanceBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
+					char.recalculateStats();
+					break;
+				case "criticalDamage":
+					char.criticalValueBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
+					char.recalculateStats();
+					break;
+				case "poisonChance":
+					char.poisonChanceBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
+					char.recalculateStats();
+					break;
+				case "poisonDamage":
+					char.poisonValueBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
+					char.recalculateStats();
+					break;
+				case "healChance":
+					char.healChanceBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
+					char.recalculateStats();
+					break;
+				case "healValue":
+					char.healValueBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
+					char.recalculateStats();
+					break;
+				case "evadeChance":
+					char.evadeChanceBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
+					char.recalculateStats();
+					break;
+				case "dmgReturnChance":
+					char.dmgReturnChanceBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
+					char.recalculateStats();
+					break;
+				case "dmgReturnValue":
+					char.dmgReturnValueBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
+					char.recalculateStats();
+					break;
+				case "healChance":
+					char.healChanceBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
+					char.recalculateStats();
+					break;
+				case "healValue":
+					char.healValueBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
+					char.recalculateStats();
+					break;
+				case "lifeStealValue":
+					char.lifestealValueBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
+					char.recalculateStats();
+					break;
+				case "magicChance":
+					char.magicChanceBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
+					char.recalculateStats();
+					break;
+				case "magicDamage":
+					char.magicValueBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
+					char.recalculateStats();
+					break;
+				case "reverseChance":
+					char.reverseChanceBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
+					char.recalculateStats();
+					break;
+				case "strengthenChance":
+					char.strengthenChanceBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
+					char.recalculateStats();
+					break;
+				case "strengthenValue":
+					char.strengthenValueBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
+					char.recalculateStats();
+					break;
+				case "weakenChance":
+					char.weakenChanceBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
+					char.recalculateStats();
+					break;
+				case "weakenValue":
+					char.weakenValueBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
+					char.recalculateStats();
+					break;
+				default :
+					break;
+			}
 		}
 	}
 }
