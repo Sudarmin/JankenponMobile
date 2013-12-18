@@ -54,7 +54,7 @@ package p_menuBar
 		
 		public static var shopItems:Array;
 		public static var boughtItems:Array;
-		public static var alreadyAtShopBar:Array;
+		//public static var alreadyAtShopBar:Array;
 		
 		public function TG_ShopBar(parent:DisplayObjectContainer, gameState:TG_GameState)
 		{
@@ -62,7 +62,7 @@ package p_menuBar
 			{
 				shopItems = [];
 				boughtItems = [];
-				alreadyAtShopBar = [];
+				//alreadyAtShopBar = [];
 				var xml:XML = TG_World.assetManager.getXml("ShopItems");
 				var i:int = 0;
 				var size:int = xml.shopItem.length();
@@ -413,7 +413,9 @@ package p_menuBar
 			m_currShopItems = [];
 			var rand:int = 0;
 			var obj:Object;
-			while(shopItems.length < m_maxItems)
+			
+			//IF ALL SHOP ITEMS HAVE BEEN BOUGHT
+			while(shopItems.length < m_maxItems && boughtItems.length > 0)
 			{
 				rand = (Math.random() * 10000) % boughtItems.length;
 				obj = boughtItems[rand];
@@ -423,12 +425,12 @@ package p_menuBar
 				boughtItems.splice(rand,1);
 			}
 			
-			
-			while(m_currShopItems.length < m_maxItems)
+			//GET CURRENT SHOP ITEMS FROM SHOP ITEMS
+			while(m_currShopItems.length < m_maxItems && shopItems.length > 0)
 			{
 				rand = (Math.random() * 10000) % shopItems.length;
 				obj = shopItems[rand];
-				alreadyAtShopBar.push(obj);
+				//alreadyAtShopBar.push(obj);
 				shopItems.splice(rand,1);
 				
 				m_currShopItems.push(obj);
@@ -438,7 +440,7 @@ package p_menuBar
 			
 			var counter:int = 0;
 			var sprite:Sprite;
-			while(counter < m_maxItems)
+			while(counter < m_currShopItems.length)
 			{
 				sprite = m_picBoxes[counter];
 				sprite.filter = null;
@@ -458,6 +460,11 @@ package p_menuBar
 			}
 			
 			chooseOne(0);
+		}
+		
+		public function doneBuyingItems():void
+		{
+			
 		}
 		
 		public function chooseOne(num:int):void
@@ -503,6 +510,7 @@ package p_menuBar
 			else
 			{
 				var value:Number = obj.value + (obj.value * obj.valueMult * obj.boughtCounter);
+				value = int(value * 100)/100;
 				str += obj.desc +" "+value+"\n";
 			}
 			
@@ -583,6 +591,8 @@ package p_menuBar
 					m_picBoxes[m_currentChosen].scaleX = m_picBoxes[m_currentChosen].scaleY = 1;
 				}
 				
+				boughtItems.push(obj);
+				
 				var counter:int = 0;
 				var currChosen:int = m_currentChosen;
 				while(counter < m_maxItems && obj.bought)
@@ -611,86 +621,107 @@ package p_menuBar
 					break;
 				case "health":
 					char.healthBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
+					char.healthBonus = int(char.healthBonus);
 					char.recalculateStats();
 					break;
 				case "damage":
 					char.damageBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
+					char.damageBonus = int(char.damageBonus);
 					char.recalculateStats();
 					break;
 				case "criticalChance":
 					char.criticalChanceBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
+					char.criticalChanceBonus = (int(char.criticalChanceBonus * 100) / 100);
 					char.recalculateStats();
 					break;
 				case "criticalDamage":
 					char.criticalValueBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
+					char.criticalValueBonus = (int(char.criticalValueBonus * 100) / 100);
 					char.recalculateStats();
 					break;
 				case "poisonChance":
 					char.poisonChanceBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
+					char.poisonChanceBonus = (int(char.poisonChanceBonus * 100) / 100);
 					char.recalculateStats();
 					break;
 				case "poisonDamage":
 					char.poisonValueBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
+					char.poisonValueBonus = int(char.poisonValueBonus);
 					char.recalculateStats();
 					break;
 				case "healChance":
 					char.healChanceBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
+					char.healChanceBonus = (int(char.healChanceBonus * 100) / 100);
 					char.recalculateStats();
 					break;
 				case "healValue":
 					char.healValueBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
+					char.healValueBonus = int(char.healValueBonus);
 					char.recalculateStats();
 					break;
 				case "evadeChance":
 					char.evadeChanceBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
+					char.evadeChanceBonus = (int(char.evadeChanceBonus * 100) / 100);
 					char.recalculateStats();
 					break;
 				case "dmgReturnChance":
 					char.dmgReturnChanceBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
+					char.dmgReturnChanceBonus = (int(char.dmgReturnChanceBonus * 100) / 100);
 					char.recalculateStats();
 					break;
 				case "dmgReturnValue":
 					char.dmgReturnValueBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
+					char.dmgReturnValueBonus = int(char.dmgReturnValueBonus);
 					char.recalculateStats();
 					break;
 				case "healChance":
 					char.healChanceBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
+					char.healChanceBonus = (int(char.healChanceBonus * 100) / 100);
 					char.recalculateStats();
 					break;
 				case "healValue":
 					char.healValueBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
+					char.healValueBonus = int(char.healValueBonus);
 					char.recalculateStats();
 					break;
 				case "lifeStealValue":
 					char.lifestealValueBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
+					char.lifestealValueBonus = (int(char.lifestealValueBonus * 100) / 100);
 					char.recalculateStats();
 					break;
 				case "magicChance":
 					char.magicChanceBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
+					char.magicChanceBonus = (int(char.magicChanceBonus * 100) / 100);
 					char.recalculateStats();
 					break;
 				case "magicDamage":
 					char.magicValueBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
+					char.magicValueBonus = int(char.magicValueBonus);
 					char.recalculateStats();
 					break;
 				case "reverseChance":
 					char.reverseChanceBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
+					char.reverseChanceBonus = (int(char.reverseChanceBonus * 100) / 100);
 					char.recalculateStats();
 					break;
 				case "strengthenChance":
 					char.strengthenChanceBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
+					char.strengthenChanceBonus = (int(char.strengthenChanceBonus * 100) / 100);
 					char.recalculateStats();
 					break;
 				case "strengthenValue":
 					char.strengthenValueBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
+					char.strengthenValueBonus = (int(char.strengthenValueBonus * 100) / 100);
 					char.recalculateStats();
 					break;
 				case "weakenChance":
 					char.weakenChanceBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
+					char.weakenChanceBonus = (int(char.weakenChanceBonus * 100) / 100);
 					char.recalculateStats();
 					break;
 				case "weakenValue":
 					char.weakenValueBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
+					char.weakenValueBonus = (int(char.weakenValueBonus * 100) / 100);
 					char.recalculateStats();
 					break;
 				default :

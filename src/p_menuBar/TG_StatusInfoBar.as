@@ -153,10 +153,26 @@ package p_menuBar
 				}
 				var textField2:TextField;
 				var image:Image;
-				if(descs["diff"][i] != 0)
+				if(descs["diff"][i] == -1 || descs["diff"][i] == -100) 
 				{
+					textField2 = new TextField(50,50,"New","Londrina",20,0x00CCCC);
 					
-					textField2 = new TextField(50,50,descs["diff"][i],"Londrina",20,0x00CCCC);
+					//textField2.border = true;
+					textField2.touchable = false;
+					textField2.kerning = false;
+					textField2.autoSize = TextFieldAutoSize.BOTH_DIRECTIONS;
+					textField2.hAlign = HAlign.LEFT;
+					
+					textField2.x = textField.x + textField.width + 5;
+					textField2.y = textField.y;
+					
+					textField.color = 0x00CCCC;
+				}
+				else if(descs["diff"][i] != 0)
+				{
+					var tempValue:Number = descs["diff"][i];
+					tempValue = int(tempValue * 100) / 100;
+					textField2 = new TextField(50,50,""+tempValue,"Londrina",20,0x00CCCC);
 					
 					//textField2.border = true;
 					textField2.touchable = false;

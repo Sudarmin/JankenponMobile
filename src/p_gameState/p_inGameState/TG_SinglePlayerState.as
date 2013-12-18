@@ -48,7 +48,7 @@ package p_gameState.p_inGameState
 	{
 		private var m_counterTime:int = 0;
 		private var m_distanceCounter:Number = 0;
-		private var m_distanceBeforeFindSomething:Number = 0.0;
+		private var m_distanceBeforeFindSomething:Number = 0.5;
 		private var m_distancePause:Boolean = false;
 		private var m_rpsBar:TG_RPSBar;
 		private var m_statusBar1:TG_StatusBar;
@@ -430,8 +430,8 @@ package p_gameState.p_inGameState
 							m_distancePause = true;
 							m_distanceCounter = 0;
 							
-						/*	
-							var rand:Number = (Math.random() * 10000) % 200;
+							
+							/*var rand:Number = (Math.random() * 10000) % 200;
 							if(rand < m_char.getLuck())
 							{
 								createSomething("treasure");
@@ -500,6 +500,10 @@ package p_gameState.p_inGameState
 					{
 						m_enemy.rotation = m_enemy.rotation - TG_Static.fullCircleRad;
 					}
+					if(m_npc)
+					{
+						m_npc.rotation = m_npc.rotation - TG_Static.fullCircleRad;
+					}
 					if(m_treasureChest)
 					{
 						m_treasureChest.rotation = m_treasureChest.rotation - TG_Static.fullCircleRad;
@@ -553,7 +557,7 @@ package p_gameState.p_inGameState
 					m_currTreasureChest = m_treasureChest2;
 				}
 				m_currTreasureChest.show();
-				m_currTreasureChest.rotation = m_char.rotation + 1.4;
+				m_currTreasureChest.rotation = m_char.rotation + 1.2;
 				m_callBackFunc = checkTreasureDistance;
 			}
 			else if(command == "npc")
@@ -602,7 +606,8 @@ package p_gameState.p_inGameState
 				{
 					difference = m_char.rotation - m_npc.rotation;
 				}
-				
+				trace("difference = "+difference);
+				trace("m_NPCdistanceDifference = "+m_NPCdistanceDifference);
 				if(difference <= m_NPCdistanceDifference)
 				{
 					m_char.moving = false;
@@ -736,7 +741,7 @@ package p_gameState.p_inGameState
 			m_enemy.removeEventListener(TG_Character.LOADED,onEnemyLoaded);
 			
 			m_enemy.playAnimation("idle",0);
-			m_enemy.rotation = m_char.rotation + 1.4;
+			m_enemy.rotation = m_char.rotation + 1.2;
 			m_enemy.sprite.alpha = 0;
 			m_statusBar2.setChar(m_enemy);
 			

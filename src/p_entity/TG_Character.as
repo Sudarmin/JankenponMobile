@@ -991,6 +991,7 @@ package p_entity
 			m_initialHealth = int(m_charXML.baseHealth) + (int(m_charXML.healthBonus) * (m_level-1));
 			m_initialHealth += healthBonus + healthBonusPermanent;
 			m_initialHealthDiff = m_initialHealth - tempValue;
+			m_initialHealthDiff = (int(m_initialHealthDiff * 100) / 100);
 			if(m_initialHealthDiff == m_initialHealth)
 			{
 				m_initialHealthDiff = 0;
@@ -1000,6 +1001,7 @@ package p_entity
 			m_damage = int(m_charXML.baseDamage) + (int(m_charXML.damageBonus) * (m_level-1));
 			m_damage += damageBonus + damageBonusPermanent;
 			m_damageDiff = m_damage - tempValue;
+			m_damageDiff = (int(m_damageDiff * 100) / 100);
 			if(m_damageDiff == m_damage)
 			{
 				m_damageDiff = 0;
@@ -1028,8 +1030,10 @@ package p_entity
 			m_critChanceDiff = m_critChance - tempValue;
 			if(m_critChanceDiff == m_critChance)
 			{
-				m_critChanceDiff = 0;
+				m_critChanceDiff = -1;
 			}
+			
+			m_critChanceDiff = (int(m_critChanceDiff * 100) / 100);
 			
 			tempValue = m_critValue;
 			m_critValue = Number(m_charXML.criticalValue) + (Number(m_charXML.criticalValueBonus) * (level -1));
@@ -1047,8 +1051,10 @@ package p_entity
 			m_critValueDiff = m_critValue - tempValue;
 			if(m_critValueDiff == m_critValue)
 			{
-				m_critValueDiff = 0;
+				m_critValueDiff = -1;
 			}
+			m_critValueDiff = (int(m_critValueDiff * 100) / 100);
+			
 			//POISON
 			tempValue = m_poisonChance;
 			m_poisonChance = Number(m_charXML.poisonChance) + (Number(m_charXML.poisonChanceBonus) * (level -1));
@@ -1064,10 +1070,12 @@ package p_entity
 				}
 			}
 			m_poisonChanceDiff = m_poisonChance - tempValue;
+			
 			if(m_poisonChanceDiff == m_poisonChance)
 			{
-				m_poisonChanceDiff = 0;
+				m_poisonChanceDiff = -1;
 			}
+			m_poisonChanceDiff = (int(m_poisonChanceDiff * 100) / 100);
 			
 			tempValue = m_poisonValue;
 			m_poisonValue = Number(m_charXML.poisonValue) + (Number(m_charXML.poisonValueBonus) * (level -1));
@@ -1083,8 +1091,9 @@ package p_entity
 			m_poisonValueDiff = m_poisonValue - tempValue;
 			if(m_poisonValueDiff == m_poisonValue)
 			{
-				m_poisonValueDiff = 0;
+				m_poisonValueDiff = -1;
 			}
+			m_poisonValueDiff = (int(m_poisonValueDiff * 100) / 100);
 			
 			//HEAL
 			tempValue = m_healChance;
@@ -1103,8 +1112,9 @@ package p_entity
 			m_healChanceDiff = m_healChance - tempValue;
 			if(m_healChanceDiff == m_healChance)
 			{
-				m_healChanceDiff = 0;
+				m_healChanceDiff = -1;
 			}
+			m_healChanceDiff = (int(m_healChanceDiff * 100) / 100);
 			
 			tempValue = m_healValue;
 			m_healValue = Number(m_charXML.healValue) + (Number(m_charXML.healValueBonus) * (level -1));
@@ -1120,8 +1130,9 @@ package p_entity
 			m_healValueDiff = m_healValue - tempValue;
 			if(m_healValueDiff == m_healValue)
 			{
-				m_healValueDiff = 0;
+				m_healValueDiff = -1;
 			}
+			m_healValueDiff = (int(m_healValueDiff * 100) / 100);
 			
 			//EVADE
 			tempValue = m_evadeChance;
@@ -1140,8 +1151,9 @@ package p_entity
 			m_evadeChanceDiff = m_evadeChance - tempValue;
 			if(m_evadeChanceDiff == m_evadeChance)
 			{
-				m_evadeChanceDiff = 0;
+				m_evadeChanceDiff = -1;
 			}
+			m_evadeChanceDiff = (int(m_evadeChanceDiff * 100) / 100);
 			
 			//DAMAGE RETURN
 			tempValue = m_dmgReturnChance;
@@ -1160,8 +1172,9 @@ package p_entity
 			m_dmgReturnChanceDiff = m_dmgReturnChance - tempValue;
 			if(m_dmgReturnChanceDiff == m_dmgReturnChance)
 			{
-				m_dmgReturnChanceDiff = 0;
+				m_dmgReturnChanceDiff = -1;
 			}
+			m_dmgReturnChanceDiff = (int(m_dmgReturnChanceDiff * 100) / 100);
 			
 			tempValue = m_dmgReturnValue;
 			m_dmgReturnValue = Number(m_charXML.dmgReturnValue) + (Number(m_charXML.dmgReturnValue) * (level -1));
@@ -1177,8 +1190,9 @@ package p_entity
 			m_dmgReturnValueDiff = m_dmgReturnValue - tempValue;
 			if(m_dmgReturnValueDiff == m_dmgReturnValue)
 			{
-				m_dmgReturnValueDiff = 0;
+				m_dmgReturnValueDiff = -1;
 			}
+			m_dmgReturnValueDiff = (int(m_dmgReturnValueDiff * 100) / 100);
 			
 			//LIFE STEAL
 			tempValue = m_lifestealValue;
@@ -1195,8 +1209,9 @@ package p_entity
 			m_lifestealValueDiff = m_lifestealValue - tempValue;
 			if(m_lifestealValueDiff == m_lifestealValue)
 			{
-				m_lifestealValueDiff = 0;
+				m_lifestealValueDiff = -1;
 			}
+			m_lifestealValueDiff = (int(m_lifestealValueDiff * 100) / 100);
 			
 			//MAGIC 
 			tempValue = m_magicChance;
@@ -1216,8 +1231,9 @@ package p_entity
 			m_magicChanceDiff = m_magicChance - tempValue;
 			if(m_magicChanceDiff == m_magicChance)
 			{
-				m_magicChanceDiff = 0;
+				m_magicChanceDiff = -1;
 			}
+			m_magicChanceDiff = (int(m_magicChanceDiff * 100) / 100);
 			
 			tempValue = m_magicValue;
 			m_magicValue = Number(m_charXML.magicValue) + (Number(m_charXML.magicValueBonus) * (level -1));
@@ -1233,8 +1249,9 @@ package p_entity
 			m_magicValueDiff = m_magicValue - tempValue;
 			if(m_magicValueDiff == m_magicValue)
 			{
-				m_magicValueDiff = 0;
+				m_magicValueDiff = -1;
 			}
+			m_magicValueDiff = (int(m_magicValueDiff * 100) / 100);
 			
 			//STRENGTHEN
 			tempValue = m_strengthenChance;
@@ -1253,8 +1270,9 @@ package p_entity
 			m_strengthenChanceDiff = m_strengthenChance - tempValue;
 			if(m_strengthenChanceDiff == m_strengthenChance)
 			{
-				m_strengthenChanceDiff = 0;
+				m_strengthenChanceDiff = -1;
 			}
+			m_strengthenChanceDiff = (int(m_strengthenChanceDiff * 100) / 100);
 			
 			tempValue = m_strengthenValue;
 			m_strengthenValue = Number(m_charXML.strengthenValue) + (Number(m_charXML.strengthenValueBonus) * (level -1));
@@ -1272,8 +1290,9 @@ package p_entity
 			m_strengthenValueDiff = m_strengthenValue - tempValue;
 			if(m_strengthenValueDiff == m_strengthenValue)
 			{
-				m_strengthenValueDiff = 0;
+				m_strengthenValueDiff = -1;
 			}
+			m_strengthenValueDiff = (int(m_strengthenValueDiff * 100) / 100);
 			
 			//WEAKEN
 			tempValue = m_weakenChance;
@@ -1292,8 +1311,9 @@ package p_entity
 			m_weakenChanceDiff = m_weakenChance - tempValue;
 			if(m_weakenChanceDiff == m_weakenChance)
 			{
-				m_weakenChanceDiff = 0;
+				m_weakenChanceDiff = -1;
 			}
+			m_weakenChanceDiff = (int(m_weakenChanceDiff * 100) / 100);
 			
 			tempValue = m_weakenValue;
 			m_charXML.weakenValue = 1;
@@ -1318,8 +1338,9 @@ package p_entity
 			m_weakenValueDiff = m_weakenValue - tempValue;
 			if(m_weakenValueDiff == m_weakenValue)
 			{
-				m_weakenValueDiff = 0;
+				m_weakenValueDiff = -1;
 			}
+			m_weakenValueDiff = (int(m_weakenValueDiff * 100) / 100);
 			
 			//REVERSE 
 			tempValue = m_reverseChance;
@@ -1338,8 +1359,9 @@ package p_entity
 			m_reverseChanceDiff = m_reverseChance - tempValue;
 			if(m_reverseChanceDiff == m_reverseChance)
 			{
-				m_reverseChanceDiff = 0;
+				m_reverseChanceDiff = -1;
 			}
+			m_reverseChanceDiff = (int(m_reverseChanceDiff * 100) / 100);
 			
 			//LUCK
 			tempValue = m_luck;
@@ -1356,8 +1378,9 @@ package p_entity
 			m_luckDiff = m_luck - tempValue;
 			if(m_luckDiff == m_luck)
 			{
-				m_luckDiff = 0;
+				m_luckDiff = -1;
 			}
+			m_luckDiff = (int(m_luckDiff * 100) / 100);
 			
 			//POINTS
 			if(!isPlayer)
