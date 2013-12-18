@@ -431,7 +431,7 @@ package p_gameState.p_inGameState
 							m_distanceCounter = 0;
 							
 							
-							/*var rand:Number = (Math.random() * 10000) % 200;
+							var rand:Number = (Math.random() * 10000) % 200;
 							if(rand < m_char.getLuck())
 							{
 								createSomething("treasure");
@@ -439,8 +439,8 @@ package p_gameState.p_inGameState
 							else
 							{
 								createSomething("enemy");
-							}*/
-							createSomething("npc");
+							}
+							//createSomething("npc");
 							//createSomething("enemy");
 						}
 					}
