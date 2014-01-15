@@ -17,7 +17,7 @@
 	<id>bomb</id>
 	<nameEnglish>Bomb</nameEnglish>
 	<nameIndonesia>Bom</nameIndonesia>
-	<imageName>ItemBone</imageName>
+	<imageName>ItemBomb</imageName>
 	<value1>1</value1>
 	<randomizeValue1>1</randomizeValue1>
 	<randomValue1>200</randomValue1>
@@ -30,7 +30,7 @@
 	<id>addhealth</id>
 	<nameEnglish>Health Regen</nameEnglish>
 	<nameIndonesia>Regen Darah</nameIndonesia>
-	<imageName>ItemGreenHerb</imageName>
+	<imageName>ItemPotion</imageName>
 	<value1>1</value1>
 	<randomizeValue1>1</randomizeValue1>
 	<randomValue1>100</randomValue1>
@@ -43,7 +43,7 @@
 	<id>health</id>
 	<nameEnglish>Max Health</nameEnglish>
 	<nameIndonesia>Max Darah</nameIndonesia>
-	<imageName>ItemWood</imageName>
+	<imageName>ItemHealthBoost</imageName>
 	<value1>1</value1>
 	<randomizeValue1>0</randomizeValue1>
 	<randomValue1>0</randomValue1>
@@ -56,7 +56,7 @@
 	<id>damage</id>
 	<nameEnglish>Damage</nameEnglish>
 	<nameIndonesia>Pukulan</nameIndonesia>
-	<imageName>ItemClaw</imageName>
+	<imageName>ItemDamagePlus</imageName>
 	<value1>1</value1>
 	<randomizeValue1>0</randomizeValue1>
 	<randomValue1>0</randomValue1>
@@ -69,13 +69,11 @@
 	<id>critical</id>
 	<nameEnglish>Critical</nameEnglish>
 	<nameIndonesia>Kritikal</nameIndonesia>
-	<imageName>ItemClaw</imageName>
+	<imageName>ItemCritBoost</imageName>
 	<value1>1</value1>
-	<maxValue1>70</maxValue1>
 	<randomizeValue1>0</randomizeValue1>
 	<randomValue1>0</randomValue1>
 	<value2>1</value2>
-	<maxValue2>3</maxValue2>
 	<quantity>2</quantity><!-- THE HIGHER THIS IS THE HIGHER THE PROBABILITY -->
 	<type>skill</type>
 </treasure>
@@ -84,13 +82,11 @@
 	<id>heal</id>
 	<nameEnglish>Heal</nameEnglish>
 	<nameIndonesia>Sembuh</nameIndonesia>
-	<imageName>ItemSpiderEgg</imageName>
+	<imageName>ItemHealBoost</imageName>
 	<value1>100</value1>
-	<maxValue1>50</maxValue1>
 	<randomizeValue1>0</randomizeValue1>
 	<randomValue1>0</randomValue1>
 	<value2>1000</value2>
-	<maxValue2>200</maxValue2>
 	<quantity>2</quantity><!-- THE HIGHER THIS IS THE HIGHER THE PROBABILITY -->
 	<type>skill</type>
 </treasure>
@@ -99,13 +95,11 @@
 	<id>evade</id>
 	<nameEnglish>Evasion</nameEnglish>
 	<nameIndonesia>Mengelak</nameIndonesia>
-	<imageName>ItemFeather</imageName>
+	<imageName>ItemEvade</imageName>
 	<value1>1</value1>
-	<maxValue1>50</maxValue1>
 	<randomizeValue1>0</randomizeValue1>
 	<randomValue1>0</randomValue1>
 	<value2>0</value2>
-	<maxValue2>0</maxValue2>
 	<quantity>2</quantity><!-- THE HIGHER THIS IS THE HIGHER THE PROBABILITY -->
 	<type>skill</type>
 </treasure>
@@ -114,13 +108,24 @@
 	<id>poison</id>
 	<nameEnglish>Poison</nameEnglish>
 	<nameIndonesia>Mengelak</nameIndonesia>
-	<imageName>ItemFeather</imageName>
+	<imageName>ItemPoison</imageName>
 	<value1>1</value1>
-	<maxValue1>50</maxValue1>
 	<randomizeValue1>0</randomizeValue1>
 	<randomValue1>0</randomValue1>
 	<value2>10</value2>
-	<maxValue2>100</maxValue2>
+	<quantity>2</quantity><!-- THE HIGHER THIS IS THE HIGHER THE PROBABILITY -->
+	<type>skill</type>
+</treasure>
+
+<treasure>
+	<id>dmgReturn</id>
+	<nameEnglish>Damage Return</nameEnglish>
+	<nameIndonesia>Kembalikan Pukulan</nameIndonesia>
+	<imageName>ItemDamageReturn</imageName>
+	<value1>1</value1>
+	<randomizeValue1>0</randomizeValue1>
+	<randomValue1>0</randomValue1>
+	<value2>10</value2>
 	<quantity>2</quantity><!-- THE HIGHER THIS IS THE HIGHER THE PROBABILITY -->
 	<type>skill</type>
 </treasure>
@@ -129,13 +134,11 @@
 	<id>lifesteal</id>
 	<nameEnglish>Life Steal</nameEnglish>
 	<nameIndonesia>Curi Darah</nameIndonesia>
-	<imageName>ItemAnimalEye</imageName>
+	<imageName>ItemLifesteal</imageName>
 	<value1>1</value1>
-	<maxValue1>25</maxValue1>
 	<randomizeValue1>0</randomizeValue1>
 	<randomValue1>0</randomValue1>
 	<value2>0</value2>
-	<maxValue2>0</maxValue2>
 	<quantity>2</quantity><!-- THE HIGHER THIS IS THE HIGHER THE PROBABILITY -->
 	<type>skill</type>
 </treasure>
@@ -144,13 +147,11 @@
 	<id>magic</id>
 	<nameEnglish>Magic</nameEnglish>
 	<nameIndonesia>Sihir</nameIndonesia>
-	<imageName>ItemSpiderWeb</imageName>
+	<imageName>ItemMagicFire</imageName>
 	<value1>1</value1>
-	<maxValue1>50</maxValue1>
 	<randomizeValue1>0</randomizeValue1>
 	<randomValue1>0</randomValue1>
 	<value2>50</value2>
-	<maxValue2>200</maxValue2>
 	<quantity>2</quantity><!-- THE HIGHER THIS IS THE HIGHER THE PROBABILITY -->
 	<type>skill</type>
 </treasure>
@@ -159,13 +160,11 @@
 	<id>strengthen</id>
 	<nameEnglish>Strengthen</nameEnglish>
 	<nameIndonesia>Menguatkan</nameIndonesia>
-	<imageName>ItemLeather</imageName>
+	<imageName>ItemStrengthen</imageName>
 	<value1>1</value1>
-	<maxValue1>50</maxValue1>
 	<randomizeValue1>0</randomizeValue1>
 	<randomValue1>0</randomValue1>
 	<value2>0.5</value2>
-	<maxValue2>3</maxValue2>
 	<quantity>2</quantity><!-- THE HIGHER THIS IS THE HIGHER THE PROBABILITY -->
 	<type>skill</type>
 </treasure>
@@ -174,13 +173,11 @@
 	<id>weaken</id>
 	<nameEnglish>Weaken</nameEnglish>
 	<nameIndonesia>Melemahkan</nameIndonesia>
-	<imageName>ItemBone</imageName>
+	<imageName>ItemWeaken</imageName>
 	<value1>1</value1>
-	<maxValue1>50</maxValue1>
 	<randomizeValue1>0</randomizeValue1>
 	<randomValue1>0</randomValue1>
 	<value2>0.2</value2>
-	<maxValue2>0.5</maxValue2>
 	<quantity>2</quantity><!-- THE HIGHER THIS IS THE HIGHER THE PROBABILITY -->
 	<type>skill</type>
 </treasure>
@@ -189,13 +186,11 @@
 	<id>reversed</id>
 	<nameEnglish>Reverse</nameEnglish>
 	<nameIndonesia>Membalikkan</nameIndonesia>
-	<imageName>ItemClaw</imageName>
+	<imageName>ItemReverse</imageName>
 	<value1>1</value1>
-	<maxValue1>50</maxValue1>
 	<randomizeValue1>0</randomizeValue1>
 	<randomValue1>0</randomValue1>
 	<value2>0</value2>
-	<maxValue2>0</maxValue2>
 	<quantity>2</quantity><!-- THE HIGHER THIS IS THE HIGHER THE PROBABILITY -->
 	<type>skill</type>
 </treasure>

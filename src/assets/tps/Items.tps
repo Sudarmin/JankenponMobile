@@ -148,19 +148,23 @@
         </struct>
         <key>fileList</key>
         <array>
-            <filename>../png/Items/ItemBone.png</filename>
+            <filename>../png/Items/ItemBomb.png</filename>
+            <filename>../png/Items/ItemCritBoost.png</filename>
+            <filename>../png/Items/ItemEmerald.png</filename>
+            <filename>../png/Items/ItemEvade.png</filename>
+            <filename>../png/Items/ItemHealBoost.png</filename>
+            <filename>../png/Items/ItemHealthBoost.png</filename>
+            <filename>../png/Items/ItemLifesteal.png</filename>
+            <filename>../png/Items/ItemMagicFire.png</filename>
+            <filename>../png/Items/ItemPoison.png</filename>
+            <filename>../png/Items/ItemPotion.png</filename>
+            <filename>../png/Items/ItemReverse.png</filename>
             <filename>../png/Items/TreasureClip0001.png</filename>
             <filename>../png/Items/TreasureClip0002.png</filename>
-            <filename>../png/Items/ItemClaw.png</filename>
-            <filename>../png/Items/ItemEmerald.png</filename>
-            <filename>../png/Items/ItemFeather.png</filename>
-            <filename>../png/Items/ItemGreenHerb.png</filename>
-            <filename>../png/Items/ItemLeather.png</filename>
-            <filename>../png/Items/ItemMushroom.png</filename>
-            <filename>../png/Items/ItemSpiderEgg.png</filename>
-            <filename>../png/Items/ItemSpiderWeb.png</filename>
-            <filename>../png/Items/ItemWood.png</filename>
-            <filename>../png/Items/ItemAnimalEye.png</filename>
+            <filename>../png/Items/ItemStrengthen.png</filename>
+            <filename>../png/Items/ItemWeaken.png</filename>
+            <filename>../png/Items/ItemDamagePlus.png</filename>
+            <filename>../png/Items/ItemDamageReturn.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

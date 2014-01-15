@@ -55,6 +55,8 @@ package p_gameState
 		private static const CASTLE:int = 4;
 		
 		
+		public var loadBGDone:Boolean = false;
+		
 		protected var multiFunctionText:TextField;
 		public function TG_InGameState(parent:DisplayObjectContainer)
 		{
@@ -133,6 +135,7 @@ package p_gameState
 		
 		protected override function destroySprite():void
 		{
+			destroyBackground();
 			super.destroySprite();
 			if(multiFunctionText)
 			{
@@ -309,6 +312,106 @@ package p_gameState
 			layerDynamic.addChild(layerCharacter);
 			layerDynamic.addChild(layerForeground);
 			
+			createBackground();
+			
+			//MULTI FUNCTION TEXT
+			multiFunctionText = new TextField(50,50,"START","Londrina",100,0xFFFF00);
+			multiFunctionText.autoSize = TextFieldAutoSize.BOTH_DIRECTIONS;
+			TG_Static.layerText.addChild(multiFunctionText);
+		}
+		
+		public function restartBackground():void
+		{
+			destroyBackground();
+			
+			var xml:XML;
+			xml = TG_World.assetManager.getXml("Levels");
+			var size:int = xml.level.length();
+			var prevLevelNum:int = levelNum;
+			if(size > 1)
+			{
+				while(levelNum == prevLevelNum)
+				{
+					levelNum = (Math.random() * 1000) % size;
+				}
+			}
+			else
+			{
+				levelNum = (Math.random() * 1000) % size;
+			}
+			
+			levelXML = xml.level[levelNum];
+			
+			describeAssets();
+			
+			var i:int = 0;
+			size = m_assetsToLoad.length;
+			var obj:Object;
+			for(i;i<size;i++)
+			{
+				obj = m_assetsToLoad[i];
+				TG_AssetsLoader.getInstance().append(obj.url,obj.itemName,obj.type,obj.kbTotal);
+			}
+			TG_AssetsLoader.getInstance().addEventListener(Event.COMPLETE,onLoadBGDone);
+			TG_AssetsLoader.getInstance().startLoad(false);	
+			TG_World.getInstance().pauseGame();
+			loadBGDone = false;
+		}
+		
+		protected function onLoadBGDone(e:Event):void
+		{
+			TG_AssetsLoader.getInstance().removeEventListener(Event.COMPLETE,onLoadBGDone);
+			initTextureAtlas();
+			createBackground();
+			loadBGDone = true;
+			TG_World.getInstance().resumeGame();
+			
+		}
+		
+		public function destroyBackground():void
+		{
+			var image:Image;
+			if(fgArray)
+			{
+				while(fgArray.length>0)
+				{
+					image = fgArray.pop();
+					image.removeFromParent(true)
+				}
+			}
+			if(bgArray)
+			{
+				while(bgArray.length>0)
+				{
+					image = bgArray.pop();
+					image.removeFromParent(true)
+				}
+			}
+			if(groundArray)
+			{
+				while(groundArray.length>0)
+				{
+					image = groundArray.pop();
+					image.removeFromParent(true)
+				}
+			}
+			
+			if(sky)
+			{
+				sky.removeFromParent(true);
+			}
+			
+			textureLevel.dispose();
+			atlasLevel.dispose();
+			if(bitmapLevel && bitmapLevel.bitmapData)
+			{
+				bitmapLevel.bitmapData.dispose();
+				bitmapLevel = null;
+			}
+		}
+		
+		public function createBackground():void
+		{
 			fgArray = [];
 			bgArray = [];
 			groundArray = [];
@@ -375,20 +478,22 @@ package p_gameState
 			
 			layerForeground.scaleX = layerForeground.scaleY = 0.9;
 			
-			//MULTI FUNCTION TEXT
-			multiFunctionText = new TextField(50,50,"START","Londrina",100,0xFFFF00);
-			multiFunctionText.autoSize = TextFieldAutoSize.BOTH_DIRECTIONS;
-			TG_Static.layerText.addChild(multiFunctionText);
+			trace("sky = "+sky);
+			
 		}
 		
 		//STEP 6 CREATE RESIZE FUNCTION
 		public override function resize():void
 		{
 			super.resize();
-			sky.width = TG_World.GAME_WIDTH + 20;
-			sky.height = TG_World.GAME_HEIGHT + 20;
-			sky.x = -10;
-			sky.y = -10;
+			
+			if(sky)
+			{
+				sky.width = TG_World.GAME_WIDTH + 20;
+				sky.height = TG_World.GAME_HEIGHT + 20;
+				sky.x = -10;
+				sky.y = -10;
+			}
 			
 			layerDynamic.scaleX = layerDynamic.scaleY = TG_World.SCALE_ROUNDED * 0.5;
 			

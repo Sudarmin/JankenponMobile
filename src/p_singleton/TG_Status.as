@@ -4,6 +4,7 @@ package p_singleton
 	{
 		public var characterLevels:Array;
 		public var characterExps:Array;
+		public var princessSaved:Array;
 		private static var INSTANCE:TG_Status;
 		public function TG_Status()
 		{
@@ -21,6 +22,7 @@ package p_singleton
 		{
 			characterLevels = [];
 			characterExps = [];
+			princessSaved = [];
 		}
 		
 		public function saveGame():void

@@ -1,62 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with TexturePacker http://www.codeandweb.com/texturepacker-->
-<!-- $TexturePacker:SmartUpdate:709eeff4b38802455b3cda9ac3b7110b:37e42c92dd1dd40e96fc2944c69b882f:f6271f27725b8ba7dbb64c4b8ca0b079$ -->
+<!-- $TexturePacker:SmartUpdate:40082be9f9ae440f348c0912b94f954c:1/1$ -->
 <TextureAtlas imagePath="generalUI.png">
     <SubTexture name="ArrowIncrease" x="498" y="51" width="10" height="14"/>
-    <SubTexture name="ArrowUp" x="104" y="583" width="36" height="32"/>
-    <SubTexture name="Bullet" x="354" y="544" width="61" height="46"/>
-    <SubTexture name="ButtonBack0001" x="394" y="738" width="56" height="56"/>
-    <SubTexture name="ButtonBack0002" x="336" y="708" width="56" height="56"/>
-    <SubTexture name="ButtonBack0003" x="250" y="702" width="56" height="56"/>
-    <SubTexture name="ButtonBack0004" x="192" y="650" width="56" height="56"/>
-    <SubTexture name="ButtonPaper0001" x="142" y="512" width="138" height="136"/>
-    <SubTexture name="ButtonPaper0002" x="282" y="406" width="138" height="136"/>
-    <SubTexture name="ButtonPaper0003" x="2" y="445" width="138" height="136"/>
-    <SubTexture name="ButtonRock0001" x="142" y="374" width="138" height="136"/>
-    <SubTexture name="ButtonRock0002" x="282" y="268" width="138" height="136"/>
-    <SubTexture name="ButtonRock0003" x="2" y="307" width="138" height="136"/>
-    <SubTexture name="ButtonScissor0001" x="142" y="236" width="138" height="136"/>
-    <SubTexture name="ButtonScissor0002" x="2" y="169" width="138" height="136"/>
-    <SubTexture name="ButtonScissor0003" x="145" y="98" width="138" height="136"/>
-    <SubTexture name="CheckIcon" x="336" y="766" width="39" height="39"/>
-    <SubTexture name="DrawIcon" x="456" y="734" width="40" height="36"/>
+    <SubTexture name="ArrowUp" x="126" y="960" width="36" height="32"/>
+    <SubTexture name="Bullet" x="445" y="268" width="61" height="46"/>
+    <SubTexture name="ButtonBack0001" x="76" y="861" width="56" height="56"/>
+    <SubTexture name="ButtonBack0002" x="76" y="790" width="56" height="56"/>
+    <SubTexture name="ButtonBack0003" x="76" y="732" width="56" height="56"/>
+    <SubTexture name="ButtonBack0004" x="76" y="674" width="56" height="56"/>
+    <SubTexture name="ButtonPaper0001" x="142" y="664" width="138" height="136"/>
+    <SubTexture name="ButtonPaper0002" x="282" y="615" width="138" height="136"/>
+    <SubTexture name="ButtonPaper0003" x="2" y="536" width="138" height="136"/>
+    <SubTexture name="ButtonRock0001" x="142" y="526" width="138" height="136"/>
+    <SubTexture name="ButtonRock0002" x="282" y="477" width="138" height="136"/>
+    <SubTexture name="ButtonRock0003" x="2" y="398" width="138" height="136"/>
+    <SubTexture name="ButtonScissor0001" x="142" y="388" width="138" height="136"/>
+    <SubTexture name="ButtonScissor0002" x="302" y="339" width="138" height="136"/>
+    <SubTexture name="ButtonScissor0003" x="2" y="260" width="138" height="136"/>
+    <SubTexture name="CheckIcon" x="118" y="919" width="39" height="39"/>
+    <SubTexture name="DrawIcon" x="134" y="861" width="40" height="36"/>
     <SubTexture name="HealthBar" x="2" y="58" width="292" height="24"/>
     <SubTexture name="HealthBarFrame" x="2" y="2" width="300" height="32"/>
-    <SubTexture name="Icon-CoinsAnim0001" x="377" y="796" width="26" height="24"/>
-    <SubTexture name="Icon-CoinsAnim0002" x="480" y="772" width="26" height="24"/>
-    <SubTexture name="Icon-CoinsAnim0003" x="452" y="772" width="26" height="24"/>
-    <SubTexture name="Icon-CoinsAnim0004" x="308" y="754" width="26" height="24"/>
-    <SubTexture name="Icon-CoinsAnim0005" x="308" y="728" width="26" height="24"/>
-    <SubTexture name="Icon-CoinsAnim0006" x="308" y="702" width="26" height="24"/>
-    <SubTexture name="Icon-CoinsAnim0007" x="250" y="676" width="26" height="24"/>
-    <SubTexture name="Icon-CoinsAnim0008" x="250" y="650" width="26" height="24"/>
-    <SubTexture name="Icon-CoinsAnim0009" x="76" y="711" width="26" height="24"/>
-    <SubTexture name="Icon-CoinsAnim0010" x="76" y="685" width="26" height="24"/>
-    <SubTexture name="IconAnswer" x="2" y="685" width="72" height="72"/>
-    <SubTexture name="IconPaper" x="422" y="490" width="72" height="72"/>
-    <SubTexture name="IconQuestion" x="422" y="416" width="72" height="72"/>
-    <SubTexture name="IconRock" x="422" y="342" width="72" height="72"/>
-    <SubTexture name="IconScissor" x="422" y="268" width="72" height="72"/>
+    <SubTexture name="Icon-CoinsAnim0001" x="182" y="977" width="26" height="24"/>
+    <SubTexture name="Icon-CoinsAnim0002" x="164" y="951" width="26" height="24"/>
+    <SubTexture name="Icon-CoinsAnim0003" x="176" y="861" width="26" height="24"/>
+    <SubTexture name="Icon-CoinsAnim0004" x="159" y="925" width="26" height="24"/>
+    <SubTexture name="Icon-CoinsAnim0005" x="159" y="899" width="26" height="24"/>
+    <SubTexture name="Icon-CoinsAnim0006" x="154" y="994" width="26" height="24"/>
+    <SubTexture name="Icon-CoinsAnim0007" x="126" y="994" width="26" height="24"/>
+    <SubTexture name="Icon-CoinsAnim0008" x="198" y="362" width="26" height="24"/>
+    <SubTexture name="Icon-CoinsAnim0009" x="170" y="362" width="26" height="24"/>
+    <SubTexture name="Icon-CoinsAnim0010" x="142" y="362" width="26" height="24"/>
+    <SubTexture name="IconAnswer" x="2" y="896" width="72" height="72"/>
+    <SubTexture name="IconPaper" x="2" y="822" width="72" height="72"/>
+    <SubTexture name="IconPaperReversed" x="2" y="748" width="72" height="72"/>
+    <SubTexture name="IconQuestion" x="2" y="674" width="72" height="72"/>
+    <SubTexture name="IconQuestion2" x="422" y="490" width="73" height="73"/>
+    <SubTexture name="IconRock" x="415" y="787" width="72" height="72"/>
+    <SubTexture name="IconRockReversed" x="422" y="713" width="72" height="72"/>
+    <SubTexture name="IconScissor" x="422" y="639" width="72" height="72"/>
+    <SubTexture name="IconScissorReversed" x="422" y="565" width="72" height="72"/>
     <SubTexture name="TimeBar" x="2" y="84" width="292" height="12"/>
     <SubTexture name="TimeBarFrame" x="2" y="36" width="300" height="20"/>
-    <SubTexture name="UI-BGButtonWood2" x="282" y="544" width="70" height="40"/>
+    <SubTexture name="UI-BGButtonWood2" x="54" y="970" width="70" height="40"/>
     <SubTexture name="UI-BGFrame" x="304" y="51" width="192" height="215"/>
-    <SubTexture name="UI-BGPaperScroll" x="2" y="98" width="141" height="69"/>
+    <SubTexture name="UI-BGPaperScroll" x="302" y="268" width="141" height="69"/>
     <SubTexture name="UI-BGRibbon" x="304" y="2" width="204" height="47"/>
-    <SubTexture name="UI-BoxBag" x="2" y="583" width="100" height="100"/>
-    <SubTexture name="UI-Coins" x="104" y="617" width="30" height="30"/>
-    <SubTexture name="XIcon" x="456" y="692" width="40" height="40"/>
-    <SubTexture name="buttonNext0001" x="104" y="687" width="28" height="36"/>
-    <SubTexture name="buttonNext0002" x="475" y="602" width="28" height="36"/>
-    <SubTexture name="buttonNext0003" x="475" y="564" width="28" height="36"/>
-    <SubTexture name="buttonNext0004" x="104" y="649" width="28" height="36"/>
-    <SubTexture name="buttonOK0001" x="134" y="650" width="56" height="56"/>
-    <SubTexture name="buttonOK0002" x="398" y="680" width="56" height="56"/>
-    <SubTexture name="buttonOK0003" x="340" y="650" width="56" height="56"/>
-    <SubTexture name="buttonOK0004" x="398" y="622" width="56" height="56"/>
-    <SubTexture name="buttonX0001" x="282" y="644" width="56" height="56"/>
-    <SubTexture name="buttonX0002" x="340" y="592" width="56" height="56"/>
-    <SubTexture name="buttonX0003" x="417" y="564" width="56" height="56"/>
-    <SubTexture name="buttonX0004" x="282" y="586" width="56" height="56"/>
-    <SubTexture name="transition" x="456" y="640" width="50" height="50"/>
+    <SubTexture name="UI-BGWood" x="2" y="98" width="240" height="160"/>
+    <SubTexture name="UI-BoxBag" x="142" y="260" width="100" height="100"/>
+    <SubTexture name="UI-Coins" x="385" y="753" width="30" height="30"/>
+    <SubTexture name="XIcon" x="76" y="919" width="40" height="40"/>
+    <SubTexture name="buttonNext0001" x="164" y="802" width="28" height="36"/>
+    <SubTexture name="buttonNext0002" x="134" y="802" width="28" height="36"/>
+    <SubTexture name="buttonNext0003" x="385" y="823" width="28" height="36"/>
+    <SubTexture name="buttonNext0004" x="385" y="785" width="28" height="36"/>
+    <SubTexture name="buttonOK0001" x="442" y="432" width="56" height="56"/>
+    <SubTexture name="buttonOK0002" x="442" y="374" width="56" height="56"/>
+    <SubTexture name="buttonOK0003" x="244" y="330" width="56" height="56"/>
+    <SubTexture name="buttonOK0004" x="244" y="272" width="56" height="56"/>
+    <SubTexture name="buttonX0001" x="445" y="316" width="56" height="56"/>
+    <SubTexture name="buttonX0002" x="244" y="214" width="56" height="56"/>
+    <SubTexture name="buttonX0003" x="244" y="156" width="56" height="56"/>
+    <SubTexture name="buttonX0004" x="244" y="98" width="56" height="56"/>
+    <SubTexture name="transition" x="2" y="970" width="50" height="50"/>
+    <SubTexture name="txtBubble" x="282" y="753" width="101" height="93"/>
 </TextureAtlas>

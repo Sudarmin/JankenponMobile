@@ -46,6 +46,7 @@ package p_gameState.p_inGameState
 	
 	public class TG_SinglePlayerState extends TG_InGameState
 	{
+		private var m_createTreasureTest:Boolean = false;
 		private var m_counterTime:int = 0;
 		private var m_distanceCounter:Number = 0;
 		private var m_distanceBeforeFindSomething:Number = 0.5;
@@ -59,18 +60,25 @@ package p_gameState.p_inGameState
 		private var m_owedRotation:Number = 0;
 		private var m_enemy:TG_Character;
 		private var m_npc:TG_NPC;
+		private var m_princess:TG_NPC;
+		private var m_princessCounter:int = 0;
 		
 		private var m_callBackFunc:Function;
+		private var m_callBackFunc2:Function;
 		private var m_callBackParams:Array;
 		private var m_level:int = 2;
+		private var m_quad:Quad;
 		
 		private var m_surprisedStrings:Array;
 		private var m_distanceDifference:Number = 1;
 		private var m_NPCdistanceDifference:Number = 0.5;
+		private var m_PrincessdistanceDifference:Number = 0.5;
 		private var m_treasureDistanceDifference:Number = 0.3;
 		private var m_attackDistance:Number = 0.4;
 		private var m_charRotationCounter:Number = 0;
 		private var m_enemyRotationCounter:Number = 0;
+		
+		private var m_princessID:int = 0;
 		
 		private var m_animationCounter:int = 0;
 		private var m_animationTime:int = 500;
@@ -84,6 +92,7 @@ package p_gameState.p_inGameState
 		private var m_clipAreaFX:MovieClip;
 		private var m_clipAreaFX2:MovieClip;
 		private var m_clipLevelUpFX:MovieClip;
+		private var m_clipPoofFX:MovieClip;
 		
 		private var m_bulletNumCreated:int = 0;
 		
@@ -91,6 +100,8 @@ package p_gameState.p_inGameState
 		private var m_quadBot:Quad;
 		
 		private var m_enemyCounter:int = 0;
+		private var m_ableToShowNPC:Boolean = true;
+		private var m_ableToChangeBG:Boolean = true;
 		private var m_eventsXML:XML;
 		private var m_eventCounter:int = 0;
 		
@@ -101,6 +112,9 @@ package p_gameState.p_inGameState
 		private var m_warning:TG_Warning;
 		
 		private var m_shopBar:TG_ShopBar;
+		private var m_rpsBarHided:Boolean = false;
+		
+		private var m_prevCharRotationBeforeBGChange:Number = 0;
 		public function TG_SinglePlayerState(parent:DisplayObjectContainer)
 		{
 			super(parent);
@@ -126,8 +140,8 @@ package p_gameState.p_inGameState
 		}
 		protected function hideBlackQuads():void
 		{
-			TweenMax.fromTo(m_quadTop,0.5,{y:0},{y:-m_quadTop.height,visible:false,ease:Circ.easeOut});
-			TweenMax.fromTo(m_quadBot,0.5,{y:TG_World.GAME_HEIGHT-m_quadBot.height},{y:TG_World.GAME_HEIGHT,visible:false,ease:Circ.easeOut});
+			TweenMax.fromTo(m_quadTop,2,{y:0},{y:-m_quadTop.height,visible:false,ease:Circ.easeOut});
+			TweenMax.fromTo(m_quadBot,2,{y:TG_World.GAME_HEIGHT-m_quadBot.height},{y:TG_World.GAME_HEIGHT,visible:false,ease:Circ.easeOut});
 		}
 		public override function init():void
 		{
@@ -147,6 +161,16 @@ package p_gameState.p_inGameState
 			
 			m_warning = new TG_Warning(TG_Static.layerMenuBar,this);
 			m_warning.sprite.visible = false;
+			
+			
+			
+			m_clipPoofFX = new MovieClip(TG_World.assetManager.getTextures("FxPoofsAnim"));
+			m_clipPoofFX.stop();
+			m_clipPoofFX.pivotX = 55;
+			m_clipPoofFX.pivotY = 120;
+			m_clipPoofFX.visible = false;
+			Starling.juggler.add(m_clipPoofFX);
+			m_clipPoofFX.loop = false;
 			
 			m_clipAreaFX = new MovieClip(TG_World.assetManager.getTextures("FxHealPowerUp"));
 			m_clipAreaFX.stop();
@@ -189,6 +213,22 @@ package p_gameState.p_inGameState
 		public override function destroy():void
 		{
 			super.destroy();
+			if(m_quad)
+			{
+				m_quad.removeFromParent(true);
+			}
+			if(m_clipPoofFX)
+			{
+				if(Starling.juggler.contains(m_clipPoofFX))
+				{
+					Starling.juggler.remove(m_clipPoofFX);
+				}
+				if(m_clipPoofFX.parent)
+				{
+					m_clipPoofFX.parent.removeChild(m_clipPoofFX);
+				}
+			}
+			
 			if(m_clipAreaFX)
 			{
 				if(Starling.juggler.contains(m_clipAreaFX))
@@ -259,9 +299,9 @@ package p_gameState.p_inGameState
 				TG_Status.getInstance().characterLevels[m_char.id] = 1;
 			}
 			var currentLevel:int = TG_Status.getInstance().characterLevels[m_char.id];
-			m_char.level = currentLevel;
+			m_char.setLevel(currentLevel,true);
 			m_statusBar1.setExp(currentExp,m_char.nextExp);
-			m_statusBar1.setLevel(m_char.level);
+			m_statusBar1.setLevel(m_char.getLevel());
 			showStartText();
 		}
 		protected override function onStartTextCompleted():void
@@ -296,7 +336,7 @@ package p_gameState.p_inGameState
 			var textField:TextField;
 			m_char.levelUp();
 			m_statusBar1.setExp(m_char.currentExp,m_char.nextExp);
-			m_statusBar1.setLevel(m_char.level);
+			m_statusBar1.setLevel(m_char.getLevel());
 			textField = createText("Level Up",75,0x00FF00);
 			layerCharacter.addChild(textField);
 			textField.rotation = m_char.rotation;
@@ -325,16 +365,15 @@ package p_gameState.p_inGameState
 			if(!m_statusInfo.sprite.visible)
 			{
 				TweenMax.fromTo(m_statusInfo.sprite,0.5,{x:posX,y:-m_statusInfo.sprite.height,visible:true},{x:posX,y:posY});
-				m_statusInfo.nextButton.visible = true;
-				m_statusInfo.nextLabel.visible = true;
-				m_statusInfo.nextButton.addEventListener(Event.TRIGGERED,onPlayerStatsClicked);
+				m_statusInfo.nextSprite.visible = false;
+				m_statusInfo.nextSprite.addEventListener(Event.TRIGGERED,onPlayerStatsClicked);
 			}
 			
 			
 		}
 		protected function onPlayerStatsClicked(e:Event = null):void
 		{
-			m_statusInfo.nextButton.removeEventListener(Event.TRIGGERED,onPlayerStatsClicked);
+			m_statusInfo.nextSprite.removeEventListener(Event.TRIGGERED,onPlayerStatsClicked);
 			TweenMax.to(m_statusInfo.sprite,0.5,{y:TG_World.GAME_HEIGHT,visible:false});
 			m_char.playAnimation("walk");
 			m_callBackFunc = moveUntilPlayerAtTheMiddle;
@@ -430,9 +469,7 @@ package p_gameState.p_inGameState
 							m_distancePause = true;
 							m_distanceCounter = 0;
 							
-							
-							var rand:Number = (Math.random() * 10000) % 200;
-							if(rand < m_char.getLuck())
+							/*if(m_createTreasureTest)
 							{
 								createSomething("treasure");
 							}
@@ -440,8 +477,36 @@ package p_gameState.p_inGameState
 							{
 								createSomething("enemy");
 							}
-							//createSomething("npc");
-							//createSomething("enemy");
+							m_createTreasureTest = !m_createTreasureTest;*/
+							//createSomething("princess");
+							//createSomething("treasure");
+							if(m_enemyCounter % 2 == 0 && m_enemyCounter != 0 && m_ableToShowNPC)
+							{
+								createSomething("npc");
+								m_ableToShowNPC = false;
+							}
+							else if(m_enemyCounter % 1 == 0 && m_enemyCounter != 0 &&  m_ableToChangeBG)
+							{
+								changeBGInit();
+								m_ableToChangeBG = false;
+							}
+							else
+							{
+								trace("ke sini 3");
+								var rand:Number = (Math.random() * 10000) % 200;
+								if(rand < m_char.luck)
+								{
+									createSomething("treasure");
+								}
+								else
+								{
+									createSomething("enemy");
+									m_ableToShowNPC = true;
+									m_ableToChangeBG = true;
+								}
+							}
+							
+							
 						}
 					}
 				}
@@ -455,6 +520,69 @@ package p_gameState.p_inGameState
 			if(m_callBackFunc != null)
 			{
 				m_callBackFunc(elapsedTime);
+			}
+			if(m_callBackFunc2 != null)
+			{
+				m_callBackFunc2(elapsedTime);
+			}
+		}
+		
+		protected function changeBGInit():void
+		{
+			if(m_quad == null)
+			{
+				m_quad = new Quad(100,100,0x000000);
+				m_sprite.addChild(m_quad);
+				/*if(m_quadTop)
+				{
+					m_sprite.swapChildren(m_quad,m_quadTop);
+				}*/
+			}
+			
+			
+			m_quad.width = TG_World.GAME_WIDTH;
+			m_quad.height = TG_World.GAME_HEIGHT;
+			m_quad.alpha = 0;
+			m_quad.visible = true;
+			showBlackQuads();
+			m_char.moving = false;
+			m_prevCharRotationBeforeBGChange = m_char.rotation;
+			m_callBackFunc = charMoveBGInit;
+			TweenMax.to(m_quad,3,{alpha:1,onComplete:changeBGMid});
+		}
+		protected function charMoveBGInit(elapsedTime:int):void
+		{
+			m_char.rotation += m_char.speed * elapsedTime/1000;
+		}
+		protected function changeBGMid():void
+		{
+			restartBackground();
+			m_callBackFunc = checkLoadBGDone;
+		}
+		protected function checkLoadBGDone(elapsedTime:int):void
+		{
+			if(loadBGDone)
+			{
+				TweenMax.to(m_quad,2,{alpha:0.1,onComplete:changeBGEnd});
+				m_char.rotation = m_prevCharRotationBeforeBGChange - 1.5;
+				m_callBackFunc = charMoveBGEnd;
+			}
+		}
+		protected function changeBGEnd():void
+		{
+			m_quad.visible = false;
+			
+		}
+		protected function charMoveBGEnd(elapsedTime:int):void
+		{
+			m_char.rotation += m_char.speed * elapsedTime/1000;
+			if(m_char.rotation >= m_prevCharRotationBeforeBGChange)
+			{
+				m_char.rotation = m_prevCharRotationBeforeBGChange;
+				m_distancePause = false;
+				m_callBackFunc = null;
+				m_char.moving = true;
+				hideBlackQuads();
 			}
 		}
 		
@@ -518,6 +646,7 @@ package p_gameState.p_inGameState
 		
 		private function createSomething(command:String):void
 		{
+			m_princessID = 0;
 			if(m_eventsXML.event[m_eventCounter])
 			{
 				trace("after battle = "+int(m_eventsXML.event[m_eventCounter].afterBattles));
@@ -531,6 +660,7 @@ package p_gameState.p_inGameState
 					{
 						trace("boss is coming");
 						charID = m_eventsXML.event[m_eventCounter].charID;
+						m_princessID = int(m_eventsXML.event[m_eventCounter].princessID);
 						m_eventCounter++;
 					}
 				}
@@ -564,13 +694,391 @@ package p_gameState.p_inGameState
 			{
 				createNPC();
 			}
+			else if(command == "princess")
+			{
+				createPrincess(1);
+			}
+		}
+		
+		private function createPrincess(no:int):void
+		{
+			if(m_princess)
+			{
+				m_princess.destroy();
+			}
+			m_princess = new TG_NPC(layerCharacter,"left",no);
+			m_princess.addEventListener(TG_Character.LOADED,onPrincessLoaded);
+		}
+		private function onPrincessLoaded(e:Event = null):void
+		{
+			m_princess.removeEventListener(TG_Character.LOADED,onPrincessLoaded);
+			
+			m_princess.playAnimation("idle",0);
+			m_princess.rotation = m_char.rotation + 0.6;
+			
+			m_princess.sprite.alpha = 0;
+			TweenMax.fromTo(m_princess.sprite,2,{alpha:1},{alpha:1,ease:Circ.easeIn,onComplete:showPrincessText});
+			
+			m_clipPoofFX.visible = true;
+			m_clipPoofFX.currentFrame = 1;
+			m_clipPoofFX.play();
+			m_clipPoofFX.scaleX = m_princess.sprite.scaleX * 1.5;
+			m_clipPoofFX.scaleY = m_princess.sprite.scaleY * 1.5;
+			m_princess.sprite.addChild(m_clipPoofFX);
+			
+			
+			
+			
+			
+			
+			m_callBackFunc = checkCharPrincessDistance;
+		}
+		
+		private function checkCharPrincessDistance(elapsedTime:int):void
+		{
+			if(m_princess && m_char)
+			{
+				var difference:Number = 0;
+				if(m_princess.rotation > m_char.rotation)
+				{
+					difference = m_princess.rotation - m_char.rotation;
+				}
+				else
+				{
+					difference = m_char.rotation - m_princess.rotation;
+				}
+				if(difference <= m_PrincessdistanceDifference)
+				{
+					m_char.moving = false;
+					m_char.playAnimation("idle");
+					m_callBackFunc = updateDynamicLayerRotationPrincess;
+					
+					m_charRotationCounter = 0;
+					m_currentCharRotationCounter = 0;
+					m_currentDynamicLayerRotationCounter = 0;
+					
+					showBlackQuads();
+				}
+			}
+			
+		}
+		
+		private function updateDynamicLayerRotationPrincess(elapsedTime:int):void
+		{
+			var difference:Number = 0;
+			difference = m_princess.rotation - m_char.rotation;
+			if(difference < m_PrincessdistanceDifference)
+			{
+				difference = m_PrincessdistanceDifference - difference;
+				m_char.rotation -= difference;
+				layerNormalground.rotation += difference;
+				layerCharacter.rotation += difference;
+				layerForeground.rotation += difference;
+				layerBackground.rotation += difference;
+			}
+			difference = m_PrincessdistanceDifference;
+			m_currentDynamicLayerRotationCounter = difference * 0.5;
+			m_callBackFunc = null;
+			TweenMax.fromTo(layerDynamic,0.4,{rotation:layerDynamic.rotation},{rotation:layerDynamic.rotation - (difference * 0.5)});
+			
+		}
+		
+		private function showPrincessText():void
+		{
+			hideBlackQuads();
+			if(m_clipPoofFX && m_clipPoofFX.parent)
+			{
+				m_clipPoofFX.stop();
+				m_clipPoofFX.parent.removeChild(m_clipPoofFX);
+			}
+			var str:String = "";
+			if(TG_Static.language == TG_Static.ENGLISH)
+			{
+				str = m_princess.xml.chatEnglish;
+			}
+			else
+			{
+				str = m_princess.xml.chatIndonesia;
+			}
+			m_princess.showText(str,true);
+			m_callBackFunc = princessIdle;
+		}
+		
+		private function princessIdle(elapsedTime:int):void
+		{
+			m_counterTime += elapsedTime;
+			if(m_counterTime >= 500)
+			{
+				m_counterTime = 0;
+				m_princess.playAnimation("walk");
+				m_callBackFunc = null;
+				m_callBackFunc2 = princessMove;
+				
+				var str:String = "";
+				if(TG_Static.language == TG_Static.ENGLISH)
+				{
+					str = "You saved "+m_princess.xml.nameEnglish;
+				}
+				else if(TG_Static.language == TG_Static.INDONESIA)
+				{
+					str = "Kamu menyelamatkan "+m_princess.xml.nameIndonesia;
+				}
+				
+				var textField:TextField = createText(str,40,0xFFFF00);
+				layerCharacter.addChild(textField);
+				textField.rotation = m_char.rotation + m_charRotOffset * 10;
+				textField.pivotY += ((m_char.sprite.pivotY*m_char.sprite.scaleY) + (60*textField.scaleY)) / textField.scaleY;
+				TweenMax.to(textField,2,{pivotY:getTFPivotYGoal(textField),alpha:0.1,onComplete:textFieldComplete,onCompleteParams:[textField]});
+				if(TG_Status.getInstance().princessSaved[m_char.charNo] == null)
+				{
+					TG_Status.getInstance().princessSaved[m_char.charNo] = [];
+				}
+				if(TG_Status.getInstance().princessSaved[m_char.charNo][m_princessCounter] == null)
+				{
+					TG_Status.getInstance().princessSaved[m_char.charNo][m_princessCounter] = 1;
+					textField = createText(getBonusText(),40,0xFFFF00);
+					layerCharacter.addChild(textField);
+					textField.rotation = m_char.rotation + m_charRotOffset * 10;
+					textField.pivotY += ((m_char.sprite.pivotY*m_char.sprite.scaleY) + (60*textField.scaleY)) / textField.scaleY;
+					textField.visible = false;
+					TweenMax.to(textField,1,{onComplete:showPrincessBonusText,onCompleteParams:[textField]});
+					
+				}
+				
+				var posX:Number = 0;
+				var posY:Number = 0;
+				m_statusInfo.changeTexts("STATUS",m_char.descs);
+				posX = (TG_World.GAME_WIDTH - m_statusInfo.sprite.width);
+				posY = (TG_World.GAME_HEIGHT - m_statusInfo.sprite.height);
+				if(!m_statusInfo.sprite.visible)
+				{
+					TweenMax.fromTo(m_statusInfo.sprite,0.5,{x:posX,y:-m_statusInfo.sprite.height,visible:true},{x:posX,y:posY});
+					m_statusInfo.nextSprite.addEventListener(Event.TRIGGERED,onPrincessStatsBonusClicked);
+				}
+			}
+		}
+		
+		private function showPrincessBonusText(textField:TextField):void
+		{
+			textField.visible = true;
+			TweenMax.to(textField,2,{pivotY:getTFPivotYGoal(textField),alpha:0.1,onComplete:textFieldComplete,onCompleteParams:[textField]});
+		}
+		
+		private function getBonusText():String
+		{
+			var str:String = "";
+			if(m_princessCounter == 0)
+			{
+				str = parseBonusText(m_char.xml.bonus0id,Number(m_char.xml.bonus0value1),Number(m_char.xml.bonus0value2));
+			}
+			else if(m_princessCounter == 1)
+			{
+				str = parseBonusText(m_char.xml.bonus1id,Number(m_char.xml.bonus1value1),Number(m_char.xml.bonus1value2));
+			}
+			else if(m_princessCounter == 2)
+			{
+				str = parseBonusText(m_char.xml.bonus2id,Number(m_char.xml.bonus2value1),Number(m_char.xml.bonus2value2));
+			}
+			else if(m_princessCounter == 3)
+			{
+				str = parseBonusText(m_char.xml.bonus3id,Number(m_char.xml.bonus3value1),Number(m_char.xml.bonus3value2));
+			}
+			else if(m_princessCounter == 4)
+			{
+				str = parseBonusText(m_char.xml.bonus4id,Number(m_char.xml.bonus4value1),Number(m_char.xml.bonus4value2));
+			}
+			else if(m_princessCounter == 5)
+			{
+				str = parseBonusText(m_char.xml.bonus5id,Number(m_char.xml.bonus5value1),Number(m_char.xml.bonus5value2));
+			}
+			return str;
+		}
+		private function parseBonusText(text:String,value1:Number,value2:Number):String
+		{
+			var str:String = "";
+			if(text == "damage")
+			{
+				m_char.damageBonusPermanent += value1;
+				if(TG_Static.language == TG_Static.ENGLISH)
+				{
+					str = "You gained +"+value1+" permanent damage";
+				}
+				else if(TG_Static.language == TG_Static.INDONESIA)
+				{
+					str = "Kamu mendapatkan +"+value1+" pukulan permanen";
+				}
+				m_char.recalculateStats();
+			}
+			else if(text == "health")
+			{
+				m_char.healthBonusPermanent += value1;
+				if(TG_Static.language == TG_Static.ENGLISH)
+				{
+					str = "You gained +"+value1+" permanent health";
+				}
+				else if(TG_Static.language == TG_Static.INDONESIA)
+				{
+					str = "Kamu mendapatkan +"+value1+" darah permanen";
+				}
+				m_char.recalculateStats();
+			}
+			else if(text == "critical")
+			{
+				m_char.criticalChanceBonusPermanent += value1;
+				m_char.criticalValueBonusPermanent += value2;
+				if(TG_Static.language == TG_Static.ENGLISH)
+				{
+					str = "You gained +"+value1+"% permanent critical chance and +"+value2+"% critical damage";
+				}
+				else if(TG_Static.language == TG_Static.INDONESIA)
+				{
+					str = "Kamu mendapatkan +"+value1+"% kans kritikal permanen dan +"+value2+"% pukulan kritikal";
+				}
+				m_char.recalculateStats();
+			}
+			else if(text == "poison")
+			{
+				m_char.poisonChanceBonusPermanent += value1;
+				m_char.poisonValueBonusPermanent += value2;
+				if(TG_Static.language == TG_Static.ENGLISH)
+				{
+					str = "You gained +"+value1+"% permanent poison chance and +"+value2+" poison damage";
+				}
+				else if(TG_Static.language == TG_Static.INDONESIA)
+				{
+					str = "Kamu mendapatkan +"+value1+"% kans racun permanen dan +"+value2+" pukulan racun";
+				}
+				m_char.recalculateStats();
+			}
+			else if(text == "heal")
+			{
+				m_char.healChanceBonusPermanent += value1;
+				m_char.healValueBonusPermanent += value2;
+				if(TG_Static.language == TG_Static.ENGLISH)
+				{
+					str = "You gained +"+value1+"% permanent heal chance and +"+value2+" heal value";
+				}
+				else if(TG_Static.language == TG_Static.INDONESIA)
+				{
+					str = "Kamu mendapatkan +"+value1+"% kans sembuh permanen dan +"+value2+" nilai sembuh";
+				}
+				m_char.recalculateStats();
+			}
+			else if(text == "evade")
+			{
+				m_char.evadeChanceBonusPermanent += value1;
+				if(TG_Static.language == TG_Static.ENGLISH)
+				{
+					str = "You gained +"+value1+"% permanent evade chance";
+				}
+				else if(TG_Static.language == TG_Static.INDONESIA)
+				{
+					str = "Kamu mendapatkan +"+value1+"% kans menghindar permanen";
+				}
+				m_char.recalculateStats();
+			}
+			else if(text == "lifeSteal")
+			{
+				m_char.lifestealValueBonusPermanent += value1;
+				if(TG_Static.language == TG_Static.ENGLISH)
+				{
+					str = "You gained +"+value1+"% permanent life steal";
+				}
+				else if(TG_Static.language == TG_Static.INDONESIA)
+				{
+					str = "Kamu mendapatkan +"+value1+"% curi darah permanen";
+				}
+				m_char.recalculateStats();
+			}
+			else if(text == "magic")
+			{
+				m_char.magicChanceBonusPermanent += value1;
+				m_char.magicValueBonusPermanent += value2;
+				if(TG_Static.language == TG_Static.ENGLISH)
+				{
+					str = "You gained +"+value1+"% permanent magic chance and +"+value2+" magic damage";
+				}
+				else if(TG_Static.language == TG_Static.INDONESIA)
+				{
+					str = "Kamu mendapatkan +"+value1+"% kans sihir permanen dan +"+value2+" pukulan sihir";
+				}
+				m_char.recalculateStats();
+			}
+			else if(text == "reversed")
+			{
+				m_char.reverseChanceBonusPermanent += value1;
+				if(TG_Static.language == TG_Static.ENGLISH)
+				{
+					str = "You gained +"+value1+"% permanent counter attack";
+				}
+				else if(TG_Static.language == TG_Static.INDONESIA)
+				{
+					str = "Kamu mendapatkan +"+value1+"% pukulan balik permanen";
+				}
+				m_char.recalculateStats();
+			}
+			else if(text == "strengthen")
+			{
+				m_char.strengthenChanceBonusPermanent += value1;
+				m_char.strengthenValueBonusPermanent += value2;
+				if(TG_Static.language == TG_Static.ENGLISH)
+				{
+					str = "You gained +"+value1+"% permanent strengthen chance and +"+value2+"% strengthen value";
+				}
+				else if(TG_Static.language == TG_Static.INDONESIA)
+				{
+					str = "Kamu mendapatkan +"+value1+"% kans menguatkan permanen dan +"+value2+"% nilai menguatkan";
+				}
+				m_char.recalculateStats();
+			}
+			else if(text == "weaken")
+			{
+				m_char.weakenChanceBonusPermanent += value1;
+				m_char.weakenValueBonusPermanent += value2;
+				if(TG_Static.language == TG_Static.ENGLISH)
+				{
+					str = "You gained +"+value1+"% permanent weaken chance and +"+value2+"% weaken value";
+				}
+				else if(TG_Static.language == TG_Static.INDONESIA)
+				{
+					str = "Kamu mendapatkan +"+value1+"% kans melemahkan permanen dan +"+value2+"% nilai melemahkan";
+				}
+				m_char.recalculateStats();
+			}
+			return str;
+		}
+		
+		private function princessMove(elapsedTime:int):void
+		{
+			
+			m_counterTime += elapsedTime;
+			if(m_counterTime >= 5000)
+			{
+				m_counterTime = 0;
+				m_princess.playAnimation("idle");
+				m_princess.hide();
+				m_callBackFunc2 = null;
+			}
+			else
+			{
+				m_princess.rotation -= m_char.speed * 0.5 * elapsedTime/1000;
+			}
+		}
+		
+		private function onPrincessStatsBonusClicked(e:Event):void
+		{
+			m_statusInfo.nextSprite.removeEventListener(Event.TRIGGERED,onPrincessStatsBonusClicked);
+			TweenMax.to(m_statusInfo.sprite,0.5,{y:TG_World.GAME_HEIGHT,visible:false});
+			m_char.playAnimation("walk");
+			m_princessID = 0;
+			m_callBackFunc = moveUntilPlayerAtTheMiddle;
 		}
 		
 		private function createNPC():void
 		{
 			if(m_npc == null)
 			{
-				m_npc = new TG_NPC(layerCharacter,"left");
+				m_npc = new TG_NPC(layerCharacter,"left",0);
 				m_npc.addEventListener(TG_Character.LOADED,onNPCLoaded);
 			}
 			else
@@ -606,8 +1114,6 @@ package p_gameState.p_inGameState
 				{
 					difference = m_char.rotation - m_npc.rotation;
 				}
-				trace("difference = "+difference);
-				trace("m_NPCdistanceDifference = "+m_NPCdistanceDifference);
 				if(difference <= m_NPCdistanceDifference)
 				{
 					m_char.moving = false;
@@ -644,8 +1150,10 @@ package p_gameState.p_inGameState
 		
 		private function onDynamicLayerRotatedNPC():void
 		{
-			
+			m_char.recalculateStats();
+			m_shopBar.setChar(m_char);
 			m_shopBar.initShopItems();
+			
 			var nextSprite:Sprite = m_shopBar.getNextButton();
 			var buySprite:Sprite = m_shopBar.getBuyButton();
 			
@@ -666,8 +1174,7 @@ package p_gameState.p_inGameState
 			if(!m_statusInfo.sprite.visible)
 			{
 				TweenMax.fromTo(m_statusInfo.sprite,0.5,{x:posX,y:-m_statusInfo.sprite.height,visible:true},{x:posX,y:posY});
-				m_statusInfo.nextButton.visible = false;
-				m_statusInfo.nextLabel.visible = false;
+				m_statusInfo.nextSprite.visible = false;
 			}
 		}
 		
@@ -687,6 +1194,7 @@ package p_gameState.p_inGameState
 					nextSprite.removeEventListener(TouchEvent.TOUCH,onBMNextClicked);
 					buySprite.removeEventListener(TouchEvent.TOUCH,onBMBuyClicked);
 					m_char.playAnimation("walk");
+					m_char.recalculateStats();
 					m_callBackFunc = moveUntilPlayerAtTheMiddle;
 					
 					var middleX:Number = (TG_World.GAME_WIDTH - m_shopBar.sprite.width) * 0.5;
@@ -718,21 +1226,33 @@ package p_gameState.p_inGameState
 				if(touchPhase == TouchPhase.ENDED)
 				{
 					var obj:Object = m_shopBar.buyCurrentItem();
-					m_shopBar.addBonusToUser(m_char,obj);
-					levelUpFX(m_char);
-					var textField:TextField = createText(obj.name,60,0xFF0000);
-					layerCharacter.addChild(textField);
-					textField.rotation = m_char.rotation + m_charRotOffset * -10;
-					textField.pivotY += ((m_char.sprite.pivotY*m_char.sprite.scaleY) + (60*textField.scaleY)) / textField.scaleY;
-					TweenMax.to(textField,2,{pivotY:getTFPivotYGoal(textField),alpha:0.1,onComplete:textFieldComplete,onCompleteParams:[textField]});
+					var textField:TextField;
+					if(obj)
+					{
+						m_shopBar.addBonusToUser(obj);
+						levelUpFX(m_char);
+						textField = createText(obj.name,60,0xFF0000);
+						layerCharacter.addChild(textField);
+						textField.rotation = m_char.rotation + m_charRotOffset * -10;
+						textField.pivotY += ((m_char.sprite.pivotY*m_char.sprite.scaleY) + (60*textField.scaleY)) / textField.scaleY;
+						TweenMax.to(textField,2,{pivotY:getTFPivotYGoal(textField),alpha:0.1,onComplete:textFieldComplete,onCompleteParams:[textField]});
+					}
+					else
+					{
+						textField = createText("NOT ENOUGH GOLD",50,0xFFFF00);
+						layerCharacter.addChild(textField);
+						textField.rotation = m_char.rotation + m_charRotOffset * -10;
+						textField.pivotY += ((m_char.sprite.pivotY*m_char.sprite.scaleY) + (60*textField.scaleY)) / textField.scaleY;
+						TweenMax.to(textField,2,{pivotY:getTFPivotYGoal(textField),alpha:0.1,onComplete:textFieldComplete,onCompleteParams:[textField]});
+					}
 				}
 				
 			}
 		}
 		
-		private function createEnemy(charID:String = ""):void
+		private function createEnemy(charID:String = "",exceptionID:String = ""):void
 		{
-			m_enemy = new TG_Character(layerCharacter,"left",charID);
+			m_enemy = new TG_Character(layerCharacter,"left",charID,m_char.id);
 			m_enemy.addEventListener(TG_Character.LOADED,onEnemyLoaded);
 		}
 		
@@ -747,15 +1267,15 @@ package p_gameState.p_inGameState
 			
 			if(m_enemy.isBoss)
 			{
-				m_enemy.level = m_enemy.xml.level;
+				m_enemy.setLevel(m_enemy.xml.level,true);
 			}
 			else
 			{
-				m_enemy.level = ((Math.random() * 100000) % 4) + m_char.level;
+				m_enemy.setLevel(((Math.random() * 100000) % 4) + m_char.getLevel(),true);
 			}
 			
 			m_statusBar2.setSeizedExp(m_enemy.seizedExp);
-			m_statusBar2.setLevel(m_enemy.level);
+			m_statusBar2.setLevel(m_enemy.getLevel());
 			m_statusBar2.calculateReduceExp();
 			
 			TweenMax.fromTo(m_enemy.sprite,1,{alpha:0.1},{alpha:1,ease:Circ.easeIn});
@@ -912,7 +1432,7 @@ package p_gameState.p_inGameState
 					textField.rotation = m_char.rotation;
 					textField.pivotY += ((m_char.sprite.pivotY*m_char.sprite.scaleY) + (60*textField.scaleY)) / textField.scaleY;
 					TweenMax.to(textField,duration,{pivotY:getTFPivotYGoal(textField,offsetY),alpha:0.1,onComplete:textFieldComplete,onCompleteParams:[textField]});
-					
+					showStat = false;
 					break;
 				case "bomb": 
 					obj.value1 = int(obj.value1);
@@ -924,7 +1444,7 @@ package p_gameState.p_inGameState
 					textField.rotation = m_char.rotation;
 					textField.pivotY += ((m_char.sprite.pivotY*m_char.sprite.scaleY) + (60*textField.scaleY)) / textField.scaleY;
 					TweenMax.to(textField,duration,{pivotY:getTFPivotYGoal(textField,offsetY),alpha:0.1,onComplete:textFieldComplete,onCompleteParams:[textField]});
-					
+					showStat = false;
 					break;
 				case "addhealth": 
 					obj.value1 = int(obj.value1);
@@ -936,7 +1456,7 @@ package p_gameState.p_inGameState
 					textField.rotation = m_char.rotation;
 					textField.pivotY += ((m_char.sprite.pivotY*m_char.sprite.scaleY) + (60*textField.scaleY)) / textField.scaleY;
 					TweenMax.to(textField,duration,{pivotY:getTFPivotYGoal(textField,offsetY),alpha:0.1,onComplete:textFieldComplete,onCompleteParams:[textField]});
-					
+					showStat = false;
 					break;
 				case "health": 
 					obj.value1 = int(obj.value1);
@@ -963,7 +1483,7 @@ package p_gameState.p_inGameState
 					showStat = true;
 					break;
 				case "critical": 
-					if(m_char.getCriticalChance() <= 0 && obj.value1 > 0)
+					if(m_char.critChance <= 0 && obj.value1 > 0)
 					{
 						textField = createText("UNLOCKED SKILL "+objName,60,0xFF0000);
 						layerCharacter.addChild(textField);
@@ -976,9 +1496,9 @@ package p_gameState.p_inGameState
 					{
 						delayTime = 0;
 					}
-					if(m_char.getCriticalChance() < obj.maxValue1)
+					if(m_char.critChance < m_char.critChanceMax)
 					{
-						diff = obj.maxValue1 - m_char.getCriticalChance();
+						diff = m_char.critChanceMax - m_char.critChance;
 						if(diff < obj.value1)
 						{
 							m_char.criticalChanceBonus += diff;
@@ -996,9 +1516,9 @@ package p_gameState.p_inGameState
 						showValue1 = false;
 					}
 					
-					if(m_char.getCriticalDamage() < obj.maxValue2)
+					if(m_char.critValue < m_char.critValueMax)
 					{
-						diff = obj.maxValue2 - m_char.getCriticalDamage();
+						diff = m_char.critValueMax - m_char.critValue;
 						if(diff < obj.value2)
 						{
 							m_char.criticalValueBonus += diff;
@@ -1034,7 +1554,6 @@ package p_gameState.p_inGameState
 						textField.pivotY += ((m_char.sprite.pivotY*m_char.sprite.scaleY) + (60*textField.scaleY)) / textField.scaleY;
 						TweenMax.to(textField,duration,{delay:delayTime,pivotY:getTFPivotYGoal(textField,offsetY),alpha:0.1,onComplete:textFieldComplete,onCompleteParams:[textField]});
 						
-						trace("add crit chance");
 					}
 					
 					if(showValue2)
@@ -1058,8 +1577,103 @@ package p_gameState.p_inGameState
 					
 					showStat = true;
 					break;
+				case "critical": 
+					if(m_char.dmgReturnChance <= 0 && obj.value1 > 0)
+					{
+						textField = createText("UNLOCKED SKILL "+objName,60,0xFF0000);
+						layerCharacter.addChild(textField);
+						textField.rotation = m_char.rotation;
+						textField.pivotY += ((m_char.sprite.pivotY*m_char.sprite.scaleY) + (60*textField.scaleY)) / textField.scaleY;
+						TweenMax.to(textField,duration,{pivotY:getTFPivotYGoal(textField,offsetY),alpha:0.1,onComplete:textFieldComplete,onCompleteParams:[textField]});
+						delayTime = 0.5;						
+					}
+					else
+					{
+						delayTime = 0;
+					}
+					if(m_char.dmgReturnChance < m_char.dmgReturnChanceMax)
+					{
+						diff = m_char.dmgReturnChanceMax - m_char.dmgReturnChance;
+						if(diff < obj.value1)
+						{
+							m_char.dmgReturnChanceBonus += diff;
+							usedValue1 = diff;
+						}
+						else
+						{
+							m_char.dmgReturnChanceBonus += obj.value1;
+							usedValue1 = obj.value1;
+						}
+						showValue1 = true;
+					}
+					else
+					{
+						showValue1 = false;
+					}
+					
+					if(m_char.dmgReturnValue < m_char.dmgReturnValueMax)
+					{
+						diff = m_char.dmgReturnValueMax - m_char.dmgReturnValue;
+						if(diff < obj.value2)
+						{
+							m_char.dmgReturnValueBonus += diff;
+							usedValue2 = diff;
+						}
+						else
+						{
+							m_char.dmgReturnValueBonus += obj.value2;
+							usedValue2 = obj.value2;
+						}
+						showValue2 = true;
+					}
+					else
+					{
+						showValue2 = false;
+					}
+					m_char.recalculateStats();
+					
+					if(showValue1)
+					{
+						if(TG_Static.language == TG_Static.ENGLISH)
+						{
+							text = "DMG RETURN CHANCE";
+						}
+						else if(TG_Static.language == TG_Static.INDONESIA)
+						{
+							text = "KEMBALIKAN PUKULAN KANS";
+						}
+						usedValue1 = int(usedValue1*100)/100;
+						textField = createText(""+text+" + "+usedValue1+"%",50,0xFFFF00);
+						layerCharacter.addChild(textField);
+						textField.rotation = m_char.rotation;
+						textField.pivotY += ((m_char.sprite.pivotY*m_char.sprite.scaleY) + (60*textField.scaleY)) / textField.scaleY;
+						TweenMax.to(textField,duration,{delay:delayTime,pivotY:getTFPivotYGoal(textField,offsetY),alpha:0.1,onComplete:textFieldComplete,onCompleteParams:[textField]});
+						
+					}
+					
+					if(showValue2)
+					{
+						if(TG_Static.language == TG_Static.ENGLISH)
+						{
+							text = "DMG RETURN VALUE";
+						}
+						else if(TG_Static.language == TG_Static.INDONESIA)
+						{
+							text = "NILAI KEMBALIKAN PUKULAN";
+						}
+						usedValue2 = int(usedValue2*100)/100;
+						textField = createText(""+text+" + "+usedValue2+"X",50,0xFFFF00);
+						layerCharacter.addChild(textField);
+						textField.rotation = m_char.rotation;
+						textField.pivotY += ((m_char.sprite.pivotY*m_char.sprite.scaleY) + (60*textField.scaleY)) / textField.scaleY;
+						textField.visible = false;
+						TweenMax.fromTo(textField,duration,{visible:true},{delay:0.5+delayTime,pivotY:getTFPivotYGoal(textField,offsetY),alpha:0.1,onComplete:textFieldComplete,onCompleteParams:[textField]});
+					}
+					
+					showStat = true;
+					break;
 				case "heal":
-					if(m_char.getHealChance() <= 0 && obj.value1 > 0)
+					if(m_char.healChance <= 0 && obj.value1 > 0)
 					{
 						textField = createText("UNLOCKED SKILL "+objName,60,0xFF0000);
 						layerCharacter.addChild(textField);
@@ -1073,9 +1687,9 @@ package p_gameState.p_inGameState
 						delayTime = 0;
 					}
 					
-					if(m_char.getHealChance() < obj.maxValue1)
+					if(m_char.healChance < m_char.healChanceMax)
 					{
-						diff = obj.maxValue1 - m_char.getHealChance();
+						diff = m_char.healChanceMax - m_char.healChance;
 						if(diff < obj.value1)
 						{
 							m_char.healChanceBonus += diff;
@@ -1093,9 +1707,9 @@ package p_gameState.p_inGameState
 						showValue1 = false;
 					}
 					
-					if(m_char.getHealValue() < obj.maxValue2)
+					if(m_char.healValue < m_char.healValueMax)
 					{
-						diff = obj.maxValue2 - m_char.getHealValue();
+						diff = m_char.healValueMax - m_char.healValue;
 						if(diff < obj.value2)
 						{
 							m_char.healValueBonus += diff;
@@ -1155,7 +1769,7 @@ package p_gameState.p_inGameState
 					
 					break;
 				case "evade":
-					if(m_char.getEvadeChance() <= 0 && obj.value1 > 0)
+					if(m_char.evadeChance <= 0 && obj.value1 > 0)
 					{
 						textField = createText("UNLOCKED SKILL "+objName,60,0xFF0000);
 						layerCharacter.addChild(textField);
@@ -1168,9 +1782,9 @@ package p_gameState.p_inGameState
 					{
 						delayTime = 0;
 					}
-					if(m_char.getEvadeChance() < obj.maxValue1)
+					if(m_char.evadeChance < m_char.evadeChanceMax)
 					{
-						diff = obj.maxValue1 - m_char.getEvadeChance();
+						diff = m_char.evadeChanceMax - m_char.evadeChance;
 						if(diff < obj.value1)
 						{
 							m_char.evadeChanceBonus += diff;
@@ -1212,7 +1826,7 @@ package p_gameState.p_inGameState
 					break;
 				case "poison":
 					
-					if(m_char.getPoisonChance() <= 0 && obj.value1 > 0)
+					if(m_char.poisonChance <= 0 && obj.value1 > 0)
 					{
 						textField = createText("UNLOCKED SKILL "+objName,60,0xFF0000);
 						layerCharacter.addChild(textField);
@@ -1226,9 +1840,9 @@ package p_gameState.p_inGameState
 						delayTime = 0;
 					}
 					
-					if(m_char.getPoisonChance() < obj.maxValue1)
+					if(m_char.poisonChance < m_char.poisonChanceMax)
 					{
-						diff = obj.maxValue1 - m_char.getPoisonChance();
+						diff = m_char.poisonChanceMax - m_char.poisonChance;
 						if(diff < obj.value1)
 						{
 							m_char.poisonChanceBonus += diff;
@@ -1246,9 +1860,9 @@ package p_gameState.p_inGameState
 						showValue1 = false;
 					}
 					
-					if(m_char.getPoisonDamage() < obj.maxValue2)
+					if(m_char.poisonValue < m_char.poisonValueMax)
 					{
-						diff = obj.maxValue2 - m_char.getPoisonDamage();
+						diff = m_char.poisonValueMax - m_char.poisonValue;
 						if(diff < obj.value2)
 						{
 							m_char.poisonValueBonus += diff;
@@ -1309,7 +1923,7 @@ package p_gameState.p_inGameState
 					break;
 				case "lifesteal":
 					
-					if(m_char.getLifeStealValue() <= 0 && obj.value1 > 0)
+					if(m_char.lifestealValue <= 0 && obj.value1 > 0)
 					{
 						textField = createText("UNLOCKED SKILL "+objName,60,0xFF0000);
 						layerCharacter.addChild(textField);
@@ -1322,10 +1936,9 @@ package p_gameState.p_inGameState
 					{
 						delayTime = 0;
 					}
-					if(m_char.getLifeStealValue() < obj.maxValue1)
+					if(m_char.lifestealValue < m_char.lifestealValueMax)
 					{
-						diff = obj.maxValue1 - m_char.getLifeStealValue();
-						trace("max value = "+obj.maxValue1);
+						diff = m_char.lifestealValueMax - m_char.lifestealValue;
 						if(diff < obj.value1)
 						{
 							m_char.lifestealValueBonus += diff;
@@ -1367,7 +1980,7 @@ package p_gameState.p_inGameState
 					
 					break;
 				case "magic":
-					if(m_char.getMagicChance() <= 0 && obj.value1 > 0)
+					if(m_char.magicChance <= 0 && obj.value1 > 0)
 					{
 						textField = createText("UNLOCKED SKILL "+objName,60,0xFF0000);
 						layerCharacter.addChild(textField);
@@ -1381,9 +1994,9 @@ package p_gameState.p_inGameState
 						delayTime = 0;
 					}
 					
-					if(m_char.getMagicChance() < obj.maxValue1)
+					if(m_char.magicChance < m_char.magicChanceMax)
 					{
-						diff = obj.maxValue1 - m_char.getMagicChance();
+						diff = m_char.magicChanceMax - m_char.magicChance;
 						if(diff < obj.value1)
 						{
 							m_char.magicChanceBonus += diff;
@@ -1401,9 +2014,9 @@ package p_gameState.p_inGameState
 						showValue1 = false;
 					}
 					
-					if(m_char.getMagicValue() < obj.maxValue2)
+					if(m_char.magicValue < m_char.magicValueMax)
 					{
-						diff = obj.maxValue2 - m_char.getMagicValue();
+						diff = m_char.magicValueMax - m_char.magicValue;
 						if(diff < obj.value2)
 						{
 							m_char.magicValueBonus += diff;
@@ -1463,7 +2076,7 @@ package p_gameState.p_inGameState
 					break;
 				case "strengthen":
 					
-					if(m_char.getStrengthenChance() <= 0 && obj.value1 > 0)
+					if(m_char.strengthenChance <= 0 && obj.value1 > 0)
 					{
 						textField = createText("UNLOCKED SKILL "+objName,60,0xFF0000);
 						layerCharacter.addChild(textField);
@@ -1477,9 +2090,9 @@ package p_gameState.p_inGameState
 						delayTime = 0;
 					}
 					
-					if(m_char.getStrengthenChance() < obj.maxValue1)
+					if(m_char.strengthenChance < m_char.strengthenChanceMax)
 					{
-						diff = obj.maxValue1 - m_char.getStrengthenChance();
+						diff = m_char.strengthenChanceMax - m_char.strengthenChance;
 						if(diff < obj.value1)
 						{
 							m_char.strengthenChanceBonus += diff;
@@ -1497,9 +2110,9 @@ package p_gameState.p_inGameState
 						showValue1 = false;
 					}
 					
-					if(m_char.getStrengthenValue() < obj.maxValue2)
+					if(m_char.strengthenValue < m_char.strengthenValueMax)
 					{
-						diff = obj.maxValue2 - m_char.getStrengthenValue();
+						diff = m_char.strengthenValueMax - m_char.strengthenValue;
 						if(diff < obj.value2)
 						{
 							m_char.strengthenValueBonus += diff;
@@ -1559,7 +2172,7 @@ package p_gameState.p_inGameState
 					break;
 				case "weaken":
 					
-					if(m_char.getWeakenChance() <= 0 && obj.value1 > 0)
+					if(m_char.weakenChance <= 0 && obj.value1 > 0)
 					{
 						textField = createText("UNLOCKED SKILL "+objName,60,0xFF0000);
 						layerCharacter.addChild(textField);
@@ -1573,9 +2186,9 @@ package p_gameState.p_inGameState
 						delayTime = 0;
 					}
 					
-					if(m_char.getWeakenChance() < obj.maxValue1)
+					if(m_char.weakenChance < m_char.weakenChanceMax)
 					{
-						diff = obj.maxValue1 - m_char.getWeakenChance();
+						diff = m_char.weakenChanceMax - m_char.weakenChance;
 						if(diff < obj.value1)
 						{
 							m_char.weakenChanceBonus += diff;
@@ -1593,9 +2206,9 @@ package p_gameState.p_inGameState
 						showValue1 = false;
 					}
 					
-					if(m_char.getWeakenValue() > obj.maxValue2)
+					if(m_char.weakenValue > m_char.weakenValueMax)
 					{
-						diff = m_char.getWeakenValue() - obj.maxValue2;
+						diff = m_char.weakenValue - m_char.weakenValueMax;
 						if(diff < obj.value2)
 						{
 							m_char.weakenValueBonus += diff;
@@ -1656,7 +2269,7 @@ package p_gameState.p_inGameState
 					
 					break;
 				case "reversed": 
-					if(m_char.getReverseChance() <= 0 && obj.value1 > 0)
+					if(m_char.reverseChance <= 0 && obj.value1 > 0)
 					{
 						textField = createText("UNLOCKED SKILL "+objName,60,0xFF0000);
 						layerCharacter.addChild(textField);
@@ -1669,9 +2282,9 @@ package p_gameState.p_inGameState
 					{
 						delayTime = 0;
 					}
-					if(m_char.getReverseChance() < obj.maxValue1)
+					if(m_char.reverseChance < m_char.reverseChanceMax)
 					{
-						diff = obj.maxValue1 - m_char.getReverseChance();
+						diff = m_char.reverseChanceMax - m_char.reverseChance;
 						if(diff < obj.value1)
 						{
 							m_char.reverseChanceBonus += diff;
@@ -1695,11 +2308,11 @@ package p_gameState.p_inGameState
 					{
 						if(TG_Static.language == TG_Static.ENGLISH)
 						{
-							text = "REVERSE CHANCE";
+							text = "COUNTER ATT CHANCE";
 						}
 						else if(TG_Static.language == TG_Static.INDONESIA)
 						{
-							text = "MEMBALIKKAN KANS";
+							text = "PUKUL BALIK KANS";
 						}
 						usedValue1 = int(usedValue1*100)/100;
 						textField = createText(""+text+" + "+usedValue1+"%",50,0xFFFF00);
@@ -1715,7 +2328,6 @@ package p_gameState.p_inGameState
 		
 			if(showStat)
 			{
-				trace("show stats");
 				var posX:Number = 0;
 				var posY:Number = 0;
 				m_statusInfo.changeTexts("STATUS",m_char.descs);
@@ -1725,7 +2337,8 @@ package p_gameState.p_inGameState
 				if(!m_statusInfo.sprite.visible)
 				{
 					TweenMax.fromTo(m_statusInfo.sprite,0.5,{x:posX,y:-m_statusInfo.sprite.height,visible:true},{x:posX,y:posY});
-					m_statusInfo.nextButton.addEventListener(Event.TRIGGERED,onPlayerStatsBonusClicked);
+					m_statusInfo.nextSprite.addEventListener(Event.TRIGGERED,onPlayerStatsBonusClicked);
+					m_statusInfo.nextSprite.visible = true;
 				}
 				
 			}
@@ -1737,7 +2350,7 @@ package p_gameState.p_inGameState
 		}
 		private function onPlayerStatsBonusClicked(e:Event):void
 		{
-			m_statusInfo.nextButton.removeEventListener(Event.TRIGGERED,onPlayerStatsBonusClicked);
+			m_statusInfo.nextSprite.removeEventListener(Event.TRIGGERED,onPlayerStatsBonusClicked);
 			TweenMax.to(m_statusInfo.sprite,0.5,{y:TG_World.GAME_HEIGHT,visible:false});
 			
 			m_callBackFunc = null;
@@ -1746,12 +2359,12 @@ package p_gameState.p_inGameState
 		private function idleTreasureChest(elapsedTime:int):void
 		{
 			m_animationCounter += elapsedTime;
-			
 			if(m_animationCounter >= 1000)
 			{
 				m_animationCounter = 0;
 				m_callBackFunc = null;
-				if(!isAnyoneDies())
+				
+				if(!isAnyoneDies(true))
 				{
 					hideTreasureChest();
 				}
@@ -1773,7 +2386,7 @@ package p_gameState.p_inGameState
 			}
 			m_char.playAnimation("walk");
 			m_callBackFunc = moveUntilPlayerAtTheMiddle;
-			
+			trace("move");
 		}
 		
 		
@@ -1803,6 +2416,7 @@ package p_gameState.p_inGameState
 			if(m_rpsBar)
 			{
 				m_rpsBar.show();
+				m_rpsBarHided = false;
 			}
 			if(m_statusBar2)
 			{
@@ -1811,12 +2425,11 @@ package p_gameState.p_inGameState
 			}
 			if(m_question)
 			{
-				var level:int = m_char.level-1;
+				var level:int = m_char.getLevel()-1;
 				if(m_enemy.isBoss)
 				{
 					level = m_enemy.xml.jkpLevel;
 				}
-				trace("level jkp = "+level);
 				m_question.level = level;
 				m_question.show();
 			}
@@ -1925,11 +2538,13 @@ package p_gameState.p_inGameState
 			TweenMax.fromTo(m_statusInfo.sprite,0.5,{x:posX,y:-m_statusInfo.sprite.height,visible:true},{x:posX,y:posY});
 			//m_callBackFunc = waitBossIdle;
 			m_callBackFunc = null;
-			m_statusInfo.nextButton.addEventListener(Event.TRIGGERED,onEnemyStatsClicked);
+			m_statusInfo.nextSprite.addEventListener(Event.TRIGGERED,onEnemyStatsClicked);
+			m_statusInfo.nextSprite.visible = true;
+			
 		}
 		protected function onEnemyStatsClicked(e:Event):void
 		{
-			m_statusInfo.nextButton.removeEventListener(Event.TRIGGERED,onEnemyStatsClicked);
+			m_statusInfo.nextSprite.removeEventListener(Event.TRIGGERED,onEnemyStatsClicked);
 			m_callBackFunc = rotateToPlayer;
 			TweenMax.to(m_statusInfo.sprite,0.5,{y:TG_World.GAME_HEIGHT,visible:false});
 			TweenMax.to(multiFunctionText,0.4,{y:-multiFunctionText.height,visible:false});
@@ -2002,7 +2617,7 @@ package p_gameState.p_inGameState
 				var rand:int;
 				var rangeMin:int = 0;
 				var rangeMax:int = 0;
-				var level:int = m_char.level-1;
+				var level:int = m_char.getLevel()-1;
 				if(level >= 4)
 				{
 					rangeMin = level - 1;
@@ -2019,6 +2634,7 @@ package p_gameState.p_inGameState
 					level = m_enemy.xml.jkpLevel;
 					rand = level;
 				}
+				
 				m_question.showQuestion(rand);
 				//m_question.showQuestion();
 			}
@@ -2145,7 +2761,7 @@ package p_gameState.p_inGameState
 			{
 				if(victim.isPoisoned)
 				{
-					damage =  attacker.getPoisonDamage();
+					damage =  attacker.poisonValue;
 					victim.health -= damage;
 					textField = createText(""+damage,60,0x00FF00);
 					layerCharacter.addChild(textField);
@@ -2191,13 +2807,67 @@ package p_gameState.p_inGameState
 		
 		private function checkAnyoneDiesAfterPoison(elapsedTime:int):void
 		{
-			if(!isAnyoneDies())
+			if(isAnyoneFall())
+			{
+				showBlackQuads();
+				m_callBackFunc = waitUntilEnemyFellAfterPoison;
+			}
+			else if(!isAnyoneDies())
 			{
 				m_char.playAnimation("battle");
 				m_enemy.playAnimation("battle");
 				m_callBackFunc = checkHeal;
 			}
 		}
+		private function waitUntilEnemyFellAfterPoison(elapsedTime:int):void
+		{
+			m_counterTime+=elapsedTime;
+			if(m_counterTime>500)
+			{
+				m_counterTime = 0;
+				m_enemy.setLevel(m_enemy.getLevel()+3);
+				m_statusBar2.setSeizedExp(m_enemy.seizedExp);
+				m_statusBar2.setLevel(m_enemy.getLevel());
+				m_statusBar2.calculateReduceExp();
+				var textField:TextField;
+				var str:String;
+				if(TG_Static.language == TG_Static.ENGLISH)
+				{
+					str = "Revived";
+				}
+				else if(TG_Static.language == TG_Static.INDONESIA)
+				{
+					str = "Hidup Kembali";
+				}
+				textField = createText(""+str,50,0xFFFF00);
+				layerCharacter.addChild(textField);
+				textField.rotation = m_enemy.rotation + m_enemyRotOffset;
+				textField.pivotY += ((m_enemy.sprite.pivotY*m_enemy.sprite.scaleY) + (60*textField.scaleY)) / textField.scaleY;
+				TweenMax.to(textField,2,{pivotY:getTFPivotYGoal(textField),alpha:0.1,onComplete:textFieldComplete,onCompleteParams:[textField]});
+				
+				m_clipLevelUpFX.visible = true;
+				m_clipLevelUpFX.currentFrame = 1;
+				m_clipLevelUpFX.play();
+				m_clipLevelUpFX.scaleX = m_enemy.sprite.scaleX * 2;
+				m_clipLevelUpFX.scaleY = m_enemy.sprite.scaleY * 2;
+				m_enemy.sprite.addChild(m_clipLevelUpFX);
+				
+				m_enemy.reviveChar();
+				m_callBackFunc = waitUntilEnemyRevivedAfterPoison;
+			}
+		}
+		
+		private function waitUntilEnemyRevivedAfterPoison(elapsedTime:int):void
+		{
+			m_counterTime+=elapsedTime;
+			if(m_counterTime>500)
+			{
+				m_counterTime = 0;
+				hideBlackQuads();
+				m_callBackFunc = checkHeal;
+			}
+		}
+		
 		
 		/*************HEAL****************************/
 		private function doHeal(char:TG_Character,offset:Number):Boolean
@@ -2205,12 +2875,12 @@ package p_gameState.p_inGameState
 			var textField:TextField;
 			var healValue:int = 0;
 			var rand:Number = 0;
-			if(char.getHealChance() > 0)
+			if(char.healChance > 0)
 			{
 				rand = (Math.random() * 100000 ) % 100;
-				if(rand <= char.getHealChance())
+				if(rand <= char.healChance)
 				{
-					healValue = char.getHealValue();
+					healValue = char.healValue;
 					char.health += healValue;
 					if(char.health > char.initialHealth)
 					{
@@ -2296,12 +2966,12 @@ package p_gameState.p_inGameState
 			var textField:TextField;
 			var damage:int = 0;
 			var rand:Number = 0;
-			if(attacker.getMagicChance() > 0)
+			if(attacker.magicChance > 0)
 			{
 				rand = (Math.random() * 100000 ) % 100;
-				if(rand <= attacker.getMagicChance())
+				if(rand <= attacker.magicChance)
 				{
-					damage = attacker.getMagicValue();
+					damage = attacker.magicValue;
 					attacker.playAnimation("range attack",1,1);
 					
 					return true;
@@ -2328,7 +2998,7 @@ package p_gameState.p_inGameState
 			}
 			clip.rotation += offset;
 			
-			TweenMax.to(clip,0.5,{ease:Circ.easeIn,shortRotation:{rotation:victim.sprite.rotation,useRadians:true},onComplete:onBulletHit,onCompleteParams:[clip,victim,attacker.getMagicValue()]});
+			TweenMax.to(clip,0.5,{ease:Circ.easeIn,shortRotation:{rotation:victim.sprite.rotation,useRadians:true},onComplete:onBulletHit,onCompleteParams:[clip,victim,attacker.magicValue]});
 		}
 		private function checkMagic(elapsedTime:int):void
 		{
@@ -2431,13 +3101,68 @@ package p_gameState.p_inGameState
 		
 		private function checkAnyoneDiesAfterMagic(elapsedTime:int):void
 		{
-			if(!isAnyoneDies())
+			if(isAnyoneFall())
+			{
+				showBlackQuads();
+				m_callBackFunc = waitUntilEnemyFellAfterMagic;
+			}
+			else if(!isAnyoneDies())
 			{
 				m_char.playAnimation("battle");
 				m_enemy.playAnimation("battle");
 				m_callBackFunc = checkStrengthen;
 			}
 		}
+		private function waitUntilEnemyFellAfterMagic(elapsedTime:int):void
+		{
+			m_counterTime+=elapsedTime;
+			if(m_counterTime>500)
+			{
+				m_counterTime = 0;
+				m_enemy.setLevel(m_enemy.getLevel()+3);
+				m_statusBar2.setSeizedExp(m_enemy.seizedExp);
+				m_statusBar2.setLevel(m_enemy.getLevel());
+				m_statusBar2.calculateReduceExp();
+				var textField:TextField;
+				var str:String;
+				if(TG_Static.language == TG_Static.ENGLISH)
+				{
+					str = "Revived";
+				}
+				else if(TG_Static.language == TG_Static.INDONESIA)
+				{
+					str = "Hidup Kembali";
+				}
+				textField = createText(""+str,50,0xFFFF00);
+				layerCharacter.addChild(textField);
+				textField.rotation = m_enemy.rotation + m_enemyRotOffset;
+				textField.pivotY += ((m_enemy.sprite.pivotY*m_enemy.sprite.scaleY) + (60*textField.scaleY)) / textField.scaleY;
+				TweenMax.to(textField,2,{pivotY:getTFPivotYGoal(textField),alpha:0.1,onComplete:textFieldComplete,onCompleteParams:[textField]});
+				
+				m_clipLevelUpFX.visible = true;
+				m_clipLevelUpFX.currentFrame = 1;
+				m_clipLevelUpFX.play();
+				m_clipLevelUpFX.scaleX = m_enemy.sprite.scaleX * 2;
+				m_clipLevelUpFX.scaleY = m_enemy.sprite.scaleY * 2;
+				m_enemy.sprite.addChild(m_clipLevelUpFX);
+				
+				m_enemy.reviveChar();
+				m_callBackFunc = waitUntilEnemyRevivedAfterMagic;
+			}
+		}
+		
+		private function waitUntilEnemyRevivedAfterMagic(elapsedTime:int):void
+		{
+			m_counterTime+=elapsedTime;
+			if(m_counterTime>500)
+			{
+				m_counterTime = 0;
+				hideBlackQuads();
+				m_callBackFunc = checkStrengthen;
+			}
+		}
+		
+		
 		
 		/**************************************************************/
 		
@@ -2448,12 +3173,12 @@ package p_gameState.p_inGameState
 			var rand:Number;
 			var textField:TextField;
 			var multiplier:Number = 0;
-			if(char.getStrengthenChance() > 0)
+			if(char.strengthenChance > 0)
 			{
 				rand = (Math.random() * 100000 ) % 100;
-				if(rand <= char.getStrengthenChance())
+				if(rand <= char.strengthenChance)
 				{
-					multiplier = char.getStrengthenValue();
+					multiplier = char.strengthenValue;
 					char.setDamageMultiplier(multiplier);
 					
 					var str:String;
@@ -2545,12 +3270,12 @@ package p_gameState.p_inGameState
 			var rand:Number;
 			var textField:TextField;
 			var multiplier:Number = 0;
-			if(attacker.getWeakenChance() > 0)
+			if(attacker.weakenChance > 0)
 			{
 				rand = (Math.random() * 100000 ) % 100;
-				if(rand <= attacker.getWeakenChance())
+				if(rand <= attacker.weakenChance)
 				{
-					multiplier = attacker.getWeakenValue();
+					multiplier = attacker.weakenValue;
 					victim.setDamageMultiplier(multiplier);
 					
 					var str:String;
@@ -2755,7 +3480,7 @@ package p_gameState.p_inGameState
 			var rand:int;
 			var rangeMin:int = 0;
 			var rangeMax:int = 0;
-			var level:int = m_char.level-1;
+			var level:int = m_char.getLevel()-1;
 			if(level >= 4)
 			{
 				rangeMin = level - 1;
@@ -2775,7 +3500,6 @@ package p_gameState.p_inGameState
 			}
 			
 			m_question.showQuestion(rand);
-			
 			//m_question.showQuestion();
 			m_callBackFunc = checkAnswers;
 		}
@@ -2811,12 +3535,12 @@ package p_gameState.p_inGameState
 			var multiplier:int = 1;
 			if(TG_Static.language == TG_Static.ENGLISH)
 			{
-				str = "REVERSE!";
+				str = "COUNTER ATTACK!";
 				multiplier = 1;
 			}
 			else if(TG_Static.language == TG_Static.INDONESIA)
 			{
-				str = "DIBALIK!";
+				str = "DIPUKUL BALIK!";
 				multiplier = 1.5;
 			}
 			
@@ -2833,12 +3557,12 @@ package p_gameState.p_inGameState
 			var multiplier:int = 1;
 			if(TG_Static.language == TG_Static.ENGLISH)
 			{
-				str = "REVERSE!";
+				str = "COUNTER ATTACK!";
 				multiplier = 1;
 			}
 			else if(TG_Static.language == TG_Static.INDONESIA)
 			{
-				str = "DIBALIK!";
+				str = "DIPUKUL BALIK!";
 				multiplier = 1.5;
 			}
 			
@@ -2912,12 +3636,12 @@ package p_gameState.p_inGameState
 			if(whoWon == 0)
 			{
 				rand = (Math.random() * 10000) % 100;
-				if(rand <= m_enemy.getEvadeChance())
+				if(rand <= m_enemy.evadeChance)
 				{
 					m_callBackFunc = playerAttacksEnemyEvade;
 					showEvadeText(m_enemy,m_enemyRotOffset);
 				}
-				else if(rand <= m_char.getEvadeChance())
+				else if(rand <= m_char.evadeChance)
 				{
 					m_callBackFunc = enemyAttacksPlayerEvade;
 					showEvadeText(m_char,m_charRotOffset);
@@ -2932,7 +3656,7 @@ package p_gameState.p_inGameState
 			else if(whoWon == 1)
 			{
 				rand = (Math.random() * 10000) % 100;
-				if(rand <= m_enemy.getEvadeChance())
+				if(rand <= m_enemy.evadeChance)
 				{
 					m_callBackFunc = playerAttacksEnemyEvade;
 					showEvadeText(m_enemy,m_enemyRotOffset);
@@ -2940,7 +3664,7 @@ package p_gameState.p_inGameState
 				else
 				{
 					rand = (Math.random() * 10000) % 100;
-					if(rand <= m_enemy.getReverseChance())
+					if(rand <= m_enemy.reverseChance)
 					{
 						showReverseTextEnemy(m_enemy,m_enemyRotOffset);
 						m_question.reverseCurrentAnswer();
@@ -2956,7 +3680,7 @@ package p_gameState.p_inGameState
 			else if(whoWon == 2)
 			{
 				rand = (Math.random() * 10000) % 100;
-				if(rand <= m_char.getEvadeChance())
+				if(rand <= m_char.evadeChance)
 				{
 					m_callBackFunc = enemyAttacksPlayerEvade;
 					showEvadeText(m_char,m_charRotOffset);
@@ -2964,7 +3688,7 @@ package p_gameState.p_inGameState
 				else
 				{
 					rand = (Math.random() * 10000) % 100;
-					if(rand <= m_char.getReverseChance())
+					if(rand <= m_char.reverseChance)
 					{
 						showReverseTextPlayer(m_char,m_charRotOffset);
 						m_question.reverseCurrentAnswer();
@@ -3105,10 +3829,10 @@ package p_gameState.p_inGameState
 						showDamage(obj,m_char,m_charRotOffset);
 						
 						rand = (Math.random() * 10000) % 100;
-						if(m_char.getDamageReturnChance() > 0 && rand <= m_char.getDamageReturnChance())
+						if(m_char.dmgReturnChance > 0 && rand <= m_char.dmgReturnChance)
 						{
 							m_enemy.playAnimation("hit"+m_enemy.getRandomHitNumber(),1,m_animationTime/2000);
-							damage = m_char.getDamageReturnValue();
+							damage = m_char.dmgReturnValue;
 							m_enemy.health -= damage;
 							showDamageReturnText(m_enemy,m_enemyRotOffset,damage);
 						}
@@ -3129,10 +3853,10 @@ package p_gameState.p_inGameState
 						showDamage(obj,m_enemy,m_enemyRotOffset);
 						
 						rand = (Math.random() * 10000) % 100;
-						if(m_enemy.getDamageReturnChance() > 0 && rand <= m_enemy.getDamageReturnChance())
+						if(m_enemy.dmgReturnChance > 0 && rand <= m_enemy.dmgReturnChance)
 						{
 							m_char.playAnimation("hit"+m_enemy.getRandomHitNumber(),1,m_animationTime/2000);
-							damage = m_enemy.getDamageReturnValue();
+							damage = m_enemy.dmgReturnValue;
 							m_char.health -= damage;
 							showDamageReturnText(m_char,m_charRotOffset,damage);
 						}
@@ -3205,7 +3929,29 @@ package p_gameState.p_inGameState
 			}
 		}
 		
-		private function isAnyoneDies():Boolean
+		private function isAnyoneFall(charOnly:Boolean = false):Boolean
+		{
+			var someoneFall:Boolean = false;
+			/*if(m_char.health <= 0)
+			{
+				m_char.playAnimation("die"+m_char.getRandomDieNumber(),1,m_animationTime/1000);
+				//someoneFall = true;
+			}*/
+			if(m_enemy && m_enemy.health <= 0 && !charOnly && m_enemy.reviveCounter < m_enemy.reviveTimes)
+			{
+				m_enemy.fallChar();
+				someoneFall = true;
+			}
+			
+			if(someoneFall)
+			{
+				purgeAnyAilments();
+			}
+			
+			return someoneFall;
+		}
+		
+		private function isAnyoneDies(charOnly:Boolean = false):Boolean
 		{
 			var someoneDies:Boolean = false;
 			if(m_char.health <= 0)
@@ -3213,7 +3959,7 @@ package p_gameState.p_inGameState
 				m_char.playAnimation("die"+m_char.getRandomDieNumber(),1,m_animationTime/1000);
 				someoneDies = true;
 			}
-			if(m_enemy && m_enemy.health <= 0)
+			if(m_enemy && m_enemy.health <= 0 && !charOnly)
 			{
 				m_enemy.playAnimation("die"+m_enemy.getRandomDieNumber(),1,m_animationTime/1000);
 				someoneDies = true;
@@ -3245,6 +3991,8 @@ package p_gameState.p_inGameState
 					m_statusBar1.calculateAddExp(m_statusBar2.expManipulator,m_enemy.seizedExp);
 					m_statusBar2.calculateReduceCoin();
 					m_statusBar1.calculateAddCoin(m_statusBar2.coinManipulator,m_enemy.points);
+					
+					
 					m_callBackFunc = waitUntilExpSeized;
 					
 					m_enemyCounter++;
@@ -3284,12 +4032,102 @@ package p_gameState.p_inGameState
 		
 		private function checkAnyoneDies(elapsedTime:int):void
 		{
-			if(!isAnyoneDies())
+			if(isAnyoneFall())
+			{
+				showBlackQuads();
+				m_rpsBar.hide();
+				m_question.hide();
+				m_callBackFunc = waitUntilPlayerBack;
+			}
+			else if(!isAnyoneDies())
 			{
 				m_callBackFunc = checkResults;
 			}
 		}
 		
+		private function waitUntilPlayerBack(elapsedTime:int):void
+		{
+			if(m_charRotationCounter < m_attackDistance)
+			{
+				m_char.rotation -= m_char.jumpSpeed * elapsedTime/1000;
+				m_charRotationCounter += m_char.jumpSpeed * elapsedTime/1000;
+				m_currentCharRotationCounter -= m_char.jumpSpeed * elapsedTime/1000;
+			}
+			if(m_charRotationCounter >= m_attackDistance)
+			{
+				m_char.playAnimation("battle");
+				m_char.rotation += (m_charRotationCounter - m_attackDistance);
+				m_currentCharRotationCounter += (m_charRotationCounter - m_attackDistance);
+				m_charRotationCounter = 0;
+				m_callBackFunc = waitUntilEnemyFell;
+			}
+		}
+		private function waitUntilEnemyFell(elapsedTime:int):void
+		{
+			m_counterTime+=elapsedTime;
+			if(m_counterTime>500)
+			{
+				m_counterTime = 0;
+				m_enemy.setLevel(m_enemy.getLevel()+3);
+				m_statusBar2.setSeizedExp(m_enemy.seizedExp);
+				m_statusBar2.setLevel(m_enemy.getLevel());
+				m_statusBar2.calculateReduceExp();
+				var textField:TextField;
+				var str:String;
+				if(TG_Static.language == TG_Static.ENGLISH)
+				{
+					str = "Revived";
+				}
+				else if(TG_Static.language == TG_Static.INDONESIA)
+				{
+					str = "Hidup Kembali";
+				}
+				textField = createText(""+str,50,0xFFFF00);
+				layerCharacter.addChild(textField);
+				textField.rotation = m_enemy.rotation + m_enemyRotOffset;
+				textField.pivotY += ((m_enemy.sprite.pivotY*m_enemy.sprite.scaleY) + (60*textField.scaleY)) / textField.scaleY;
+				TweenMax.to(textField,2,{pivotY:getTFPivotYGoal(textField),alpha:0.1,onComplete:textFieldComplete,onCompleteParams:[textField]});
+				
+				m_clipLevelUpFX.visible = true;
+				m_clipLevelUpFX.currentFrame = 1;
+				m_clipLevelUpFX.play();
+				m_clipLevelUpFX.scaleX = m_enemy.sprite.scaleX * 2;
+				m_clipLevelUpFX.scaleY = m_enemy.sprite.scaleY * 2;
+				m_enemy.sprite.addChild(m_clipLevelUpFX);
+				
+				m_enemy.reviveChar();
+				m_callBackFunc = waitUntilEnemyRevived;
+			}
+		}
+		
+		private function waitUntilEnemyRevived(elapsedTime:int):void
+		{
+			m_counterTime+=elapsedTime;
+			if(m_counterTime>500)
+			{
+				m_counterTime = 0;
+				hideBlackQuads();
+				m_callBackFunc = waitUntilEnemyBack;
+			}
+		}
+		
+		private function waitUntilEnemyBack(elapsedTime:int):void
+		{
+			if(m_enemyRotationCounter < m_attackDistance)
+			{
+				m_enemy.rotation += m_enemy.jumpSpeed * elapsedTime/1000;
+				m_enemyRotationCounter += m_enemy.jumpSpeed * elapsedTime/1000;
+			}
+			if(m_enemyRotationCounter >= m_attackDistance)
+			{
+				m_enemy.playAnimation("battle");
+				m_enemy.rotation -= (m_enemyRotationCounter - m_attackDistance);
+				m_rpsBar.show();
+				m_question.show();
+				m_enemyRotationCounter = 0;
+				m_callBackFunc = takeNextQuestions;
+			}
+		}
 		
 		private function waitUntilExpSeized(elapsedTime:int):void
 		{
@@ -3325,18 +4163,29 @@ package p_gameState.p_inGameState
 				m_question.hide();
 				m_statusBar2.hide();
 				m_animationCounter = 0;
+				m_rpsBarHided = true;
 				
 				TweenMax.to(m_enemy.sprite,1,{alpha:0.1,visible:false,delay:4,onComplete:onEnemyKilled,onCompleteParams:[m_enemy]});
 				if(!m_char.isLevelingUp)
 				{
-					
 					m_char.playAnimation("walk");
 					m_callBackFunc = moveUntilPlayerAtTheMiddle;
 				}
 				else
 				{
-					m_callBackFunc = null;
+					m_callBackFunc = checkRPSBarHide;
 				}
+				
+				
+			}
+		}
+		
+		private function checkRPSBarHide(elapsedTime:int):void
+		{
+			if(m_rpsBarHided && m_statusInfo && m_statusInfo.sprite.visible)
+			{
+				m_statusInfo.nextSprite.visible = true;
+				m_callBackFunc = null;
 			}
 		}
 		
@@ -3364,6 +4213,12 @@ package p_gameState.p_inGameState
 				m_charRotationCounter = 0;
 				m_currentCharRotationCounter = 0;
 				m_currentDynamicLayerRotationCounter = 0;
+				
+				if(m_princessID > 0)
+				{
+					createPrincess(m_princessID);
+				}
+				
 			}
 		}
 		

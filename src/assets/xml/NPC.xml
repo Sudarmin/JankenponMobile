@@ -9,4 +9,66 @@
 		<pngUrl>assets/chars/CharBlackSmith.png</pngUrl>
 		<size>30</size>
 	</NPC>
+	<NPC>
+		<id>princess1</id>
+		<nameEnglish>Princess 1</nameEnglish>
+		<nameIndonesia>Princess 1</nameIndonesia>
+		<name>CharacterPrincess1</name><!-- Name in Flash -->
+		<pivot>0,310</pivot>
+		<scale>1</scale>
+		<pngUrl>assets/chars/CharPrincess1.png</pngUrl>
+		<size>30</size>
+		<chatEnglish>Thank you for saving me</chatEnglish>
+		<chatIndonesia>Terima kasih sudah menyelamatkan saya</chatIndonesia>
+	</NPC>
+	<NPC>
+		<id>princess2</id>
+		<nameEnglish>Princess 2</nameEnglish>
+		<nameIndonesia>Princess 2</nameIndonesia>
+		<name>CharacterPrincess2</name><!-- Name in Flash -->
+		<pivot>0,310</pivot>
+		<scale>1</scale>
+		<pngUrl>assets/chars/CharPrincess2.png</pngUrl>
+		<size>30</size>
+	</NPC>
+	<NPC>
+		<id>princess3</id>
+		<nameEnglish>Princess 3</nameEnglish>
+		<nameIndonesia>Princess 3</nameIndonesia>
+		<name>CharacterPrincess3</name><!-- Name in Flash -->
+		<pivot>0,310</pivot>
+		<scale>1</scale>
+		<pngUrl>assets/chars/CharPrincess3.png</pngUrl>
+		<size>30</size>
+	</NPC>
+	<NPC>
+		<id>princess4</id>
+		<nameEnglish>Princess 4</nameEnglish>
+		<nameIndonesia>Princess 4</nameIndonesia>
+		<name>CharacterPrincess4</name><!-- Name in Flash -->
+		<pivot>0,310</pivot>
+		<scale>1</scale>
+		<pngUrl>assets/chars/CharPrincess4.png</pngUrl>
+		<size>30</size>
+	</NPC>
+	<NPC>
+		<id>princess5</id>
+		<nameEnglish>Princess 5</nameEnglish>
+		<nameIndonesia>Princess 5</nameIndonesia>
+		<name>CharacterPrincess5</name><!-- Name in Flash -->
+		<pivot>0,310</pivot>
+		<scale>1</scale>
+		<pngUrl>assets/chars/CharPrincess5.png</pngUrl>
+		<size>30</size>
+	</NPC>
+	<NPC>
+		<id>princess6</id>
+		<nameEnglish>Princess 6</nameEnglish>
+		<nameIndonesia>Princess 6</nameIndonesia>
+		<name>CharacterPrincess6</name><!-- Name in Flash -->
+		<pivot>0,310</pivot>
+		<scale>1</scale>
+		<pngUrl>assets/chars/CharPrincess6.png</pngUrl>
+		<size>30</size>
+	</NPC>
 </NPCS>

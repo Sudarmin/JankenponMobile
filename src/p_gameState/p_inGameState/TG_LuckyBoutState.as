@@ -84,8 +84,8 @@ package p_gameState.p_inGameState
 			m_char.rotation = -m_distanceDifference * 0.5;
 			m_statusBar1.setChar(m_char);
 			m_statusBar1.name = m_char.name;
-			m_char.level = 10;
-			m_statusBar1.setLevel(m_char.level);
+			m_char.setLevel(10);
+			m_statusBar1.setLevel(m_char.getLevel());
 			m_statusBar1.blueText.visible = false;
 			m_statusBar1.blueBarInvisible();
 			
@@ -101,8 +101,8 @@ package p_gameState.p_inGameState
 			m_enemy.rotation = m_distanceDifference * 0.5;
 			m_statusBar2.setChar(m_enemy);
 			m_statusBar2.name = m_enemy.name;
-			m_enemy.level = 10;
-			m_statusBar2.setLevel(m_enemy.level);
+			m_enemy.setLevel(10);
+			m_statusBar2.setLevel(m_enemy.getLevel());
 			m_statusBar2.blueText.visible = false;
 			m_statusBar2.blueBarInvisible();
 			

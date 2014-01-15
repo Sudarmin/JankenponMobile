@@ -51,7 +51,6 @@ package p_entity
 					var quantity:int = int(xml.treasure[i].quantity);
 					lastQuantity += quantity;
 					bonusIndexes.push(lastQuantity);
-					
 					if(bonusObjs[id] == null)
 					{
 						obj = new Object();
@@ -147,63 +146,70 @@ package p_entity
 					case "damage": 
 						break;
 					case "critical": 
-						if(char.getCriticalChance() >= obj.maxValue1 && char.getCriticalDamage() >= obj.maxValue2)
+						if(char.critChance >= char.critChanceMax && char.critValue >= char.critValueMax)
+						{
+							index = removeFromArray(bonusString,str);
+							sortIndexArray(bonusIndexes,index);
+						}
+						break;
+					case "dmgReturn": 
+						if(char.dmgReturnChance >= char.dmgReturnChanceMax && char.dmgReturnValue >= char.dmgReturnValueMax)
 						{
 							index = removeFromArray(bonusString,str);
 							sortIndexArray(bonusIndexes,index);
 						}
 						break;
 					case "heal":
-						if(char.getHealChance() >= obj.maxValue1 && char.getHealValue() >= obj.maxValue2)
+						if(char.healChance >= char.healChanceMax && char.healValue >= char.healValueMax)
 						{
 							index = removeFromArray(bonusString,str);
 							sortIndexArray(bonusIndexes,index);
 						}
 						break;
 					case "evade":
-						if(char.getEvadeChance() >= obj.maxValue1)
+						if(char.evadeChance >= char.evadeChanceMax)
 						{
 							index = removeFromArray(bonusString,str);
 							sortIndexArray(bonusIndexes,index);
 						}
 						break;
 					case "poison":
-						if(char.getPoisonChance() >= obj.maxValue1 && char.getPoisonDamage() >= obj.maxValue2)
+						if(char.poisonChance >= char.poisonChanceMax && char.poisonValue >= char.poisonValueMax)
 						{
 							index = removeFromArray(bonusString,str);
 							sortIndexArray(bonusIndexes,index);
 						}
 						break;
 					case "lifesteal":
-						if(char.getLifeStealValue() >= obj.maxValue1)
+						if(char.lifestealValue >= char.lifestealValueMax)
 						{
 							index = removeFromArray(bonusString,str);
 							sortIndexArray(bonusIndexes,index);
 						}
 						break;
 					case "magic":
-						if(char.getMagicChance() >= obj.maxValue1 && char.getMagicValue() >= obj.maxValue2)
+						if(char.magicChance >= char.magicChanceMax && char.magicValue >= char.magicValueMax)
 						{
 							index = removeFromArray(bonusString,str);
 							sortIndexArray(bonusIndexes,index);
 						}
 						break;
 					case "strengthen":
-						if(char.getStrengthenChance() >= obj.maxValue1 && char.getStrengthenValue() >= obj.maxValue2)
+						if(char.strengthenChance >= char.strengthenChanceMax && char.strengthenValue >= char.strengthenValueMax)
 						{
 							index = removeFromArray(bonusString,str);
 							sortIndexArray(bonusIndexes,index);
 						}
 						break;
 					case "weaken":
-						if(char.getWeakenChance() >= obj.maxValue1 && char.getWeakenValue() <= obj.maxValue2)
+						if(char.weakenChance >= char.weakenChanceMax && char.weakenValue <= char.weakenValueMax)
 						{
 							index = removeFromArray(bonusString,str);
 							sortIndexArray(bonusIndexes,index);
 						}
 						break;
 					case "reversed": 
-						if(char.getReverseChance() >= obj.maxValue1)
+						if(char.reverseChance >= char.reverseChanceMax)
 						{
 							index = removeFromArray(bonusString,str);
 							sortIndexArray(bonusIndexes,index);
@@ -229,16 +235,24 @@ package p_entity
 		
 		private final function sortIndexArray(array:Array,index:int):void 
 		{
+			if(index<0)return;
 			var i:int = index+1;
 			var size:int = array.length;
-			var quantity:int = array[index];
+			var quantity:int = 0;
+			if(index == 0)
+			{
+				quantity =  array[index];
+			}
+			else
+			{
+				quantity =  array[index] - array[index-1];
+			}
 			for(i; i < size; i++) 
 			{
 				array[i] -= quantity;
 			}
 			array.splice(index,1);
 			lastQuantity -= quantity;
-			
 		}
 		
 		public override function init():void

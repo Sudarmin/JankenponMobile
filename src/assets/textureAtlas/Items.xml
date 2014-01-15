@@ -1,18 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with TexturePacker http://www.codeandweb.com/texturepacker-->
-<!-- $TexturePacker:SmartUpdate:e96c176d5825caa4515fd1bebe164b04:1/1$ -->
+<!-- $TexturePacker:SmartUpdate:3c17130347d9a19f96d657b3a22a6273:1/1$ -->
 <TextureAtlas imagePath="Items.png">
-    <SubTexture name="ItemAnimalEye" x="133" y="206" width="43" height="43"/>
-    <SubTexture name="ItemBone" x="197" y="158" width="50" height="50"/>
-    <SubTexture name="ItemClaw" x="145" y="107" width="50" height="50"/>
-    <SubTexture name="ItemEmerald" x="197" y="106" width="50" height="50"/>
-    <SubTexture name="ItemFeather" x="133" y="251" width="21" height="49"/>
-    <SubTexture name="ItemGreenHerb" x="178" y="210" width="28" height="46"/>
-    <SubTexture name="ItemLeather" x="145" y="55" width="50" height="50"/>
-    <SubTexture name="ItemMushroom" x="145" y="159" width="49" height="45"/>
-    <SubTexture name="ItemSpiderEgg" x="197" y="54" width="50" height="50"/>
-    <SubTexture name="ItemSpiderWeb" x="145" y="2" width="50" height="51"/>
-    <SubTexture name="ItemWood" x="197" y="2" width="50" height="50"/>
-    <SubTexture name="TreasureClip0001" x="2" y="164" width="129" height="120" frameX="-2" frameY="-39" frameWidth="141" frameHeight="162"/>
+    <SubTexture name="ItemBomb" x="145" y="98" width="53" height="63"/>
+    <SubTexture name="ItemCritBoost" x="145" y="2" width="100" height="94"/>
+    <SubTexture name="ItemDamagePlus" x="247" y="2" width="98" height="90" frameX="0" frameY="-2" frameWidth="100" frameHeight="92"/>
+    <SubTexture name="ItemDamageReturn" x="144" y="385" width="94" height="99" frameX="-2" frameY="0" frameWidth="96" frameHeight="99"/>
+    <SubTexture name="ItemEmerald" x="228" y="334" width="29" height="44"/>
+    <SubTexture name="ItemEvade" x="102" y="164" width="97" height="116" frameX="-3" frameY="0" frameWidth="101" frameHeight="116"/>
+    <SubTexture name="ItemHealBoost" x="201" y="156" width="96" height="87" frameX="0" frameY="-2" frameWidth="96" frameHeight="89"/>
+    <SubTexture name="ItemHealthBoost" x="200" y="98" width="74" height="56"/>
+    <SubTexture name="ItemLifesteal" x="276" y="94" width="68" height="56"/>
+    <SubTexture name="ItemMagicFire" x="228" y="245" width="79" height="87"/>
+    <SubTexture name="ItemPoison" x="299" y="152" width="46" height="69"/>
+    <SubTexture name="ItemPotion" x="96" y="426" width="46" height="69"/>
+    <SubTexture name="ItemReverse" x="2" y="426" width="92" height="71" frameX="0" frameY="-4" frameWidth="92" frameHeight="75"/>
+    <SubTexture name="ItemStrengthen" x="133" y="282" width="93" height="101" frameX="0" frameY="-2" frameWidth="93" frameHeight="103"/>
+    <SubTexture name="ItemWeaken" x="2" y="164" width="98" height="138" frameX="0" frameY="-15" frameWidth="98" frameHeight="164"/>
+    <SubTexture name="TreasureClip0001" x="2" y="304" width="129" height="120" frameX="-2" frameY="-39" frameWidth="141" frameHeight="162"/>
     <SubTexture name="TreasureClip0002" x="2" y="2" width="141" height="160" frameX="0" frameY="0" frameWidth="141" frameHeight="162"/>
 </TextureAtlas>

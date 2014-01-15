@@ -13,6 +13,7 @@ package p_entity
 	{
 		protected var m_parent:DisplayObjectContainer;
 		protected var m_sprite:Sprite;
+		
 		protected var m_stageStarling:Stage;
 		
 		protected var m_position:Point;

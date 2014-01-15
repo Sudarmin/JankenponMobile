@@ -51,7 +51,7 @@ package p_menuBar
 		private var m_animation:TweenMax;
 		
 		private var m_filter:ColorMatrixFilter;
-		
+		private var m_char:TG_Character;
 		public static var shopItems:Array;
 		public static var boughtItems:Array;
 		//public static var alreadyAtShopBar:Array;
@@ -92,17 +92,27 @@ package p_menuBar
 						chosenString = currXML.descIndonesia;
 					}
 					obj.desc = chosenString;
+					
+					if(TG_Static.language == TG_Static.ENGLISH)
+					{
+						chosenString = currXML.desc2English;
+					}
+					else if(TG_Static.language == TG_Static.INDONESIA)
+					{
+						chosenString = currXML.desc2Indonesia;
+					}
+					obj.desc2 = chosenString;
+					
 					obj.imageName = currXML.imageName;
 					obj.price = Number(currXML.price);
 					obj.priceMult = Number(currXML.priceMult);
 					obj.alwaysShow = int(currXML.alwaysShow);
+					
 					obj.value = Number(currXML.value);
 					obj.valueMult = Number(currXML.valueMult);
-					obj.maxValue = Number(currXML.maxValue);
 					
 					obj.value2 = Number(currXML.value2);
 					obj.valueMult2 = Number(currXML.valueMult2);
-					obj.maxValue2 = Number(currXML.maxValue2);
 					
 					obj.boughtCounter = 0;
 					obj.bought = false;
@@ -292,6 +302,10 @@ package p_menuBar
 			
 		}
 		
+		public final function setChar(char:TG_Character):void
+		{
+			m_char = char;
+		}
 		private final function initFilter():void
 		{
 			m_filter = new ColorMatrixFilter();
@@ -413,12 +427,296 @@ package p_menuBar
 			
 		}
 		
+		public function removeMaxedItems():void
+		{
+			var i:int = shopItems.length-1;
+			var obj:Object;
+			for(i;i>=0;i--)
+			{
+				obj = shopItems[i];
+				switch(""+obj.id)
+				{
+					
+					case "critical":
+						if(m_char.critChance >= m_char.critChanceMax && m_char.critValue >= m_char.critValueMax)
+						{
+							shopItems.splice(i,1);
+						}
+						break;
+					case "poison":
+						if(m_char.poisonChance >= m_char.poisonChanceMax && m_char.poisonValue >= m_char.poisonValueMax)
+						{
+							shopItems.splice(i,1);
+						}
+						break;
+					case "heal":
+						if(m_char.healChance >= m_char.healChanceMax && m_char.healValue >= m_char.healValueMax)
+						{
+							shopItems.splice(i,1);
+						}
+						break;
+					case "evade":
+						if(m_char.evadeChance >= m_char.evadeChanceMax )
+						{
+							shopItems.splice(i,1);
+						}
+						break;
+					case "dmgReturn":
+						if(m_char.dmgReturnChance >= m_char.dmgReturnChanceMax && m_char.dmgReturnValue >= m_char.dmgReturnValueMax)
+						{
+							shopItems.splice(i,1);
+						}
+						break;
+					case "heal":
+						if(m_char.healChance >= m_char.healChanceMax && m_char.healValue >= m_char.healValueMax)
+						{
+							shopItems.splice(i,1);
+						}
+						break;
+					case "lifeSteal":
+						if(m_char.lifestealValue >= m_char.lifestealValueMax)
+						{
+							shopItems.splice(i,1);
+						}
+					case "magic":
+						if(m_char.magicChance >= m_char.magicChanceMax && m_char.magicValue >= m_char.magicValueMax)
+						{
+							shopItems.splice(i,1);
+						}
+						break;
+					case "reversed":
+						if(m_char.reverseChance >= m_char.reverseChanceMax)
+						{
+							shopItems.splice(i,1);
+						}
+						break;
+					case "strengthen":
+						if(m_char.strengthenChance >= m_char.strengthenChanceMax && m_char.strengthenValue >= m_char.strengthenValueMax)
+						{
+							shopItems.splice(i,1);
+						}
+						break;
+					case "weaken":
+						if(m_char.weakenChance >= m_char.weakenChanceMax && m_char.weakenValue <= m_char.weakenValueMax)
+						{
+							shopItems.splice(i,1);
+						}
+						break;
+					default :
+						break;
+				}
+			}
+		}
+		
+		public function checkMaxValue(id:String,value1:Number,value2:Number):Object
+		{
+			var obj:Object = new Object();
+			switch(id)
+			{
+				
+				case "critical":
+					if(m_char.critChance + value1 > m_char.critChanceMax)
+					{
+						obj.value1 = m_char.critChanceMax - m_char.critChance;
+					}
+					else
+					{
+						obj.value1 = value1;
+					}
+					
+					if(m_char.critValue + value2 > m_char.critValueMax)
+					{
+						obj.value2 = m_char.critValueMax - m_char.critValue;
+					}
+					else
+					{
+						obj.value2 = value2;
+					}
+					break;
+				case "poison":
+					if(m_char.poisonChance + value1 > m_char.poisonChanceMax)
+					{
+						obj.value1 = m_char.poisonChanceMax - m_char.poisonChance;
+					}
+					else
+					{
+						obj.value1 = value1;
+					}
+					if(m_char.poisonValue + value2 > m_char.poisonValueMax)
+					{
+						obj.value2 = m_char.poisonValueMax - m_char.poisonValue;
+					}
+					else
+					{
+						obj.value2 = value2;
+					}
+					break;
+				case "heal":
+					if(m_char.healChance + value1 > m_char.healChanceMax)
+					{
+						obj.value1 = m_char.healChanceMax - m_char.healChance;
+					}
+					else
+					{
+						obj.value1 = value1;
+					}
+					if(m_char.healValue + value2 > m_char.healValueMax)
+					{
+						obj.value2 = m_char.healValueMax - m_char.healValue;
+					}
+					else
+					{
+						obj.value2 = value2;
+					}
+					break;
+				case "evade":
+					if(m_char.evadeChance + value1 > m_char.evadeChanceMax)
+					{
+						obj.value1 = m_char.evadeChanceMax - m_char.evadeChance;
+					}
+					else
+					{
+						obj.value1 = value1;
+					}
+					break;
+				case "dmgReturn":
+					if(m_char.dmgReturnChance + value1 > m_char.dmgReturnChanceMax)
+					{
+						obj.value1 = m_char.dmgReturnChanceMax - m_char.dmgReturnChance;
+					}
+					else
+					{
+						obj.value1 = value1;
+					}
+					if(m_char.dmgReturnValue + value2 > m_char.dmgReturnValueMax)
+					{
+						obj.value2 = m_char.dmgReturnValueMax - m_char.dmgReturnValue;
+					}
+					else
+					{
+						obj.value2 = value2;
+					}
+					break;
+				case "heal":
+					if(m_char.healChance + value1 > m_char.healChanceMax)
+					{
+						obj.value1 = m_char.healChanceMax - m_char.healChance;
+					}
+					else
+					{
+						obj.value1 = value1;
+					}
+					if(m_char.healValue + value2 > m_char.healValueMax)
+					{
+						obj.value2 = m_char.healValueMax - m_char.healValue;
+					}
+					else
+					{
+						obj.value2 = value2;
+					}
+					break;
+				case "lifeSteal":
+					if(m_char.lifestealValue + value1 > m_char.lifestealValueMax)
+					{
+						obj.value1 = m_char.lifestealValueMax - m_char.lifestealValue;
+					}
+					else
+					{
+						obj.value1 = value1;
+					}
+				case "magic":
+					if(m_char.magicChance + value1 > m_char.magicChanceMax)
+					{
+						obj.value1 = m_char.magicChanceMax - m_char.magicChance;
+					}
+					else
+					{
+						obj.value1 = value1;
+					}
+					if(m_char.magicValue + value2 > m_char.magicValueMax)
+					{
+						obj.value2 = m_char.magicValueMax - m_char.magicValue;
+					}
+					else
+					{
+						obj.value2 = value2;
+					}
+					break;
+				case "reversed":
+					if(m_char.reverseChance + value1 > m_char.reverseChanceMax)
+					{
+						obj.value1 = m_char.reverseChanceMax - m_char.reverseChance;
+					}
+					else
+					{
+						obj.value1 = value1;
+					}
+					break;
+				case "strengthen":
+					if(m_char.strengthenChance + value1 > m_char.strengthenChanceMax)
+					{
+						obj.value1 = m_char.strengthenChanceMax - m_char.strengthenChance;
+					}
+					else
+					{
+						obj.value1 = value1;
+					}
+					if(m_char.strengthenValue + value2 > m_char.strengthenValue)
+					{
+						obj.value2 = m_char.strengthenValueMax - m_char.strengthenValue;
+					}
+					else
+					{
+						obj.value2 = value2;
+					}
+					break;
+				case "weaken":
+					if(m_char.weakenChance + value1 > m_char.weakenChanceMax)
+					{
+						obj.value1 = m_char.weakenChanceMax - m_char.weakenChance;
+					}
+					else
+					{
+						obj.value1 = value1;
+					}
+					if(m_char.weakenValue - value2 < m_char.weakenValueMax)
+					{
+						obj.value2 = m_char.weakenValue - m_char.weakenValueMax;
+					}
+					else
+					{
+						obj.value2 = value2;
+					}
+					break;
+				default :
+					obj.value1 = value1;
+					obj.value2 = value2;
+					break;
+			}
+			
+			return obj;
+		}
+		
 		public function initShopItems():void
 		{
-			m_currShopItems = [];
+			if(m_currShopItems == null)
+			{
+				m_currShopItems = [];
+			}
+			
 			var rand:int = 0;
 			var obj:Object;
 			
+			//PUT UNBOUGHT ITEMS TO SHOP ITEMS
+			while(m_currShopItems.length > 0)
+			{
+				obj = m_currShopItems.pop();
+				if(!obj.bought)
+				{
+					shopItems.push(obj);
+					shopItems[obj.id] = obj;
+				}
+			}
 			//IF ALL SHOP ITEMS HAVE BEEN BOUGHT
 			while(shopItems.length < m_maxItems && boughtItems.length > 0)
 			{
@@ -429,6 +727,7 @@ package p_menuBar
 				
 				boughtItems.splice(rand,1);
 			}
+			removeMaxedItems();
 			
 			//GET CURRENT SHOP ITEMS FROM SHOP ITEMS
 			while(m_currShopItems.length < m_maxItems && shopItems.length > 0)
@@ -445,6 +744,17 @@ package p_menuBar
 			
 			var counter:int = 0;
 			var sprite:Sprite;
+			
+			while(counter < m_picBoxes.length)
+			{
+				sprite = m_picBoxes[counter];
+				sprite.scaleX = sprite.scaleY = 1;
+				sprite.filter = null;
+				sprite.removeFromParent();
+				counter++;
+			}
+			
+			counter = 0;
 			while(counter < m_currShopItems.length)
 			{
 				sprite = m_picBoxes[counter];
@@ -462,7 +772,11 @@ package p_menuBar
 				sprite.name = ""+counter;
 				image.name = "image";
 				counter++;
+				
+				m_allPicBoxes.addChild(sprite);
 			}
+			m_allPicBoxes.x = (m_bg.width - m_allPicBoxes.width) * 0.5;
+			m_allPicBoxes.y = 50;
 			
 			chooseOne(0);
 		}
@@ -508,7 +822,7 @@ package p_menuBar
 		{
 			var str:String = "";
 			str = obj.name+"\n";
-			if(obj.id == "heal")
+			if(obj.id == "healRegen")
 			{
 				str += obj.desc+"\n";
 			}
@@ -516,12 +830,27 @@ package p_menuBar
 			{
 				var value:Number = obj.value + (obj.value * obj.valueMult * obj.boughtCounter);
 				value = int(value * 100)/100;
+				
+				if(obj.value2 > 0)
+				{
+					var value2:Number = obj.value2 + (obj.value2 * obj.valueMult2 * obj.boughtCounter);
+					value2 = int(value2 * 100)/100;
+				}
+				
+				var newObj:Object = checkMaxValue(obj.id,value,value2);
+				value = int(newObj.value1 * 100)/100;
 				str += obj.desc +" "+value+"\n";
+				if(obj.value2 > 0)
+				{
+					value2 = int(newObj.value2 * 100)/100;
+					str += obj.desc2 +" "+value2+"\n";
+				}
+				
 			}
 			
 			var price:Number = obj.price + (obj.price * obj.priceMult * obj.boughtCounter);
 			str += "Price : "+price;
-			
+			obj.currPrice = price;
 			return str;
 		}
 		
@@ -533,6 +862,7 @@ package p_menuBar
 			{
 				m_animation.kill();
 			}
+			shopItems = null;
 		}
 		
 		public function getShopItems():Array
@@ -581,8 +911,9 @@ package p_menuBar
 			var usedObj:Object;
 			usedObj = m_currShopItems[m_currentChosen];
 			obj = usedObj;
-			if(!obj.bought)
+			if(!obj.bought && m_char.points >= obj.currPrice)
 			{
+				m_char.points -= obj.currPrice;
 				m_picBoxes[m_currentChosen].filter = m_filter;
 				obj.bought = true;
 				obj.boughtCounter++;
@@ -600,7 +931,7 @@ package p_menuBar
 				
 				var counter:int = 0;
 				var currChosen:int = m_currentChosen;
-				while(counter < m_maxItems && obj.bought)
+				while(counter < m_currShopItems.length && obj.bought)
 				{
 					currChosen++;
 					if(currChosen >= m_currShopItems.length)
@@ -612,114 +943,194 @@ package p_menuBar
 				}
 				
 				chooseOne(currChosen);
+				return usedObj;
 			}
-			return usedObj;
+			return null;
 		}
 		
-		public function addBonusToUser(char:TG_Character,obj:Object):void
+		public function addBonusToUser(obj:Object):void
 		{
 			switch(""+obj.id)
 			{
 				
-				case "heal":
-					char.health = char.initialHealth;
+				case "healRegen":
+					m_char.health = m_char.initialHealth;
 					break;
 				case "health":
-					char.healthBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
-					char.healthBonus = int(char.healthBonus);
-					char.recalculateStats();
+					m_char.healthBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
+					m_char.healthBonus = int(m_char.healthBonus);
+					m_char.recalculateStats();
 					break;
 				case "damage":
-					char.damageBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
-					char.damageBonus = int(char.damageBonus);
-					char.recalculateStats();
+					m_char.damageBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
+					m_char.damageBonus = int(m_char.damageBonus);
+					m_char.recalculateStats();
 					break;
 				case "critical":
-					char.criticalChanceBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
-					char.criticalChanceBonus = (int(char.criticalChanceBonus * 100) / 100);
+					m_char.criticalChanceBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
+					m_char.criticalChanceBonus = (int(m_char.criticalChanceBonus * 100) / 100);
+					if(m_char.criticalChanceBonus >= obj.maxValue)
+					{
+						m_char.criticalChanceBonus = obj.maxValue; 
+					}
 					
-					char.criticalValueBonus += obj.value2 + (obj.valueMult2 * obj.boughtCounter * obj.value2);
-					char.criticalValueBonus = (int(char.criticalValueBonus * 100) / 100);
+					m_char.criticalValueBonus += obj.value2 + (obj.valueMult2 * obj.boughtCounter * obj.value2);
+					m_char.criticalValueBonus = (int(m_char.criticalValueBonus * 100) / 100);
+					if(m_char.criticalValueBonus >= obj.maxValue2)
+					{
+						m_char.criticalValueBonus = obj.maxValue2; 
+					}
 					
-					char.recalculateStats();
+					m_char.recalculateStats();
 					break;
 				case "poison":
-					char.poisonChanceBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
-					char.poisonChanceBonus = (int(char.poisonChanceBonus * 100) / 100);
+					m_char.poisonChanceBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
+					m_char.poisonChanceBonus = (int(m_char.poisonChanceBonus * 100) / 100);
+					if(m_char.poisonChanceBonus >= obj.maxValue)
+					{
+						m_char.poisonChanceBonus = obj.maxValue; 
+					}
 					
-					char.poisonValueBonus += obj.value2 + (obj.valueMult2 * obj.boughtCounter * obj.value2);
-					char.poisonValueBonus = int(char.poisonValueBonus);
+					m_char.poisonValueBonus += obj.value2 + (obj.valueMult2 * obj.boughtCounter * obj.value2);
+					m_char.poisonValueBonus = int(m_char.poisonValueBonus);
+					if(m_char.poisonValueBonus >= obj.maxValue2)
+					{
+						m_char.poisonValueBonus = obj.maxValue2; 
+					}
 					
-					char.recalculateStats();
+					m_char.recalculateStats();
 					break;
 				case "heal":
-					char.healChanceBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
-					char.healChanceBonus = (int(char.healChanceBonus * 100) / 100);
+					m_char.healChanceBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
+					m_char.healChanceBonus = (int(m_char.healChanceBonus * 100) / 100);
+					if(m_char.healChanceBonus >= obj.maxValue)
+					{
+						m_char.healChanceBonus = obj.maxValue; 
+					}
 					
-					char.healValueBonus += obj.value2 + (obj.valueMult2 * obj.boughtCounter * obj.value2);
-					char.healValueBonus = int(char.healValueBonus);
+					m_char.healValueBonus += obj.value2 + (obj.valueMult2 * obj.boughtCounter * obj.value2);
+					m_char.healValueBonus = int(m_char.healValueBonus);
+					if(m_char.healValueBonus >= obj.maxValue2)
+					{
+						m_char.healValueBonus = obj.maxValue2; 
+					}
 					
-					char.recalculateStats();
+					m_char.recalculateStats();
 					break;
 				case "evade":
-					char.evadeChanceBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
-					char.evadeChanceBonus = (int(char.evadeChanceBonus * 100) / 100);
-					char.recalculateStats();
+					m_char.evadeChanceBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
+					m_char.evadeChanceBonus = (int(m_char.evadeChanceBonus * 100) / 100);
+					if(m_char.evadeChanceBonus >= obj.maxValue)
+					{
+						m_char.evadeChanceBonus = obj.maxValue; 
+					}
+					
+					m_char.recalculateStats();
 					break;
 				case "dmgReturn":
-					char.dmgReturnChanceBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
-					char.dmgReturnChanceBonus = (int(char.dmgReturnChanceBonus * 100) / 100);
+					m_char.dmgReturnChanceBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
+					m_char.dmgReturnChanceBonus = (int(m_char.dmgReturnChanceBonus * 100) / 100);
+					if(m_char.dmgReturnChanceBonus >= obj.maxValue)
+					{
+						m_char.dmgReturnChanceBonus = obj.maxValue; 
+					}
 					
-					char.dmgReturnValueBonus += obj.value2 + (obj.valueMult2 * obj.boughtCounter * obj.value2);
-					char.dmgReturnValueBonus = int(char.dmgReturnValueBonus);
+					m_char.dmgReturnValueBonus += obj.value2 + (obj.valueMult2 * obj.boughtCounter * obj.value2);
+					m_char.dmgReturnValueBonus = int(m_char.dmgReturnValueBonus);
+					if(m_char.dmgReturnValueBonus >= obj.maxValue2)
+					{
+						m_char.dmgReturnValueBonus = obj.maxValue2; 
+					}
 					
-					char.recalculateStats();
+					m_char.recalculateStats();
 					break;
 				case "heal":
-					char.healChanceBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
-					char.healChanceBonus = (int(char.healChanceBonus * 100) / 100);
+					m_char.healChanceBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
+					m_char.healChanceBonus = (int(m_char.healChanceBonus * 100) / 100);
+					if(m_char.healChanceBonus >= obj.maxValue)
+					{
+						m_char.healChanceBonus = obj.maxValue; 
+					}
 					
-					char.healValueBonus += obj.value2 + (obj.valueMult2 * obj.boughtCounter * obj.value2);
-					char.healValueBonus = int(char.healValueBonus);
+					m_char.healValueBonus += obj.value2 + (obj.valueMult2 * obj.boughtCounter * obj.value2);
+					m_char.healValueBonus = int(m_char.healValueBonus);
+					if(m_char.healValueBonus >= obj.maxValue2)
+					{
+						m_char.healValueBonus = obj.maxValue2; 
+					}
 					
-					char.recalculateStats();
+					m_char.recalculateStats();
 					break;
 				case "lifeSteal":
-					char.lifestealValueBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
-					char.lifestealValueBonus = (int(char.lifestealValueBonus * 100) / 100);
-					char.recalculateStats();
+					m_char.lifestealValueBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
+					m_char.lifestealValueBonus = (int(m_char.lifestealValueBonus * 100) / 100);
+					if(m_char.lifestealValueBonus >= obj.maxValue)
+					{
+						m_char.lifestealValueBonus = obj.maxValue; 
+					}
+					
+					m_char.recalculateStats();
 					break;
 				case "magic":
-					char.magicChanceBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
-					char.magicChanceBonus = (int(char.magicChanceBonus * 100) / 100);
+					m_char.magicChanceBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
+					m_char.magicChanceBonus = (int(m_char.magicChanceBonus * 100) / 100);
+					if(m_char.magicChanceBonus >= obj.maxValue)
+					{
+						m_char.magicChanceBonus = obj.maxValue; 
+					}
 					
-					char.magicValueBonus += obj.value2 + (obj.valueMult2 * obj.boughtCounter * obj.value2);
-					char.magicValueBonus = int(char.magicValueBonus);
+					m_char.magicValueBonus += obj.value2 + (obj.valueMult2 * obj.boughtCounter * obj.value2);
+					m_char.magicValueBonus = int(m_char.magicValueBonus);
+					if(m_char.magicValueBonus >= obj.maxValue2)
+					{
+						m_char.magicValueBonus = obj.maxValue2; 
+					}
 					
-					char.recalculateStats();
+					m_char.recalculateStats();
 					break;
 				case "reversed":
-					char.reverseChanceBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
-					char.reverseChanceBonus = (int(char.reverseChanceBonus * 100) / 100);
-					char.recalculateStats();
+					m_char.reverseChanceBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
+					m_char.reverseChanceBonus = (int(m_char.reverseChanceBonus * 100) / 100);
+					if(m_char.reverseChanceBonus >= obj.maxValue)
+					{
+						m_char.reverseChanceBonus = obj.maxValue; 
+					}
+					
+					m_char.recalculateStats();
 					break;
 				case "strengthen":
-					char.strengthenChanceBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
-					char.strengthenChanceBonus = (int(char.strengthenChanceBonus * 100) / 100);
+					m_char.strengthenChanceBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
+					m_char.strengthenChanceBonus = (int(m_char.strengthenChanceBonus * 100) / 100);
+					if(m_char.strengthenChanceBonus >= obj.maxValue)
+					{
+						m_char.strengthenChanceBonus = obj.maxValue; 
+					}
 					
-					char.strengthenValueBonus += obj.value2 + (obj.valueMult2 * obj.boughtCounter * obj.value2);
-					char.strengthenValueBonus = (int(char.strengthenValueBonus * 100) / 100);
+					m_char.strengthenValueBonus += obj.value2 + (obj.valueMult2 * obj.boughtCounter * obj.value2);
+					m_char.strengthenValueBonus = (int(m_char.strengthenValueBonus * 100) / 100);
+					if(m_char.strengthenValueBonus >= obj.maxValue2)
+					{
+						m_char.strengthenValueBonus = obj.maxValue2; 
+					}
 					
-					char.recalculateStats();
+					m_char.recalculateStats();
 					break;
 				case "weaken":
-					char.weakenChanceBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
-					char.weakenChanceBonus = (int(char.weakenChanceBonus * 100) / 100);
+					m_char.weakenChanceBonus += obj.value + (obj.valueMult * obj.boughtCounter * obj.value);
+					m_char.weakenChanceBonus = (int(m_char.weakenChanceBonus * 100) / 100);
+					if(m_char.weakenChanceBonus >= obj.maxValue)
+					{
+						m_char.weakenChanceBonus = obj.maxValue; 
+					}
 					
-					char.weakenValueBonus += obj.value2 + (obj.valueMult2 * obj.boughtCounter * obj.value2);
-					char.weakenValueBonus = (int(char.weakenValueBonus * 100) / 100);
+					m_char.weakenValueBonus += obj.value2 + (obj.valueMult2 * obj.boughtCounter * obj.value2);
+					m_char.weakenValueBonus = (int(m_char.weakenValueBonus * 100) / 100);
+					if(m_char.weakenValueBonus >= obj.maxValue2)
+					{
+						m_char.weakenValueBonus = obj.maxValue2; 
+					}
 					
-					char.recalculateStats();
+					m_char.recalculateStats();
 					break;
 				default :
 					break;

@@ -120,8 +120,6 @@ package p_engine.p_singleton
 		
 		private final function completeHandler(event:LoaderEvent):void 
 		{
-			
-			//trace(event.target + " is complete!");
 			this.dispatchEvent(new Event(Event.COMPLETE));
 		}
 		

@@ -2,12 +2,14 @@
 <events>
 	<event>
 		<name>boss</name>
-		<afterBattles>3</afterBattles>
+		<afterBattles>1</afterBattles>
 		<charID>boss1</charID>
+		<princessID>1</princessID>
 	</event>
 	<event>
 		<name>boss</name>
-		<afterBattles>6</afterBattles>
+		<afterBattles>2</afterBattles>
 		<charID>boss2</charID>
 	</event>
+	
 </events>

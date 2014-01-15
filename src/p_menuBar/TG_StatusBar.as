@@ -1,5 +1,6 @@
 package p_menuBar
 {
+	import com.greensock.TimelineMax;
 	import com.greensock.TweenMax;
 	
 	import p_engine.p_gameState.TG_GameState;
@@ -498,7 +499,10 @@ package p_menuBar
 		}
 		protected override function initAnimation():void
 		{
-			super.initAnimation();
+			if(!m_timeline)
+			{
+				m_timeline =  new TimelineMax({onReverseComplete:invisible});
+			}
 			if(m_timeline)
 			{
 				var tween:TweenMax;

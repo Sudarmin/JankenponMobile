@@ -33,6 +33,7 @@ package p_entity
 		private var m_factory:StarlingFactory;
 		private var m_armature:Armature;
 		private var m_charID:String = "0";
+		private var m_charNo:int = 0;
 		private var m_charXML:XML;
 		private var m_pivot:Array;
 		private var m_speed:Number = 0.35;
@@ -110,6 +111,9 @@ package p_entity
 		private var m_reverseChance:Number = 0;
 		private var m_reverseChanceDiff:Number = 0;
 		
+		private var m_reviveCounter:int = 0;
+		private var m_reviveTimes:int = 1;
+		
 		//BONUS
 		public var healthBonus:int = 0;
 		public var damageBonus:int = 0;
@@ -166,11 +170,11 @@ package p_entity
 		private static var BOSSXML:Array;
 		
 		private var m_isLevelingUp:Boolean = false;
-		private var m_reviveCounter:int = 0;
 		
+		//SAME AS GOLD OR MONEY TO BUY THINGS
 		private var m_points:Number = 0;
 		public var isPlayer:Boolean = false;
-		public function TG_Character(parent:DisplayObjectContainer, direction:String = "right",charID:String = "")
+		public function TG_Character(parent:DisplayObjectContainer, direction:String = "right",charID:String = "",exceptionID:String = "")
 		{
 			super(parent);
 			
@@ -192,8 +196,12 @@ package p_entity
 			{
 				var size:int = MINIONSXML.length;
 				number = (Math.random() * 1000 * size) % size;
-				//number = 1;
 				m_charXML = MINIONSXML[number];
+				while(m_charXML.id == exceptionID && size > 1)
+				{
+					number = (Math.random() * 1000 * size) % size;
+					m_charXML = MINIONSXML[number];
+				}
 			}
 			else
 			{
@@ -201,11 +209,42 @@ package p_entity
 			}
 			
 			m_isBoss = int(m_charXML.isBoss);
-			reviveCounter = m_charXML.revive;
+			m_charNo = CHARACTERSXML.indexOf(m_charXML);
+			
+			//m_reviveTimes = int(m_charXML.revive);
+			m_reviveTimes = 1;
+			m_reviveCounter = 0;
 			
 			initBeforeLoad();
 		}
 		
+		public function get reviveTimes():int
+		{
+			return m_reviveTimes;
+		}
+		public function get reviveCounter():int
+		{
+			return m_reviveCounter;
+		}
+		public function reviveChar():void
+		{
+			playAnimation("raiseup",1,0.5);
+			m_reviveCounter++;
+			
+			
+			health = initialHealth;
+			
+		}
+		public function fallChar():void
+		{
+			playAnimation("die0",1,0.5);
+			trace("fall");
+		}
+		
+		public function get charNo():int
+		{
+			return m_charNo;
+		}
 		private function indexCharacters():void
 		{
 			CHARACTERSXML = new Array();
@@ -445,7 +484,152 @@ package p_entity
 		{
 			return m_charXML.id;
 		}
+		public function get critChance():Number
+		{
+			return m_critChance;
+		}
+		public function get critValue():Number
+		{
+			return m_critValue;
+		}
+		public function get critChanceMax():Number
+		{
+			return Number(m_charXML.criticalChanceMax);
+		}
+		public function get critValueMax():Number
+		{
+			return Number(m_charXML.criticalValueMax);
+		}
+		public function get poisonChance():Number
+		{
+			return m_poisonChance;
+		}
+		public function get poisonValue():Number
+		{
+			return m_poisonValue;
+		}
+		public function get poisonChanceMax():Number
+		{
+			return Number(m_charXML.poisonChanceMax);
+		}
+		public function get poisonValueMax():Number
+		{
+			return Number(m_charXML.poisonValueMax);
+		}
 		
+		public function get healChance():Number
+		{
+			return m_healChance;
+		}
+		public function get healValue():int
+		{
+			return m_healValue;
+		}
+		public function get healChanceMax():Number
+		{
+			return Number(m_charXML.healChanceMax);
+		}
+		public function get healValueMax():Number
+		{
+			return Number(m_charXML.healValueMax);
+		}
+		public function get evadeChance():Number
+		{
+			return m_evadeChance;
+		}
+		public function get evadeChanceMax():Number
+		{
+			return Number(m_charXML.evadeChanceMax);
+		}
+		public function get dmgReturnChance():Number
+		{
+			return m_dmgReturnChance;
+		}
+		public function get dmgReturnValue():int
+		{
+			return m_dmgReturnValue;
+		}
+		public function get dmgReturnChanceMax():Number
+		{
+			return Number(m_charXML.dmgReturnChanceMax);
+		}
+		public function get dmgReturnValueMax():Number
+		{
+			return Number(m_charXML.dmgReturnValueMax);
+		}
+		public function get lifestealValue():int
+		{
+			return m_lifestealValue;
+		}
+		public function get lifestealValueMax():Number
+		{
+			return Number(m_charXML.lifeStealValueMax);
+		}
+		public function get magicChance():Number
+		{
+			return m_magicChance;
+		}
+		
+		public function get magicValue():int
+		{
+			return m_magicValue;
+		}
+		public function get magicChanceMax():Number
+		{
+			return Number(m_charXML.magicChanceMax);
+		}
+		public function get magicValueMax():Number
+		{
+			return Number(m_charXML.magicValueMax);
+		}
+		public function get strengthenChance():Number
+		{
+			return m_strengthenChance;
+		}
+		public function get strengthenValue():Number
+		{
+			return m_strengthenValue;
+		}
+		public function get strengthenChanceMax():Number
+		{
+			return Number(m_charXML.strengthenChanceMax);
+		}
+		public function get strengthenValueMax():Number
+		{
+			return Number(m_charXML.strengthenValueMax);
+		}
+		public function get weakenChance():Number
+		{
+			return m_weakenChance;
+		}
+		public function get weakenValue():Number
+		{
+			return m_weakenValue;
+		}
+		public function get weakenChanceMax():Number
+		{
+			return Number(m_charXML.weakenChanceMax);
+		}
+		public function get weakenValueMax():Number
+		{
+			return Number(m_charXML.weakenValueMax);
+		}
+		public function get reverseChance():Number
+		{
+			return m_reverseChance;
+		}
+		public function get reverseChanceMax():Number
+		{
+			return Number(m_charXML.reverseChanceMax);
+		}
+		public function get luck():Number
+		{
+			return m_luck;
+		}
+		public function get luckMax():Number
+		{
+			return Number(m_charXML.luckMax);
+		}
 		public function get descs():Array
 		{
 			var array:Array = [];
@@ -558,78 +742,99 @@ package p_entity
 				
 				str = "Level "+m_level+"\n";
 				array["desc"].push(str);
+				array["diff"].push(0);
 				str = "Darah "+m_initialHealth+"\n";
 				array["desc"].push(str);
+				array["diff"].push(m_initialHealthDiff);
 				str = "Pukulan "+m_damage+"-"+(m_damage+m_damageRange)+"\n";
 				array["desc"].push(str);
+				array["diff"].push(m_damageDiff);
 				if(m_critChance > 0)
 				{
 					str = "Krit Kans "+m_critChance+"%\n";
 					array["desc"].push(str);
+					array["diff"].push(m_critChanceDiff);
 					str = "Krit Pklan "+(m_critValue*100)+"%\n";
 					array["desc"].push(str);
+					array["diff"].push(m_critValueDiff*100);
 				}
 				if(m_poisonChance > 0)
 				{
 					str = "Racun Kans "+m_poisonChance+"%\n";
 					array["desc"].push(str);
+					array["diff"].push(m_poisonChanceDiff);
 					str = "Racun Pklan "+m_poisonValue+"\n";
 					array["desc"].push(str);
+					array["diff"].push(m_poisonValueDiff);
 				}
 				if(m_healChance > 0)
 				{
 					str = "Sembuh Kans "+m_healChance+"%\n";
 					array["desc"].push(str);
+					array["diff"].push(m_healChanceDiff);
 					str = "Sembuh Nilai "+m_healValue+"\n";
 					array["desc"].push(str);
+					array["diff"].push(m_healValueDiff);
 				}
 				if(m_evadeChance > 0)
 				{
 					str = "Hindar Kans "+m_evadeChance+"%\n";
 					array["desc"].push(str);
+					array["diff"].push(m_evadeChanceDiff);
 				}
 				if(m_dmgReturnChance > 0)
 				{
 					str = "Pukul Balik Kans "+m_dmgReturnChance+"%\n";
 					array["desc"].push(str);
+					array["diff"].push(m_dmgReturnChanceDiff);
 					str = "Pukul Balik "+m_dmgReturnValue+"\n";
 					array["desc"].push(str);
+					array["diff"].push(m_dmgReturnValueDiff);
 				}
 				if(m_lifestealValue > 0)
 				{
 					str = "Curi Darah "+(m_lifestealValue)+"%\n";
 					array["desc"].push(str);
+					array["diff"].push(m_lifestealValueDiff);
 				}
 				if(m_magicChance > 0)
 				{
 					str = "Sihir Kans "+m_magicChance+"%\n";
 					array["desc"].push(str);
+					array["diff"].push(m_magicChanceDiff);
 					str = "Sihir Pklan "+m_magicValue+"\n";
 					array["desc"].push(str);
+					array["diff"].push(m_magicValueDiff);
 				}
 				if(m_strengthenChance > 0)
 				{
 					str = "Menguatkan Kans "+m_strengthenChance+"%\n";
 					array["desc"].push(str);
+					array["diff"].push(m_strengthenChanceDiff);
 					str = "Menguatkan Ke "+m_strengthenValue+"X\n";
 					array["desc"].push(str);
+					array["diff"].push(m_strengthenValueDiff);
 				}
 				if(m_weakenChance > 0)
 				{
 					str = "Melemahkan Kans "+m_weakenChance+"%\n";
 					array["desc"].push(str);
+					array["diff"].push(m_weakenChanceDiff);
 					str = "Melemahkan Ke "+m_weakenValue+"X\n";
 					array["desc"].push(str);
+					array["diff"].push(m_weakenValueDiff);
 				}
 				if(m_reverseChance > 0)
 				{
 					str = "Membalik Kans "+m_reverseChance+"%\n";
 					array["desc"].push(str);
+					array["diff"].push(m_reverseChanceDiff);
 				}
 				if(m_luck > 0)
 				{
 					str = "Hoki "+m_luck+"%\n";
 					array["desc"].push(str);
+					array["diff"].push(m_luckDiff);
 				}
 			}
 			
@@ -823,86 +1028,8 @@ package p_entity
 			return obj;
 		}
 		
-		public function get reviveCounter():int
-		{
-			return m_reviveCounter;
-		}
-		public function set reviveCounter(value:int):void
-		{
-			m_reviveCounter = value;
-		}
-		public function getCriticalChance():Number
-		{
-			return m_critChance;
-		}
-		public function getCriticalDamage():Number
-		{
-			return m_critValue;
-		}
+	
 		
-		public function getPoisonChance():Number
-		{
-			return m_poisonChance;
-		}
-		
-		public function getPoisonDamage():int
-		{
-			return m_poisonValue;
-		}
-		public function getHealChance():Number
-		{
-			return m_healChance;
-		}
-		public function getHealValue():int
-		{
-			return m_healValue;
-		}
-		public function getEvadeChance():Number
-		{
-			return m_evadeChance;
-		}
-		public function getDamageReturnChance():Number
-		{
-			return m_dmgReturnChance;
-		}
-		public function getDamageReturnValue():int
-		{
-			return m_dmgReturnValue;
-		}
-		public function getLifeStealValue():int
-		{
-			return m_lifestealValue;
-		}
-		public function getMagicChance():Number
-		{
-			return m_magicChance;
-		}
-		public function getMagicValue():int
-		{
-			return m_magicValue;
-		}
-		
-		public function getStrengthenChance():Number
-		{
-			return m_strengthenChance;
-		}
-		
-		public function getStrengthenValue():Number
-		{
-			var value:int = m_strengthenValue * 100;
-			return value/100;
-		}
-		
-		public function getWeakenChance():Number
-		{
-			return m_weakenChance;
-		}
-		
-		public function getWeakenValue():Number
-		{
-			var value:int = m_weakenValue * 100;
-			return value/100;
-		}
 		
 		public function setDamageMultiplier(value:Number):void
 		{
@@ -910,15 +1037,7 @@ package p_entity
 			m_damageMultiplierCounter = 0;
 		}
 		
-		public function getReverseChance():Number
-		{
-			return m_reverseChance;
-		}
 		
-		public function getLuck():Number
-		{
-			return m_luck;
-		}
 		
 		public function get points():Number
 		{
@@ -966,24 +1085,24 @@ package p_entity
 			return m_initialHealth;
 		}
 		
-		public function get level():int
+		public function getLevel():int
 		{
 			return m_level;
 		}
 		
-		public function set level(value:int):void
+		public function setLevel(value:int,setFirst:Boolean = false):void
 		{
 			m_level = value;
 			var arr:Array = m_charXML.expFormula.split(",");
 			m_nextExp = calculateExp(arr,m_level);
 			m_seizedExp = Math.ceil((int(m_charXML.expGainPercentage)/100) * m_nextExp);
 			
-			recalculateStats();
+			recalculateStats(setFirst);
 			m_health = m_initialHealth;
 			
 		}
 		
-		public function recalculateStats():void
+		public function recalculateStats(setFirst:Boolean = false):void
 		{
 			var tempValue:Number = 0;
 			
@@ -996,6 +1115,11 @@ package p_entity
 			{
 				m_initialHealthDiff = 0;
 			}
+			if(setFirst)
+			{
+				m_initialHealthDiff = 0;
+			}
+			trace("health diff = "+m_initialHealthDiff);
 			
 			tempValue = m_damage;
 			m_damage = int(m_charXML.baseDamage) + (int(m_charXML.damageBonus) * (m_level-1));
@@ -1006,6 +1130,10 @@ package p_entity
 			{
 				m_damageDiff = 0;
 			}
+			if(setFirst)
+			{
+				m_damageDiff = 0;
+			}
 			m_damageRange = int(m_charXML.baseDamageRange);
 			
 			var maxValue:Number = 0;
@@ -1013,7 +1141,7 @@ package p_entity
 			
 			//CRITICAL
 			tempValue = m_critChance;
-			m_critChance = Number(m_charXML.criticalChance) + (Number(m_charXML.criticalChanceBonus) * (level -1));
+			m_critChance = Number(m_charXML.criticalChance) + (Number(m_charXML.criticalChanceBonus) * (getLevel() -1));
 			m_critChance += criticalChanceBonus + criticalChanceBonusPermanent;
 			m_critChance = int(m_critChance * 100)/100;
 			
@@ -1030,13 +1158,18 @@ package p_entity
 			m_critChanceDiff = m_critChance - tempValue;
 			if(m_critChanceDiff == m_critChance)
 			{
+				
 				m_critChanceDiff = -1;
+			}
+			if(setFirst)
+			{
+				m_critChanceDiff = 0;
 			}
 			
 			m_critChanceDiff = (int(m_critChanceDiff * 100) / 100);
 			
 			tempValue = m_critValue;
-			m_critValue = Number(m_charXML.criticalValue) + (Number(m_charXML.criticalValueBonus) * (level -1));
+			m_critValue = Number(m_charXML.criticalValue) + (Number(m_charXML.criticalValueBonus) * (getLevel() -1));
 			m_critValue += criticalValueBonus + criticalChanceBonusPermanent;
 			m_critValue = int(m_critValue * 100)/100;
 			
@@ -1053,11 +1186,15 @@ package p_entity
 			{
 				m_critValueDiff = -1;
 			}
+			if(setFirst)
+			{
+				m_critValueDiff = 0;
+			}
 			m_critValueDiff = (int(m_critValueDiff * 100) / 100);
 			
 			//POISON
 			tempValue = m_poisonChance;
-			m_poisonChance = Number(m_charXML.poisonChance) + (Number(m_charXML.poisonChanceBonus) * (level -1));
+			m_poisonChance = Number(m_charXML.poisonChance) + (Number(m_charXML.poisonChanceBonus) * (getLevel() -1));
 			m_poisonChance += poisonChanceBonus + poisonChanceBonusPermanent;
 			m_poisonChance = int(m_poisonChance * 100)/100;
 			
@@ -1075,10 +1212,14 @@ package p_entity
 			{
 				m_poisonChanceDiff = -1;
 			}
+			if(setFirst)
+			{
+				m_poisonChanceDiff = 0;
+			}
 			m_poisonChanceDiff = (int(m_poisonChanceDiff * 100) / 100);
 			
 			tempValue = m_poisonValue;
-			m_poisonValue = Number(m_charXML.poisonValue) + (Number(m_charXML.poisonValueBonus) * (level -1));
+			m_poisonValue = Number(m_charXML.poisonValue) + (Number(m_charXML.poisonValueBonus) * (getLevel() -1));
 			m_poisonValue += poisonValueBonus + poisonValueBonusPermanent;
 			maxValue = Number(m_charXML.poisonValueMax);
 			if(maxValue > 0)
@@ -1093,11 +1234,15 @@ package p_entity
 			{
 				m_poisonValueDiff = -1;
 			}
+			if(setFirst)
+			{
+				m_poisonValueDiff = 0;
+			}
 			m_poisonValueDiff = (int(m_poisonValueDiff * 100) / 100);
 			
 			//HEAL
 			tempValue = m_healChance;
-			m_healChance = Number(m_charXML.healChance) + (Number(m_charXML.healChanceBonus) * (level -1));
+			m_healChance = Number(m_charXML.healChance) + (Number(m_charXML.healChanceBonus) * (getLevel() -1));
 			m_healChance += healChanceBonus + healChanceBonusPermanent;
 			m_healChance = int(m_healChance * 100)/100;
 			
@@ -1114,10 +1259,14 @@ package p_entity
 			{
 				m_healChanceDiff = -1;
 			}
+			if(setFirst)
+			{
+				m_healChanceDiff = 0;
+			}
 			m_healChanceDiff = (int(m_healChanceDiff * 100) / 100);
 			
 			tempValue = m_healValue;
-			m_healValue = Number(m_charXML.healValue) + (Number(m_charXML.healValueBonus) * (level -1));
+			m_healValue = Number(m_charXML.healValue) + (Number(m_charXML.healValueBonus) * (getLevel() -1));
 			m_healValue += healValueBonus + healValueBonusPermanent;
 			maxValue = Number(m_charXML.healValueMax);
 			if(maxValue > 0)
@@ -1132,11 +1281,15 @@ package p_entity
 			{
 				m_healValueDiff = -1;
 			}
+			if(setFirst)
+			{
+				m_healValueDiff = 0;
+			}
 			m_healValueDiff = (int(m_healValueDiff * 100) / 100);
 			
 			//EVADE
 			tempValue = m_evadeChance;
-			m_evadeChance = Number(m_charXML.evadeChance) + (Number(m_charXML.evadeChanceBonus) * (level -1));
+			m_evadeChance = Number(m_charXML.evadeChance) + (Number(m_charXML.evadeChanceBonus) * (getLevel() -1));
 			m_evadeChance += evadeChanceBonus + evadeChanceBonusPermanent;
 			m_evadeChance = int(m_evadeChance * 100)/100;
 			
@@ -1153,11 +1306,15 @@ package p_entity
 			{
 				m_evadeChanceDiff = -1;
 			}
+			if(setFirst)
+			{
+				m_evadeChanceDiff = 0;
+			}
 			m_evadeChanceDiff = (int(m_evadeChanceDiff * 100) / 100);
 			
 			//DAMAGE RETURN
 			tempValue = m_dmgReturnChance;
-			m_dmgReturnChance = Number(m_charXML.dmgReturnChance) + (Number(m_charXML.dmgReturnChanceBonus) * (level -1));
+			m_dmgReturnChance = Number(m_charXML.dmgReturnChance) + (Number(m_charXML.dmgReturnChanceBonus) * (getLevel() - 1));
 			m_dmgReturnChance += dmgReturnChanceBonus + dmgReturnChanceBonusPermanent;
 			m_dmgReturnChance = int(m_dmgReturnChance * 100)/100;
 			
@@ -1174,10 +1331,14 @@ package p_entity
 			{
 				m_dmgReturnChanceDiff = -1;
 			}
+			if(setFirst)
+			{
+				m_dmgReturnChanceDiff = 0;
+			}
 			m_dmgReturnChanceDiff = (int(m_dmgReturnChanceDiff * 100) / 100);
 			
 			tempValue = m_dmgReturnValue;
-			m_dmgReturnValue = Number(m_charXML.dmgReturnValue) + (Number(m_charXML.dmgReturnValue) * (level -1));
+			m_dmgReturnValue = Number(m_charXML.dmgReturnValue) + (Number(m_charXML.dmgReturnValue) * (getLevel() - 1));
 			m_dmgReturnValue += dmgReturnValueBonus + dmgReturnValueBonusPermanent;
 			maxValue = Number(m_charXML.dmgReturnValueMax);
 			if(maxValue > 0)
@@ -1192,11 +1353,15 @@ package p_entity
 			{
 				m_dmgReturnValueDiff = -1;
 			}
+			if(setFirst)
+			{
+				m_dmgReturnValueDiff = 0;
+			}
 			m_dmgReturnValueDiff = (int(m_dmgReturnValueDiff * 100) / 100);
 			
 			//LIFE STEAL
 			tempValue = m_lifestealValue;
-			m_lifestealValue = Number(m_charXML.lifeStealValue) + (Number(m_charXML.lifeStealValueBonus) * (level -1));
+			m_lifestealValue = Number(m_charXML.lifeStealValue) + (Number(m_charXML.lifeStealValueBonus) * (getLevel() - 1));
 			m_lifestealValue += lifestealValueBonus + lifestealValueBonusPermanent;
 			maxValue = Number(m_charXML.lifeStealValueMax);
 			if(maxValue > 0)
@@ -1211,11 +1376,15 @@ package p_entity
 			{
 				m_lifestealValueDiff = -1;
 			}
+			if(setFirst)
+			{
+				m_lifestealValueDiff = 0;
+			}
 			m_lifestealValueDiff = (int(m_lifestealValueDiff * 100) / 100);
 			
 			//MAGIC 
 			tempValue = m_magicChance;
-			m_magicChance = Number(m_charXML.magicChance) + (Number(m_charXML.magicChanceBonus) * (level -1));
+			m_magicChance = Number(m_charXML.magicChance) + (Number(m_charXML.magicChanceBonus) * (getLevel() -1));
 			m_magicChance += magicChanceBonus + magicChanceBonusPermanent;
 			m_magicChance = int(m_magicChance * 100)/100;
 			
@@ -1233,10 +1402,14 @@ package p_entity
 			{
 				m_magicChanceDiff = -1;
 			}
+			if(setFirst)
+			{
+				m_magicChanceDiff = 0;
+			}
 			m_magicChanceDiff = (int(m_magicChanceDiff * 100) / 100);
 			
 			tempValue = m_magicValue;
-			m_magicValue = Number(m_charXML.magicValue) + (Number(m_charXML.magicValueBonus) * (level -1));
+			m_magicValue = Number(m_charXML.magicValue) + (Number(m_charXML.magicValueBonus) * (getLevel() -1));
 			m_magicValue += magicValueBonus + magicValueBonusPermanent;
 			maxValue = Number(m_charXML.magicValueMax);
 			if(maxValue > 0)
@@ -1251,11 +1424,15 @@ package p_entity
 			{
 				m_magicValueDiff = -1;
 			}
+			if(setFirst)
+			{
+				m_magicValueDiff = 0;
+			}
 			m_magicValueDiff = (int(m_magicValueDiff * 100) / 100);
 			
 			//STRENGTHEN
 			tempValue = m_strengthenChance;
-			m_strengthenChance = Number(m_charXML.strengthenChance) + (Number(m_charXML.strengthenChanceBonus) * (level -1));
+			m_strengthenChance = Number(m_charXML.strengthenChance) + (Number(m_charXML.strengthenChanceBonus) * (getLevel() - 1));
 			m_strengthenChance += strengthenChanceBonus + strengthenChanceBonusPermanent;
 			m_strengthenChance = int(m_strengthenChance * 100)/100;
 			
@@ -1272,10 +1449,14 @@ package p_entity
 			{
 				m_strengthenChanceDiff = -1;
 			}
+			if(setFirst)
+			{
+				m_strengthenChanceDiff = 0;
+			}
 			m_strengthenChanceDiff = (int(m_strengthenChanceDiff * 100) / 100);
 			
 			tempValue = m_strengthenValue;
-			m_strengthenValue = Number(m_charXML.strengthenValue) + (Number(m_charXML.strengthenValueBonus) * (level -1));
+			m_strengthenValue = Number(m_charXML.strengthenValue) + (Number(m_charXML.strengthenValueBonus) * (getLevel() -1));
 			m_strengthenValue += strengthenValueBonus + strengthenValueBonusPermanent;
 			m_strengthenValue = int(m_strengthenValue * 100)/100;
 			
@@ -1292,11 +1473,15 @@ package p_entity
 			{
 				m_strengthenValueDiff = -1;
 			}
+			if(setFirst)
+			{
+				m_strengthenValueDiff = 0;
+			}
 			m_strengthenValueDiff = (int(m_strengthenValueDiff * 100) / 100);
 			
 			//WEAKEN
 			tempValue = m_weakenChance;
-			m_weakenChance = Number(m_charXML.weakenChance) + (Number(m_charXML.weakenChanceBonus) * (level -1));
+			m_weakenChance = Number(m_charXML.weakenChance) + (Number(m_charXML.weakenChanceBonus) * (getLevel() -1));
 			m_weakenChance += weakenChanceBonus + weakenChanceBonusPermanent;
 			m_weakenChance = int(m_weakenChance * 100)/100;
 			
@@ -1313,11 +1498,15 @@ package p_entity
 			{
 				m_weakenChanceDiff = -1;
 			}
+			if(setFirst)
+			{
+				m_weakenChanceDiff = 0;
+			}
 			m_weakenChanceDiff = (int(m_weakenChanceDiff * 100) / 100);
 			
 			tempValue = m_weakenValue;
 			m_charXML.weakenValue = 1;
-			m_weakenValue = Number(m_charXML.weakenValue) - (Number(m_charXML.weakenValueBonus) * (level -1));
+			m_weakenValue = Number(m_charXML.weakenValue) - (Number(m_charXML.weakenValueBonus) * (getLevel() -1));
 			m_weakenValue -= (weakenValueBonus + weakenValueBonusPermanent);
 			m_weakenValue = int(m_weakenValue * 100)/100;
 			
@@ -1340,11 +1529,15 @@ package p_entity
 			{
 				m_weakenValueDiff = -1;
 			}
+			if(setFirst)
+			{
+				m_weakenValueDiff = 0;
+			}
 			m_weakenValueDiff = (int(m_weakenValueDiff * 100) / 100);
 			
 			//REVERSE 
 			tempValue = m_reverseChance;
-			m_reverseChance = Number(m_charXML.reverseChance) + (Number(m_charXML.reverseChanceBonus) * (level -1));
+			m_reverseChance = Number(m_charXML.reverseChance) + (Number(m_charXML.reverseChanceBonus) * (getLevel() -1));
 			m_reverseChance += reverseChanceBonus + reverseChanceBonusPermanent;
 			m_reverseChance = int(m_reverseChance * 100)/100;
 			
@@ -1361,11 +1554,15 @@ package p_entity
 			{
 				m_reverseChanceDiff = -1;
 			}
+			if(setFirst)
+			{
+				m_reverseChanceDiff = 0;
+			}
 			m_reverseChanceDiff = (int(m_reverseChanceDiff * 100) / 100);
 			
 			//LUCK
 			tempValue = m_luck;
-			m_luck = Number(m_charXML.luck) + (Number(m_charXML.luckBonus) * (level -1));
+			m_luck = Number(m_charXML.luck) + (Number(m_charXML.luckBonus) * (getLevel() - 1));
 			m_luck = int(m_luck * 100)/100;
 			maxValue = Number(m_charXML.luckMax);
 			if(maxValue > 0)
@@ -1380,12 +1577,16 @@ package p_entity
 			{
 				m_luckDiff = -1;
 			}
+			if(setFirst)
+			{
+				m_luckDiff = 0;
+			}
 			m_luckDiff = (int(m_luckDiff * 100) / 100);
 			
 			//POINTS
 			if(!isPlayer)
 			{
-				m_points = Number(m_charXML.points) + (Number(m_charXML.pointsBonus) * (level -1));
+				m_points = Number(m_charXML.points) + (Number(m_charXML.pointsBonus) * (getLevel() -1));
 				maxValue = Number(m_charXML.pointsMax);
 				if(maxValue > 0)
 				{
@@ -1419,7 +1620,7 @@ package p_entity
 		public function levelUp():void
 		{
 			m_currentExp -= m_nextExp;
-			level = m_level+1;
+			setLevel(m_level+1);
 			m_isLevelingUp = true;
 		}
 		

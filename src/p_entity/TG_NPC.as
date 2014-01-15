@@ -1,6 +1,7 @@
 package p_entity
 {
 	import com.greensock.TimelineMax;
+	import com.greensock.TweenMax;
 	import com.greensock.events.LoaderEvent;
 	import com.greensock.loading.BinaryDataLoader;
 	import com.greensock.loading.LoaderMax;
@@ -10,6 +11,7 @@ package p_entity
 	import dragonBones.factorys.StarlingFactory;
 	
 	import flash.events.Event;
+	import flash.geom.Rectangle;
 	
 	import p_engine.p_singleton.TG_World;
 	
@@ -19,6 +21,9 @@ package p_entity
 	import starling.display.Sprite;
 	import starling.display.Stage;
 	import starling.events.Event;
+	import starling.extensions.Scale9Image;
+	import starling.text.TextField;
+	import starling.text.TextFieldAutoSize;
 	
 	public class TG_NPC extends TG_Entity
 	{
@@ -34,6 +39,9 @@ package p_entity
 		private var m_charXML:XML;
 		private var m_pivot:Array;
 		private var m_lastAnimation:String = "";
+		private var m_balloonChat:Sprite;
+		private var m_chat:TextField;
+		private var m_balloonImage:Scale9Image;
 		
 		public static const LOADED:String = "loaded";
 		
@@ -41,7 +49,7 @@ package p_entity
 		private var loaderMax:LoaderMax;
 		
 		
-		public function TG_NPC(parent:DisplayObjectContainer, direction:String = "left")
+		public function TG_NPC(parent:DisplayObjectContainer, direction:String = "left",no:int = 0)
 		{
 			super(parent);
 			
@@ -50,7 +58,7 @@ package p_entity
 			m_direction = direction;
 			
 			var xml:XML = TG_World.assetManager.getXml("NPC");
-			m_charXML = xml.NPC[0];
+			m_charXML = xml.NPC[no];
 			initBeforeLoad();
 		}
 		
@@ -108,8 +116,14 @@ package p_entity
 		{
 			super.destroy();
 			destroySkeleton();
+			if(loaderMax)
 			loaderMax.dispose(true);
 			loaderMax = null;
+		}
+		
+		public function hide():void
+		{
+			TweenMax.to(m_sprite,2,{alpha:0.1,onComplete:destroy});
 		}
 		
 		public function get id():String
@@ -198,10 +212,34 @@ package p_entity
 			m_parent.addChild(m_sprite);
 			WorldClock.clock.add(m_armature);
 			
-			trace("complete handler = "+m_sprite);
-			trace("ada sprite = "+sprite);
+			var rect:Rectangle = new Rectangle(40,30,5,5);
+			m_balloonImage = new Scale9Image(TG_World.assetManager.getTexture("txtBubble"),rect,true);
+			m_chat = new TextField(90,50,"Thank you for saving me","Londrina",20,0xFFFF00);
+			m_chat.autoSize = TextFieldAutoSize.VERTICAL;
+			m_balloonChat = new Sprite();
+			m_balloonChat.addChild(m_balloonImage);
+			m_balloonChat.addChild(m_chat);
+			m_balloonChat.y = -(m_sprite.height);
+			m_balloonChat.x = -5;
+			m_sprite.addChild(m_balloonChat);
 			
+			m_balloonChat.visible = false;
 			dispatchEvent(new starling.events.Event(LOADED));
+		}
+		
+		public function showText(text:String,visible:Boolean = true):void
+		{
+			m_chat.text = text;
+			m_balloonImage.height = m_chat.height + 50;
+			m_chat.x = (m_balloonImage.width - m_chat.width) * 0.5;
+			m_chat.y = (m_balloonImage.height - m_chat.height) * 0.5;
+			m_chat.y -= 20;
+			
+			m_balloonChat.y = -(m_sprite.height + (m_balloonChat.height-50));
+			
+			m_balloonChat.visible = visible;
+			
+			
 		}
 		
 		public function playAnimation(label:String,loop:int = 0,duration:Number = -1):void

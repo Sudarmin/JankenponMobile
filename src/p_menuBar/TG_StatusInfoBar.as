@@ -101,6 +101,7 @@ package p_menuBar
 			var nextSprite:Sprite = new Sprite();
 			var label:TextField = new TextField(50,50,"NEXT","Londrina",30,0xFFFF00);
 			label.autoSize = TextFieldAutoSize.HORIZONTAL;
+			
 			nextSprite.addChild(label);
 			var nextButton:ButtonExtended = new ButtonExtended(TG_World.assetManager.getTextures("buttonNext")[0],"",TG_World.assetManager.getTextures("buttonNext")[2],TG_World.assetManager.getTextures("buttonNext")[1]);
 			nextButton.scaleX = nextButton.scaleY = 1.5;
@@ -114,7 +115,12 @@ package p_menuBar
 			m_sprite.addChild(nextSprite);
 			m_nextSprite = nextSprite;
 			m_nextButton = nextButton;
-			
+			label.touchable = true;
+			var button:Button = new Button(TG_World.assetManager.getTextures("UI-BGButtonWood2")[0],"NEXT");
+			button.x = label.x;
+			button.y = label.y;
+			button.alpha = 0;
+			nextSprite.addChild(button);
 			resize();
 		}
 		
@@ -206,9 +212,6 @@ package p_menuBar
 			m_title.y = (m_ribbon.height - m_title.height) * 0.5;
 			m_title.y -= 5;
 			
-			
-			
-			
 			i = 0;
 			size = textFields.length;
 			for(i;i<size;i++)
@@ -267,9 +270,10 @@ package p_menuBar
 		{
 			return m_nextButton;
 		}
-		public function get nextLabel():Sprite
+		public function get nextSprite():Sprite
 		{
 			return m_nextSprite;
 		}
+		
 	}
 }

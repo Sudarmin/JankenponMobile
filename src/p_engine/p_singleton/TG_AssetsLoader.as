@@ -51,9 +51,9 @@ package p_engine.p_singleton
 		{
 			TG_LoaderMax.getInstance().append(url,itemName,type,kbTotal);
 		}
-		public function startLoad():void
+		public function startLoad(showClip:Boolean = true):void
 		{
-			show();
+			show(showClip);
 			TG_LoaderMax.getInstance().startLoad();
 		}
 	

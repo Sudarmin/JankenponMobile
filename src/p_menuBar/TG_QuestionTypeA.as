@@ -11,6 +11,8 @@ package p_menuBar
 	import starling.display.Sprite;
 	import starling.text.TextField;
 	import starling.text.TextFieldAutoSize;
+	import starling.utils.deg2rad;
+	import starling.utils.rad2deg;
 	
 	public class TG_QuestionTypeA extends TG_MenuBar
 	{
@@ -55,6 +57,8 @@ package p_menuBar
 		private var m_state:int = NORMAL;
 		private var m_openLaterArray:Array;
 		private var m_closedArray:Array;
+		
+		private var m_chanceToReverse:int = 0;
 		public function TG_QuestionTypeA(parent:DisplayObjectContainer, gameState:TG_GameState)
 		{
 			super(parent, gameState);
@@ -72,6 +76,14 @@ package p_menuBar
 			showUnAnsweredIcon();
 			resize();
 		}
+		public function set chanceToReverse(num:int):void
+		{
+			m_chanceToReverse = num;
+		}
+		public function get chanceToReverse():int
+		{
+			return m_chanceToReverse;
+		}
 		public function resetLevel(value:int):void
 		{
 			if(value == 0)
@@ -79,102 +91,119 @@ package p_menuBar
 				m_numOfQuestion = 3;
 				m_timeTotal = 7000;
 				m_state = NORMAL;
+				m_chanceToReverse = 0;
 			}
 			else if(value == 1)
 			{
 				m_numOfQuestion = 4;
 				m_timeTotal = 6000;
 				m_state = NORMAL;
+				m_chanceToReverse = 0;
 			}
 			else if(value == 2)
 			{
 				m_numOfQuestion = 5;
 				m_timeTotal = 5000;
 				m_state = NORMAL;
+				m_chanceToReverse = 0;
 			}
 			else if(value == 3)
 			{
 				m_numOfQuestion = 5;
 				m_timeTotal = 5000;
 				m_state = LAST_ONE_OPEN_LATER;
+				m_chanceToReverse = 0;
 			}
 			else if(value == 4)
 			{
 				m_numOfQuestion = 5;
 				m_timeTotal = 5000;
 				m_state = LAST_ONE_CLOSED;
+				m_chanceToReverse = 0;
 			}
 			else if(value == 5)
 			{
 				m_numOfQuestion = 5;
 				m_timeTotal = 5000;
 				m_state = LAST_TWO_OPEN_LATER;
+				m_chanceToReverse = 10;
 			}
 			else if(value == 6)
 			{
 				m_numOfQuestion = 5;
 				m_timeTotal = 5000;
 				m_state = RANDOM_ONE_CLOSED;
+				m_chanceToReverse = 20;
 			}
 			else if(value == 7)
 			{
 				m_numOfQuestion = 5;
 				m_timeTotal = 5000;
 				m_state = RANDOM_TWO_CLOSED;
+				m_chanceToReverse = 20;
 			}
 			else if(value == 8)
 			{
 				m_numOfQuestion = 5;
 				m_timeTotal = 4000;
 				m_state = ONE_CLOSED_ONE_OPEN_LATER;
+				m_chanceToReverse = 30;
 			}
 			else if(value == 9)
 			{
 				m_numOfQuestion = 5;
 				m_timeTotal = 4000;
 				m_state = ONE_CLOSED_TWO_OPEN_LATER;
+				m_chanceToReverse = 30;
 			}
 			else if(value == 10)
 			{
 				m_numOfQuestion = 5;
 				m_timeTotal = 4000;
 				m_state = LAST_THREE_OPEN_LATER;
+				m_chanceToReverse = 30;
 			}
 			else if(value == 11)
 			{
 				m_numOfQuestion = 5;
 				m_timeTotal = 4000;
 				m_state = TWO_CLOSED_ONE_OPEN_LATER;
+				m_chanceToReverse = 30;
 			}
 			else if(value == 12)
 			{
 				m_numOfQuestion = 5;
 				m_timeTotal = 4000;
 				m_state = TWO_CLOSED_TWO_OPEN_LATER;
+				m_chanceToReverse = 30;
 			}
 			else if(value == 13)
 			{
 				m_numOfQuestion = 5;
 				m_timeTotal = 3000;
 				m_state = LAST_FOUR_OPEN_LATER;
+				m_chanceToReverse = 30;
 			}
 			else if(value == 14)
 			{
 				m_numOfQuestion = 5;
 				m_timeTotal = 3000;
 				m_state = RANDOM_THREE_CLOSED;
+				m_chanceToReverse = 30;
 			}
 			else if(value == 15)
 			{
 				m_numOfQuestion = 5;
 				m_timeTotal = 3000;
 				m_state = RANDOM_FOUR_CLOSED;
+				m_chanceToReverse = 30;
 			}
 			else if(value == 16)
 			{
 				m_numOfQuestion = 5;
 				m_timeTotal = 3000;
 				m_state = RANDOM_FOUR_CLOSED_ONE_OPEN_LATER;
+				m_chanceToReverse = 30;
 			}
 			else
 			{
@@ -183,6 +212,7 @@ package p_menuBar
 				var rand:int = (Math.random() * 1000) % 9;
 				rand+= 5;
 				m_state = rand;
+				m_chanceToReverse = 30;
 			}
 		}
 		protected override function initSprite():void
@@ -261,11 +291,15 @@ package p_menuBar
 				source.splice(rand,1);
 			}
 		}
-		public function showQuestion(level:int = -1):void
+		public function showQuestion(level:int = -1,reverseChance:int = -1):void
 		{
 			if(level >= 0)
 			{
 				resetLevel(level);
+			}
+			if(reverseChance>-1)
+			{
+				m_chanceToReverse = reverseChance;
 			}
 			m_ready = false;
 			var image:Image;
@@ -412,7 +446,7 @@ package p_menuBar
 				{
 					if(i == m_closedArray[j])
 					{
-						image = new Image(TG_World.assetManager.getTexture("IconAnswer"));
+						image = new Image(TG_World.assetManager.getTexture("IconQuestion2"));
 						insideState = true;
 					}
 				}
@@ -498,20 +532,53 @@ package p_menuBar
 				}
 			}
 		}
-		private final function createImageRPS(value:int):Image
+		private final function createImageRPS(value:int,answer:Boolean = false):Image
 		{
 			var image:Image;
+			var reversed:Boolean = false;
+			if(m_chanceToReverse > 0 && !answer)
+			{
+				var rand:int = (Math.random() * 10000) % 100;
+				if(rand <= m_chanceToReverse)
+				{
+					reversed = true;
+				}
+			}
 			if(value == ROCK)
 			{
-				image = new Image(TG_World.assetManager.getTexture("IconRock"));
+				if(reversed)
+				{
+					image = new Image(TG_World.assetManager.getTexture("IconScissorReversed"));
+				}
+				else
+				{
+					image = new Image(TG_World.assetManager.getTexture("IconRock"));
+				}
+				
 			}
 			else if(value == PAPER)
 			{
-				image = new Image(TG_World.assetManager.getTexture("IconPaper"));
+				if(reversed)
+				{
+					image = new Image(TG_World.assetManager.getTexture("IconRockReversed"));
+				}
+				else
+				{
+					image = new Image(TG_World.assetManager.getTexture("IconPaper"));
+				}
+				
 			}
 			else if(value == SCISSOR)
 			{
-				image = new Image(TG_World.assetManager.getTexture("IconScissor"));
+				if(reversed)
+				{
+					image = new Image(TG_World.assetManager.getTexture("IconPaperReversed"));
+				}
+				else
+				{
+					image = new Image(TG_World.assetManager.getTexture("IconScissor"));
+				}
+				
 			}
 			return image;
 		}
@@ -594,7 +661,7 @@ package p_menuBar
 			
 			m_answers[m_answerCounter] = value;
 			var image:Image;
-			image = createImageRPS(value);
+			image = createImageRPS(value,true);
 			var sprite:Sprite;
 			sprite = new Sprite();
 			sprite.addChild(image);
@@ -708,7 +775,7 @@ package p_menuBar
 						if(m_resultCounter == m_closedArray[i])
 						{
 							prevSprite = m_questionSprites[num];
-							image = createImageRPS(m_questions[num]);
+							image = createImageRPS(m_questions[num],true);
 							sprite = new Sprite();
 							sprite.addChild(image);
 							sprite.pivotX = sprite.width * 0.5;

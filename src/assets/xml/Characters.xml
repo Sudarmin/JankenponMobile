@@ -15,7 +15,7 @@
 		<numOfDie>2</numOfDie>
 		<baseHealth>520</baseHealth>
 		<healthBonus>10</healthBonus>
-		<baseDamage>20</baseDamage>
+		<baseDamage>2000</baseDamage>
 		<damageBonus>5</damageBonus>
 		<baseDamageRange>5</baseDamageRange>
 		<exp>100</exp>
@@ -34,6 +34,20 @@
 		<criticalValue>3</criticalValue>
 		<criticalValueBonus>0.1</criticalValueBonus>
 		<criticalValueMax>4</criticalValueMax>
+		
+		<bonus0id>damage</bonus0id>
+		<bonus0value1>10</bonus0value1>
+		<bonus1id>health</bonus1id>
+		<bonus1value1>10</bonus1value1>
+		<bonus2id>critical</bonus2id>
+		<bonus2value1>10</bonus2value1>
+		<bonus2value2>5</bonus2value2>
+		<bonus3id>poison</bonus3id>
+		<bonus3value1>10</bonus3value1>
+		<bonus3value2>10</bonus3value2>
+		<bonus4id>dmgReturn</bonus4id>
+		<bonus4value1>10</bonus4value1>
+		<bonus4value2>10</bonus4value2>
 		
 	</character>
 	<character>

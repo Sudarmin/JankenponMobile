@@ -16,6 +16,13 @@ package p_asset
 		[Embed(source="/assets/textureAtlas/FXHeal.xml",mimeType="application/octet-stream")]
 		public static const FXHealXML:Class;
 		
+		//FX Smoke
+		[Embed(source="/assets/textureAtlas/FXSmoke.png")]
+		public static const FXSmoke:Class;
+		
+		[Embed(source="/assets/textureAtlas/FXSmoke.xml",mimeType="application/octet-stream")]
+		public static const FXSmokeXML:Class;
+		
 		//FX Level Up
 		[Embed(source="/assets/textureAtlas/LevelUPFX.png")]
 		public static const LevelUPFX:Class;
